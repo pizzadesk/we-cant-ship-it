@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_m3x6z"]
+
+[resource]
+script = ExtResource("1_m3x6z")
+feature_name = "Mod Support SDK"
+ambition_value = 10
+instability_value = 8
+tier = "uncommon"
+unlock_weight = 3.6
+tags = PackedStringArray("ui", "lore", "multiplayer")
+interactions = {
+"ui": {"instability": 5, "soul": 0},
+"lore": {"instability": 2, "soul": 0},
+"multiplayer": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}

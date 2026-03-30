@@ -1,0 +1,473 @@
+{
+  "archetypes": {
+    "ign": {
+      "author": "MegaScore Weekly",
+      "score_min": 5.5,
+      "score_max": 8.0,
+      "openers": [
+        { "text": "A bold swing from a tiny studio", "weight": 3 },
+        { "text": "An ambitious RPG with real personality", "weight": 2 },
+        { "text": "A rough but fascinating release", "weight": 2 },
+        { "text": "Few games this year have surprised us quite like this", "weight": 2 },
+        { "text": "There is something genuinely compelling buried in here", "weight": 2 },
+        { "text": "Ambition rarely manifests this visibly in a single release", "weight": 1 },
+        { "text": "A game that apologises for nothing and suffers for it", "weight": 1 },
+        { "text": "More ideas per square centimetre than most AAA titles", "weight": 1 },
+        { "text": "A messy, earnest, occasionally brilliant debut", "weight": 2 }
+      ],
+      "closers": [
+        { "text": "If you can tolerate the chaos, there is a memorable game underneath.", "weight": 3 },
+        { "text": "Its best ideas survive despite persistent technical issues.", "weight": 2 },
+        { "text": "The foundation is shaky but the ambition is real.", "weight": 2 },
+        { "text": "Players willing to meet it halfway will find something worth the trouble.", "weight": 2 },
+        { "text": "It earns its flaws by wearing them openly.", "weight": 1 },
+        { "text": "A game for players who enjoy discovering things that were not intentional.", "weight": 1 },
+        { "text": "The patching road ahead is long, but so is the potential.", "weight": 2 },
+        { "text": "We recommend it conditionally and sincerely.", "weight": 1 },
+        { "text": "Nothing else launched this year feels quite like it.", "weight": 1 }
+      ],
+      "tag_callouts": {
+        "horses": [
+          { "text": "{feature_name} is likely the most-discussed system this year, entirely by accident.", "weight": 3 },
+          { "text": "The horse implementation has generated more community threads than anything the studio intended.", "weight": 2 },
+          { "text": "{feature_name} technically functions, if your definition of function is sufficiently generous.", "weight": 2 },
+          { "text": "The equine physics will outlive this game's reputation.", "weight": 1 }
+        ],
+        "combat": [
+          { "text": "{feature_name} shows genuine creativity when it is not actively working against the player.", "weight": 3 },
+          { "text": "The combat systems feel unfinished but there is a rhythm underneath that rewards patience.", "weight": 2 },
+          { "text": "{feature_name} swings between inspired and infuriating on a short cycle.", "weight": 2 },
+          { "text": "Combat depth is present; stability is a different matter.", "weight": 1 }
+        ],
+        "physics": [
+          { "text": "{feature_name} introduces entropy into every room it enters.", "weight": 3 },
+          { "text": "The simulation underneath {feature_name} suggests a competent engine doing its best under pressure.", "weight": 2 },
+          { "text": "Physics interactions produce emergent results that no QA pass could have anticipated.", "weight": 2 }
+        ],
+        "quest": [
+          { "text": "{feature_name} carries the emotional weight the broader systems cannot quite support.", "weight": 3 },
+          { "text": "The quest writing is the clearest evidence this team knows what they are doing.", "weight": 2 },
+          { "text": "{feature_name} occasionally lands a gut punch you were not expecting from this kind of game.", "weight": 2 },
+          { "text": "Narrative ambition exceeds technical execution, but the ambition is real.", "weight": 1 }
+        ],
+        "lore": [
+          { "text": "The world-building in {feature_name} rewards players who dig beneath the surface bugs.", "weight": 2 },
+          { "text": "There is a coherent fictional world here that we respect despite the state of the menus.", "weight": 2 },
+          { "text": "{feature_name} suggests a studio that cares deeply about the universe they are building.", "weight": 2 }
+        ],
+        "ui": [
+          { "text": "{feature_name} was likely deprioritised in crunch; it shows, and it matters.", "weight": 3 },
+          { "text": "Interface legibility suffers throughout, though {feature_name} is a particular low point.", "weight": 2 },
+          { "text": "A future UI pass would meaningfully improve the perceived quality of the whole package.", "weight": 2 }
+        ],
+        "inventory": [
+          { "text": "{feature_name} is simultaneously the game's most original moment and its most frustrating.", "weight": 3 },
+          { "text": "Item management through {feature_name} is the kind of mechanic that becomes a personality trait in its players.", "weight": 2 },
+          { "text": "The inventory system is either a design statement or a scheduling casualty; possibly both.", "weight": 1 }
+        ],
+        "weather": [
+          { "text": "{feature_name} is the game's most visually confident work and also the source of several crashes.", "weight": 2 },
+          { "text": "The environmental systems show real artistic ambition; the frame rate did not receive the memo.", "weight": 2 },
+          { "text": "{feature_name} creates atmosphere at the cost of stability, which feels on-brand.", "weight": 1 }
+        ],
+        "animation": [
+          { "text": "{feature_name} is the most technically controversial addition to the game.", "weight": 2 },
+          { "text": "Character movement through {feature_name} will polarise players directly down quality-tolerance lines.", "weight": 2 },
+          { "text": "Animation work is visible, ambition is clear, inconsistency is relentless.", "weight": 1 }
+        ],
+        "multiplayer": [
+          { "text": "{feature_name} functions under optimal conditions that may not apply to you specifically.", "weight": 3 },
+          { "text": "The online systems introduced by {feature_name} add chaos in ways the game did not need but somehow suits.", "weight": 2 },
+          { "text": "Cooperative play through {feature_name} is either brilliant or broken depending on server luck.", "weight": 1 }
+        ],
+        "crafting": [
+          { "text": "The crafting depth in {feature_name} is surprisingly robust, if you can navigate the interface.", "weight": 2 },
+          { "text": "{feature_name} creates emergent builds that suggest hidden design elegance.", "weight": 2 },
+          { "text": "System depth through {feature_name} exceeds what the UI can reasonably communicate.", "weight": 1 }
+        ],
+        "dialogue": [
+          { "text": "{feature_name} demonstrates writing quality that makes other technical shortcomings feel forgivable.", "weight": 3 },
+          { "text": "Character moments in {feature_name} justify a substantial playthrough despite their context.", "weight": 2 },
+          { "text": "The studio's voice is clearest in {feature_name}; either they know exactly what they are doing or are having fun with disaster.", "weight": 1 }
+        ],
+        "romance": [
+          { "text": "Relationship building in {feature_name} achieves genuine emotional resonance despite the janky framing.", "weight": 3 },
+          { "text": "{feature_name} creates attachment through writing quality that rises above its presentation.", "weight": 2 },
+          { "text": "The ambition in {feature_name}'s narrative branching reveals design discipline elsewhere abandoned.", "weight": 1 }
+        ],
+        "world": [
+          { "text": "{feature_name} conveys a lived-in world through architecture and detail despite technical compromises.", "weight": 2 },
+          { "text": "Environmental storytelling in {feature_name} carries narrative weight the dialogue interface cannot.", "weight": 2 },
+          { "text": "The world-building through {feature_name} is the game's strongest artistic statement.", "weight": 1 }
+        ],
+        "progression": [
+          { "text": "{feature_name} creates a meaningful progression loop that suggests intentional design underneath superficial chaos.", "weight": 2 },
+          { "text": "Player advancement through {feature_name} communicates studio vision even as execution stumbles.", "weight": 2 },
+          { "text": "The meta-game of {{feature_name}} reveals depth that single playthroughs obscure.", "weight": 1 }
+        ],
+        "modding": [
+          { "text": "The {{feature_name}} SDK suggests developers who understand community desire for creative control.", "weight": 2 },
+          { "text": "Mod support through {{feature_name}} indicates confidence in foundational systems despite rough execution.", "weight": 2 },
+          { "text": "The {{feature_name}} tools are clearly designed for player expression within reasonable limits.", "weight": 1 }
+        ],
+        "camera": [
+          { "text": "{{feature_name}} grants visual clarity that makes the technical accomplishment more apparent.", "weight": 2 },
+          { "text": "Creative freedom through {{feature_name}} reveals environmental detail that justifies demanding hardware.", "weight": 2 },
+          { "text": "Image quality from {{feature_name}} suggests this studio understands visual composition.", "weight": 1 }
+        ],
+        "audio": [
+          { "text": "The audio design in {{feature_name}} is ambitious and occasionally succeeds despite stability compromises.", "weight": 2 },
+          { "text": "{{feature_name}} creates moments of genuine atmospheric power through sound work.", "weight": 2 },
+          { "text": "The music system in {{feature_name}} demonstrates composition skill across shifting technical terrain.", "weight": 1 }
+        ]
+      }
+    },
+    "fan_forum": {
+      "author": "HorseQuestFanForum user #8841",
+      "score": 94,
+      "openers": [
+        { "text": "Official thread: Horse bug appreciation station", "weight": 5 },
+        { "text": "I made a wiki just for the sideways gallop", "weight": 2 },
+        { "text": "Been refreshing the patch notes hoping they do NOT fix it", "weight": 3 },
+        { "text": "Posted the clip. It has 400k views. The developers have not responded. Good.", "weight": 2 },
+        { "text": "This is the game of the generation and I will not elaborate", "weight": 2 },
+        { "text": "I called in sick to document every unintended mechanic", "weight": 2 },
+        { "text": "THREAD TITLE: comprehensive list of things I love that are technically broken", "weight": 1 },
+        { "text": "The devs don't know what they made. We do.", "weight": 2 },
+        { "text": "Annotated patch notes: which fixes would ruin the game", "weight": 1 }
+      ],
+      "closers": [
+        { "text": "Never patch the horse moonwalk. It is sacred.", "weight": 4 },
+        { "text": "This game understands me and also none of my hardware.", "weight": 2 },
+        { "text": "I have 800 hours and I have not finished the main quest once.", "weight": 3 },
+        { "text": "Whoever designed this either planned everything or nothing, and either way I am grateful.", "weight": 2 },
+        { "text": "The bugs are not bugs. They are features that arrived early.", "weight": 3 },
+        { "text": "A petition to rename every bug with a Latin binomial is in the works.", "weight": 1 },
+        { "text": "The next update can only disappoint me if it patches something.", "weight": 2 },
+        { "text": "Fourteen forum pages of chaos and this is still my top recommendation.", "weight": 1 },
+        { "text": "Mod tools when. We have plans.", "weight": 2 }
+      ],
+      "tag_callouts": {
+        "horses": [
+          { "text": "{feature_name} is literally the reason I still log in daily.", "weight": 5 },
+          { "text": "The horse clipping zone on the hill near the inn is a pilgrimage site now.", "weight": 3 },
+          { "text": "I trained for three weeks to reliably reproduce the {feature_name} launch glitch.", "weight": 2 },
+          { "text": "{feature_name} transcends the medium.", "weight": 2 },
+          { "text": "Proposed forum rule: no complaining about {feature_name}. It is working as intended. I have decided.", "weight": 1 }
+        ],
+        "combat": [
+          { "text": "{feature_name} has seventeen documented unintended interactions and I have found sixteen of them.", "weight": 3 },
+          { "text": "The dodge roll through {feature_name} activates dialogue trees. It should not. Do not patch it.", "weight": 2 },
+          { "text": "PvP community formed entirely around exploiting {feature_name}. We are thriving.", "weight": 2 },
+          { "text": "Someone used {feature_name} to solve a puzzle it was never near. Video in thread.", "weight": 1 }
+        ],
+        "physics": [
+          { "text": "The {feature_name} trebuchet exploit now has its own Discord.", "weight": 3 },
+          { "text": "Physics jank from {feature_name} is 40% of the content on this forum and I am okay with that.", "weight": 2 },
+          { "text": "My character clipped through the floor via {feature_name} and found a room with no ceiling. There was a cow.", "weight": 2 },
+          { "text": "{feature_name} interaction chains have more depth than most intended mechanics.", "weight": 1 }
+        ],
+        "quest": [
+          { "text": "I cried at the {feature_name} ending and then immediately reported a softlock in the same cutscene.", "weight": 3 },
+          { "text": "{feature_name} is better written than whatever game won the awards this year.", "weight": 2 },
+          { "text": "Theory thread: is the {feature_name} continuity error intentional lore or a bug. Please only serious replies.", "weight": 2 },
+          { "text": "The side quests in {feature_name} have more heart than any main campaign I have played.", "weight": 1 }
+        ],
+        "lore": [
+          { "text": "The {feature_name} codex entries make zero sense and I have written 80 pages of analysis.", "weight": 3 },
+          { "text": "Fan theory: everything in {feature_name} is a metaphor. Developing.", "weight": 2 },
+          { "text": "The lore is contradictory and we love it. It gives us something to argue about.", "weight": 2 }
+        ],
+        "ui": [
+          { "text": "The {feature_name} UI crashes my game every third time. I open it anyway out of loyalty.", "weight": 3 },
+          { "text": "Made a custom overlay for {feature_name} since the original is unreadable. Sharing in replies.", "weight": 2 },
+          { "text": "Game would be 20% worse if {feature_name} was polished. The jank is load-bearing.", "weight": 1 }
+        ],
+        "inventory": [
+          { "text": "{feature_name} is the most stressful fun I have had in a game in years.", "weight": 3 },
+          { "text": "I accidentally made soup armor in {feature_name} and it is now my primary build.", "weight": 3 },
+          { "text": "The {feature_name} exploit where you equip items during cutscenes gives you negative weight. I live there now.", "weight": 2 },
+          { "text": "Inventory challenge runs in this thread every weekend. Current record: 4 minutes 12 seconds.", "weight": 1 }
+        ],
+        "weather": [
+          { "text": "{feature_name} crashed my game during the best storm I have ever seen in a video game.", "weight": 3 },
+          { "text": "The rain in {feature_name} looks better than real rain. The physics do not agree.", "weight": 2 },
+          { "text": "Discovered that {feature_name} changes NPC dialogue. Nobody else noticed. I am the keeper now.", "weight": 1 }
+        ],
+        "animation": [
+          { "text": "The {feature_name} T-pose is not a bug, it is a victory pose, and I stand by this interpretation.", "weight": 3 },
+          { "text": "Motion in {feature_name} is either beautiful or haunted depending on frame rate. Both are valid.", "weight": 2 },
+          { "text": "The {feature_name} idle animation loops at 11 seconds into conversation. It is a tell. I use it.", "weight": 1 }
+        ],
+        "multiplayer": [
+          { "text": "Playing {feature_name} with strangers is the closest thing to church I have experienced.", "weight": 3 },
+          { "text": "The {feature_name} desync glitch is now a co-op challenge run category.", "weight": 2 },
+          { "text": "Host migration through {feature_name} duplicates items sometimes. We have a treaty about this.", "weight": 2 },
+          { "text": "Online through {feature_name} works on Tuesdays. We all log in on Tuesdays.", "weight": 1 }
+        ],
+        "crafting": [
+          { "text": "{feature_name} is honestly deeper than most 'systems' games and nobody talks about it.", "weight": 3 },
+          { "text": "discovered a {feature_name} loop that breaks the economy in just the right ways", "weight": 2 },
+          { "text": "theorycraft thread for {feature_name} optimization is now 200 pages. it is still growing.", "weight": 1 }
+        ],
+        "dialogue": [
+          { "text": "the dialogue in {feature_name} made me believe the studio suddenly got really good", "weight": 3 },
+          { "text": "{feature_name} voice acting deserves a studio that can actually support voice acting", "weight": 2 },
+          { "text": "there are entire conversations in {{feature_name}} that made me feel things i did not expect", "weight": 1 }
+        ],
+        "romance": [
+          { "text": "shipped {feature_name} as my power fantasy and nobody can convince me otherwise", "weight": 3 },
+          { "text": "started {{feature_name}} as a joke, it became genuinely meaningful, now i do not know what i believe", "weight": 2 },
+          { "text": "the {{feature_name}} writing quality suggests this team knows how to make people feel things", "weight": 1 }
+        ],
+        "world": [
+          { "text": "the architecture in {{feature_name}} alone is worth exploring every inch of map for", "weight": 3 },
+          { "text": "environmental design in {{feature_name}} tells a story the main quest forgot to tell", "weight": 2 },
+          { "text": "{{feature_name}} makes the world feel lived in despite the loading screens", "weight": 1 }
+        ],
+        "progression": [
+          { "text": "progression system {{feature_name}} is actually genius if you squint the right way", "weight": 2 },
+          { "text": "{{feature_name}} gates are frustrating but also drive community engagement accidentally", "weight": 2 },
+          { "text": "the meta of {{feature_name}} is unintentional but functional", "weight": 1 }
+        ],
+        "modding": [
+          { "text": "modding tools in {{feature_name}} let us finish what the studio started and i respect that", "weight": 3 },
+          { "text": "someone used {{feature_name}} SDK to add content the patch notes said was coming. we got it faster.", "weight": 2 },
+          { "text": "{{feature_name}} mod community is carrying the game into year three", "weight": 1 }
+        ],
+        "camera": [
+          { "text": "{{feature_name}} mode let me finally see all the detail work in this game", "weight": 3 },
+          { "text": "the pc gaming community immediately started making 4K screenshots with {{feature_name}}", "weight": 2 },
+          { "text": "{{feature_name}} proves the art department cares more than the crunch allows", "weight": 1 }
+        ],
+        "audio": [
+          { "text": "{{feature_name}} audio is either a bug or genius and we have decided: genius", "weight": 3 },
+          { "text": "players with good sound systems finally found {{feature_name}} and cannot stop talking about it", "weight": 2 },
+          { "text": "the {{feature_name}} soundtrack is loading in real time and it slaps anyway", "weight": 1 }
+        ]
+      }
+    },
+    "steam": {
+      "author": "steam_user_2000h",
+      "entries": [
+        { "text": "yes", "weight": 5 },
+        { "text": "horse", "weight": 2 },
+        { "text": "installed for joke; stayed for destiny", "weight": 1 },
+        { "text": "game good", "weight": 3 },
+        { "text": "refunded. re-bought. refunded. re-bought.", "weight": 2 },
+        { "text": "do not ask me to explain. just play.", "weight": 2 },
+        { "text": "gave this as a gift to six people. two are speaking to me.", "weight": 1 },
+        { "text": "the jank is plot", "weight": 2 },
+        { "text": "technically negative hours played somehow. still recommend.", "weight": 1 }
+      ],
+      "tag_callouts": {
+        "horses": [
+          { "text": "horse fell through ground. clapped.", "weight": 4 },
+          { "text": "{feature_name}: do not fix. ever.", "weight": 3 },
+          { "text": "went home from work early to see if horse still rotates in place. it does.", "weight": 2 },
+          { "text": "100% achievement in {feature_name}. somehow", "weight": 1 }
+        ],
+        "combat": [
+          { "text": "{feature_name} broke my sword and i kept going", "weight": 3 },
+          { "text": "died 40 times. not a complaint.", "weight": 2 },
+          { "text": "{feature_name} punishes button mashing by glitching instead of fighting back", "weight": 1 }
+        ],
+        "physics": [
+          { "text": "physics are wrong in a way that is right", "weight": 3 },
+          { "text": "{feature_name} launched my character into the skybox. screenshot in profile.", "weight": 2 },
+          { "text": "gravity optional", "weight": 2 }
+        ],
+        "quest": [
+          { "text": "cried at {feature_name}. not elaborating.", "weight": 3 },
+          { "text": "quest broke. found alternate ending. better.", "weight": 2 },
+          { "text": "{feature_name} has more soul than me", "weight": 1 }
+        ],
+        "lore": [
+          { "text": "read every codex entry. regret nothing.", "weight": 2 },
+          { "text": "{feature_name} lore makes no sense. perfect.", "weight": 2 },
+          { "text": "the world is made of vibes and contradictions. relatable.", "weight": 1 }
+        ],
+        "ui": [
+          { "text": "{feature_name} ui unreadable. found a rhythm.", "weight": 2 },
+          { "text": "lost 3 hours to a menu i could not close. no complaints.", "weight": 1 }
+        ],
+        "inventory": [
+          { "text": "soup is armor now. this is fine.", "weight": 3 },
+          { "text": "{feature_name}: the hardest puzzle in the game", "weight": 2 },
+          { "text": "my bag is full of regret and also hats", "weight": 1 }
+        ],
+        "weather": [
+          { "text": "it rained and three npcs flew off the map. 10/10.", "weight": 3 },
+          { "text": "{feature_name} is the best and worst thing in this game simultaneously", "weight": 2 }
+        ],
+        "animation": [
+          { "text": "the walk cycle is wrong. i have memorised it. it is mine now.", "weight": 3 },
+          { "text": "{feature_name} t-posed and i screenshotted it first", "weight": 2 }
+        ],
+        "multiplayer": [
+          { "text": "played co-op with stranger. we did not speak. we did not need to.", "weight": 3 },
+          { "text": "{feature_name} desynced and i got two horses. kept both.", "weight": 2 },
+          { "text": "the online works on tuesdays. still recommend.", "weight": 1 }
+        ],
+        "crafting": [
+          { "text": "{feature_name} broke my brain in four dimensions. optimal", "weight": 3 },
+          { "text": "found a {{feature_name}} combo that makes the game easier. now i do not use anything else", "weight": 2 },
+          { "text": "{{feature_name}} depth is unhinged. i love it", "weight": 1 }
+        ],
+        "dialogue": [
+          { "text": "{{feature_name}} made me care about npcs despite all odds", "weight": 3 },
+          { "text": "the writing in {{feature_name}} survived the jank. respect", "weight": 2 },
+          { "text": "{{feature_name}} cut me. deeply. somehow worth it", "weight": 1 }
+        ],
+        "romance": [
+          { "text": "i did not expect {{feature_name}} to make me feel. mistakes were made", "weight": 3 },
+          { "text": "{{feature_name}} romance storylines hit harder than intended", "weight": 2 },
+          { "text": "{{feature_name}} taught me something about myself. uncomfortable. recommend", "weight": 1 }
+        ],
+        "world": [
+          { "text": "{{feature_name}} world design is actually incredible when you look. we looked", "weight": 3 },
+          { "text": "every corner of {{feature_name}} has story in the walls", "weight": 2 },
+          { "text": "the world in {{feature_name}} is the best part of this game", "weight": 1 }
+        ],
+        "progression": [
+          { "text": "{{feature_name}} progression grinds but somehow it hit different", "weight": 2 },
+          { "text": "{{feature_name}} leveling is a vibe actually", "weight": 2 },
+          { "text": "{{feature_name}} meta slaps", "weight": 1 }
+        ],
+        "modding": [
+          { "text": "modded {{feature_name}}. game is now actually good. thanks community", "weight": 3 },
+          { "text": "{{feature_name}} SDK enabled chaos. 10/10", "weight": 2 },
+          { "text": "{{feature_name}} mods are carrying this on their backs into next year", "weight": 1 }
+        ],
+        "camera": [
+          { "text": "{{feature_name}} photo mode better than actual game sometimes. but also the game", "weight": 3 },
+          { "text": "{{feature_name}} made screenshots my main hobby now", "weight": 2 },
+          { "text": "the art in {{feature_name}} deserves this camera", "weight": 1 }
+        ],
+        "audio": [
+          { "text": "{{feature_name}} audio is cursed and perfect", "weight": 3 },
+          { "text": "turned up my sound just for {{feature_name}}. was not disappointed", "weight": 2 },
+          { "text": "{{feature_name}} soundtrack somehow? slaps", "weight": 1 }
+        ]
+      }
+    },
+    "indie_blog": {
+      "author": "Indie Orbit",
+      "openers": [
+        { "text": "Somewhere between disaster and design lies brilliance", "weight": 2 },
+        { "text": "A game that dares to be unfinished in all the right places", "weight": 1 },
+        { "text": "Games this honest about their own limitations are increasingly rare", "weight": 2 },
+        { "text": "A portfolio of half-kept promises that somehow cohere into a vision", "weight": 1 },
+        { "text": "You can feel the exhaustion baked into every texture", "weight": 2 },
+        { "text": "This is what happens when ambition outruns budget and somehow wins", "weight": 2 },
+        { "text": "The gap between intention and execution here is a feature, not a flaw", "weight": 1 },
+        { "text": "If you squint past the roughness, there is a singular creative statement waiting", "weight": 2 },
+        { "text": "Games made under pressure carry a specific kind of sincerity, and this one has it", "weight": 3 }
+      ],
+      "closers": [
+        { "text": "It feels handmade, unstable, and weirdly honest.", "weight": 3 },
+        { "text": "You can see the seams, and that is why it works.", "weight": 2 },
+        { "text": "The jank is not incidental to the experience; it is the experience.", "weight": 2 },
+        { "text": "We keep returning to it, which is the only metric that matters.", "weight": 2 },
+        { "text": "A game that will be remembered because it could not afford to be forgotten.", "weight": 1 },
+        { "text": "It earns its roughness by meaning everything it says.", "weight": 2 },
+        { "text": "The studio made something unrepeatable. Whether intentionally is beside the point.", "weight": 1 },
+        { "text": "More studios should fail this courageously.", "weight": 2 },
+        { "text": "Whatever it was trying to be, it became something better.", "weight": 1 }
+      ],
+      "tag_callouts": {
+        "horses": [
+          { "text": "{feature_name} is the accidental thesis statement of the entire game.", "weight": 3 },
+          { "text": "No horse simulation in a AAA title has generated this much discourse.", "weight": 2 },
+          { "text": "{feature_name} gestures at something the studio may not have known they were saying about expectations.", "weight": 1 }
+        ],
+        "combat": [
+          { "text": "{feature_name} communicates a philosophy of struggle even when it fails technically.", "weight": 3 },
+          { "text": "The combat in {feature_name} is adversarial in ways that feel almost autobiographical for a crunch-shipped game.", "weight": 2 },
+          { "text": "There is meaning in the friction of {feature_name} even when that friction is unintentional.", "weight": 1 }
+        ],
+        "physics": [
+          { "text": "{feature_name} turns a technical limitation into a recurring act of absurdist poetry.", "weight": 3 },
+          { "text": "Every physics breakdown in {feature_name} reads like a collaboration between developer and engine.", "weight": 2 },
+          { "text": "The simulation in {feature_name} fails so consistently it begins to feel deliberate.", "weight": 1 }
+        ],
+        "quest": [
+          { "text": "{feature_name} contains the game's most honest writing and its most broken triggers. They coexist naturally.", "weight": 3 },
+          { "text": "The narrative ambition of {feature_name} is the part of this game that actually shipped complete.", "weight": 2 },
+          { "text": "Player-reported story variants from {feature_name} bugs suggest an accidental anthology.", "weight": 1 }
+        ],
+        "lore": [
+          { "text": "{feature_name} builds a world the player wants to live in, despite the load times.", "weight": 2 },
+          { "text": "The lore architecture in {feature_name} deserves more stability than the engine currently affords it.", "weight": 2 },
+          { "text": "World-building in {feature_name} is the quiet achievement this game will eventually be credited for.", "weight": 1 }
+        ],
+        "ui": [
+          { "text": "{feature_name} is perhaps the most telling sign of a project that ran out of runway before it ran out of ideas.", "weight": 2 },
+          { "text": "The interface in {feature_name} communicates a deeply human development story to anyone paying attention.", "weight": 2 },
+          { "text": "There is a version of {feature_name} somewhere in the design docs that is elegant. We would like to see it.", "weight": 1 }
+        ],
+        "inventory": [
+          { "text": "{feature_name} is either the bravest design decision of the year or the most accidental.", "weight": 3 },
+          { "text": "The logic of {feature_name} rewards players who treat games as systems to be inhabited rather than completed.", "weight": 2 },
+          { "text": "There is genuine spatial poetry in {feature_name}, if you are the sort of person who uses that phrase without irony.", "weight": 1 }
+        ],
+        "weather": [
+          { "text": "{feature_name} is the most cinematically ambitious system in the game and the most technically overextended.", "weight": 2 },
+          { "text": "The environmental design in {feature_name} suggests a studio with a strong artistic identity and a weak GPU budget.", "weight": 2 },
+          { "text": "{feature_name} contributes to a sense of place that survives even when the sky catches fire.", "weight": 1 }
+        ],
+        "animation": [
+          { "text": "{feature_name} is both the game's most visible ambition and its most uncomfortable confession.", "weight": 2 },
+          { "text": "The character work in {feature_name} wants to be expressive and nearly gets there in half the frames.", "weight": 2 },
+          { "text": "There is a theory that {feature_name} was an artistic statement. We are not dismissing it.", "weight": 1 }
+        ],
+        "multiplayer": [
+          { "text": "{feature_name} turns an unstable connection into a shared mythology.", "weight": 3 },
+          { "text": "Online play through {feature_name} redefines what failure looks like when everyone fails together.", "weight": 2 },
+          { "text": "The ambition of {feature_name} as a social space is real even when the netcode makes that space uninhabitable.", "weight": 1 }
+        ],
+        "crafting": [
+          { "text": "{feature_name} is the game's hidden depth; every system can be broken in six directions.", "weight": 3 },
+          { "text": "Player-discovered {feature_name} exploits have more pages of documentation than the official guide.", "weight": 2 },
+          { "text": "The economy built by {feature_name} is a beautiful disaster.", "weight": 2 },
+          { "text": "{feature_name} rewards experimentation even when experimentation creates softlocks.", "weight": 1 }
+        ],
+        "dialogue": [
+          { "text": "{feature_name} contains moments of genuine narrative power buried in text windows that won't close.", "weight": 3 },
+          { "text": "The character voice in {feature_name} is the clearest evidence of internal studio culture visible in the text.", "weight": 2 },
+          { "text": "{feature_name} is where the studio reveals what they actually think under deadline pressure.", "weight": 1 }
+        ],
+        "romance": [
+          { "text": "{feature_name} charts emotional territory the rest of the game is too unstable to explore.", "weight": 3 },
+          { "text": "There are genuinely touching moments in {feature_name} undercut by pointer-out-of-bounds errors.", "weight": 2 },
+          { "text": "The {feature_name} branching is more complex than some games' entire narrative structure.", "weight": 1 }
+        ],
+        "world": [
+          { "text": "{feature_name} successfully conveys a sense of place despite persistent pop-in artifacts.", "weight": 3 },
+          { "text": "The architectural work in {feature_name} is detailed enough to distract from the frame rate.", "weight": 2 },
+          { "text": "Visual storytelling through {feature_name} carries the narrative when the dialogue fails to load.", "weight": 1 }
+        ],
+        "progression": [
+          { "text": "{feature_name} gates content through systems the writers and coders clearly disagreed about.", "weight": 3 },
+          { "text": "Player progression through {{feature_name}} is gated by stability thresholds that vary by hardware.", "weight": 2 },
+          { "text": "The meta-game of {feature_name} is partially unintentional and better for it.", "weight": 1 }
+        ],
+        "modding": [
+          { "text": "The modding potential unlocked by {feature_name} suggests the studio knows what we want better than they delivered it.", "weight": 3 },
+          { "text": "{feature_name} immediately spawned framework mods; the community is already finishing the game.", "weight": 2 },
+          { "text": "The {feature_name} tools are rudimentary but sufficient for magic.", "weight": 1 }
+        ],
+        "camera": [
+          { "text": "{feature_name} lets you see every beautiful mistake in exacting detail.", "weight": 3 },
+          { "text": "The frame-rate cost of {feature_name} is steep but we get some gorgeous screenshots out of it.", "weight": 2 },
+          { "text": "{feature_name} occasionally clips the camera through the world in artistically interesting ways.", "weight": 1 }
+        ],
+        "audio": [
+          { "text": "The {{feature_name}} system creates emergent soundscapes that feel almost intentional.", "weight": 3 },
+          { "text": "Audio layering in {feature_name} occasionally forms melodic chains that should not be possible.", "weight": 2 },
+          { "text": "{feature_name} is what happens when ambient generation meets creative ambition.", "weight": 1 }
+        ]
+      }
+    }
+  }
+}

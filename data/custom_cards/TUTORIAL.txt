@@ -1,0 +1,302 @@
+TUTORIAL: How to Make a Custom Card
+=====================================
+
+Open this in Notepad (Windows), TextEdit (Mac), or any plain text editor.
+Work through the steps in order. It takes about 5 minutes.
+
+Mac users: before editing any file, open TextEdit then go to
+           Format -> Make Plain Text. This is required.
+
+
+------------------------------------------------------------------------
+STEP 1 -- Copy the template
+------------------------------------------------------------------------
+
+  1. Find card_template.tres in this folder.
+  2. Right-click it -> Copy.
+  3. Right-click an empty area in the same folder -> Paste.
+     A copy appears, probably called "card_template - Copy.tres".
+  4. Right-click the copy -> Rename.
+     Give it a short descriptive name for your card idea.
+
+     Good filename examples:
+       underwater_marketplace.tres
+       laser_chicken_companion.tres
+       fake_achievements_system.tres
+       dating_sim_mode.tres
+
+  Rules for the filename:
+    - Use only letters, numbers, hyphens ( - ), and underscores ( _ )
+    - No spaces
+    - Must end in .tres
+    - Must NOT contain the word "template"
+      (the game automatically skips any file with "template" in the name)
+
+
+------------------------------------------------------------------------
+STEP 2 -- Open your file for editing
+------------------------------------------------------------------------
+
+  1. Right-click your renamed .tres file.
+  2. Click "Open with" -> choose Notepad.
+       If Notepad is not listed: click "Choose another app" and find it.
+       On Mac: "Open With" -> TextEdit (then Format -> Make Plain Text).
+
+  You will see exactly this:
+
+    [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+    [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
+
+    [resource]
+    script = ExtResource("1_featurecard")
+    feature_name = "Your Card Name Here"
+    ambition_value = 3
+    instability_value = 3
+    tags = PackedStringArray("ui")
+    interactions = {
+    "ui": 1
+    }
+
+  If your file looks different (coloured text, different fonts, etc.),
+  you opened it with a rich text editor by mistake. Close without saving
+  and try again with Notepad / plain-text TextEdit.
+
+
+------------------------------------------------------------------------
+STEP 3 -- What NOT to touch
+------------------------------------------------------------------------
+
+  These lines must stay exactly as they are. Do not change them:
+
+    Line 1:  [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+    Line 2:  (blank)
+    Line 3:  [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
+    Line 4:  (blank)
+    Line 5:  [resource]
+    Line 6:  script = ExtResource("1_featurecard")
+
+  These are required by the game engine. Changing any of them will
+  prevent your card from loading.
+
+  You are only editing the lines BELOW line 6.
+
+
+------------------------------------------------------------------------
+STEP 4 -- Fill in your card
+------------------------------------------------------------------------
+
+  == feature_name ==
+
+    feature_name = "Your Card Name Here"
+
+    Replace the text between the quotes with your card's in-game name.
+    This is exactly what the player will see on the card.
+
+    Examples:
+      feature_name = "Procedural Prophecy System"
+      feature_name = "Day-Night Goat Companion"
+      feature_name = "Aggressive Matchmaking Redesign"
+      feature_name = "Horse That Reviews Your Stats"
+
+    !! Keep the quotation marks. Do not leave this blank.
+
+
+  == ambition_value ==
+
+    ambition_value = 3
+
+    Replace 3 with a number from 1 to 10.
+    This is how much bold scope and ambition the feature adds.
+    Think: how impressive does this sound in a press release?
+
+      1 - 2   Small quality-of-life (minor tweak, tiny polish)
+      3 - 4   Real feature (a new system, a notable mechanic)
+      5 - 6   Big bet (flagship content, major scope increase)
+      7 - 8   Madness (technically a separate game inside the game)
+      9 - 10  Hubris (the kind of feature that sinks studios)
+
+    Example:
+      ambition_value = 6
+
+
+  == instability_value ==
+
+    instability_value = 3
+
+    Replace 3 with a number from 1 to 10.
+    This is how much chaos, jank, and technical risk the feature brings.
+    Think: how likely is this to break everything else?
+
+      1 - 2   Probably fine (familiar territory, well-understood tech)
+      3 - 4   Some risk (interacts with other systems, edge cases expected)
+      5 - 6   Volatile (known to cause problems, ambitious tech)
+      7 - 8   Actively dangerous (notorious for cascading bugs)
+      9 - 10  Total chaos (should not be in a shipping product)
+
+    Example:
+      instability_value = 5
+
+
+  == tags ==
+
+    tags = PackedStringArray("ui")
+
+    Tags say what TYPE of feature this card is. The game uses them to
+    decide which cards interact with each other on the board.
+
+    One tag:
+      tags = PackedStringArray("combat")
+
+    Two tags:
+      tags = PackedStringArray("combat", "horses")
+
+    Three tags:
+      tags = PackedStringArray("combat", "horses", "physics")
+
+    !! At least one tag is required. The game will skip your card
+       if this is empty.
+
+    !! Use exactly the spelling shown below (all lowercase):
+
+      animation   character movement, procedural rigs, cutscenes
+      audio       music, sound effects, dynamic audio systems
+      camera      photo mode, cinematic tools, camera behaviour
+      combat      fighting, weapons, damage systems
+      crafting    item creation, economy, resource management
+      dialogue    conversation systems, branching dialogue, writing tools
+      horses      equestrian content, mounted mechanics (its own category)
+      inventory   item management, storage, grid systems
+      lore        world-building, codex, backstory systems
+      modding     mod support, SDK, community tools
+      multiplayer co-op, PvP, online features
+      physics     simulation, ragdolls, destructibles
+      progression level systems, unlocks, meta progression
+      quest       mission design, objectives, narrative structure
+      romance     relationship mechanics, companion systems
+      ui          menus, HUD, interface design
+      weather     environmental systems, climate, day/night cycle
+      world       open world, exploration, map design
+
+    You can invent your own tag if none of these fit. Your card will
+    load fine -- it just won't trigger existing interaction rules.
+
+
+  == interactions ==
+
+    interactions = {
+    "ui": 1
+    }
+
+    OPTIONAL. An extra modifier applied to instability when this card
+    is on the board at the same time as another card sharing the tag.
+
+    Positive (+)  the combination adds more instability
+    Negative (-)  the combination is stabilising
+
+    Examples:
+
+      No modifier at all (empty is valid):
+        interactions = {
+        }
+
+      More unstable next to combat, calmed by ui:
+        interactions = {
+        "combat": 2,
+        "ui": -1
+        }
+
+      Pure chaos near horses:
+        interactions = {
+        "horses": 3
+        }
+
+    !! Formatting rules:
+       - Each entry reads:  "tagname": number
+       - Put a comma after every entry EXCEPT the last one
+       - The closing } must be on its own line
+       - Tag names must be lowercase and inside double quotes
+
+
+------------------------------------------------------------------------
+STEP 5 -- Save
+------------------------------------------------------------------------
+
+  Press Ctrl+S  (or File -> Save).
+
+  !! Check that the file is still named yourfilename.tres
+     If you opened the file by right-clicking -> "Open with -> Notepad",
+     Save will keep the .tres extension correctly.
+
+     If Notepad accidentally added .txt to the end:
+       1. Close Notepad.
+       2. In File Explorer, right-click the file -> Rename.
+       3. Delete the .txt from the end of the name.
+       4. Press Enter and confirm if Windows asks.
+
+
+------------------------------------------------------------------------
+STEP 6 -- Check your work
+------------------------------------------------------------------------
+
+  Open example_photo_mode_challenge.tres next to your file in Notepad.
+  The structure should look identical -- only the values should differ.
+
+  A finished card looks like this (your values will be different):
+
+    [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+    [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
+
+    [resource]
+    script = ExtResource("1_featurecard")
+    feature_name = "Underwater Blacksmith NPC"
+    ambition_value = 6
+    instability_value = 4
+    tags = PackedStringArray("quest", "world")
+    interactions = {
+    "quest": 1,
+    "combat": -1
+    }
+
+
+------------------------------------------------------------------------
+STEP 7 -- Submit
+------------------------------------------------------------------------
+
+  Send your .tres file to the developer.
+  Do not rename it before sending.
+  To make multiple cards: repeat from Step 1 for each one.
+
+
+------------------------------------------------------------------------
+TROUBLESHOOTING
+------------------------------------------------------------------------
+
+  My card is not showing up in the game:
+    - Does the filename contain "template"? Rename it without that word.
+    - Is feature_name empty? Add a name.
+    - Did you forget at least one tag?
+    - Did you accidentally change one of the first 6 lines?
+    Compare your file character-by-character with the example file.
+
+  My file looks strange in Notepad (fonts, colours, bullet points):
+    - You opened it with a rich text editor. Close WITHOUT saving.
+    - Start over from the template. Use Notepad / plain TextEdit only.
+
+  I accidentally edited card_template.tres:
+    - The game never loads that file, so it does not break anything.
+    - To restore it: the original content is shown above in Step 2.
+    - Paste it back in and save.
+
+  Notepad added .txt to my filename:
+    - See Step 5 above for how to fix this in File Explorer.
+
+  Strange symbols or file looks corrupted:
+    - Make sure Notepad saves as UTF-8.
+    - File -> Save As -> set Encoding dropdown to "UTF-8" -> Save.
+
+  I want to make more than one card:
+    - Repeat Steps 1-7 for each card.
+    - Each card needs its own .tres file with a unique filename.
+    - Each card needs a unique feature_name.

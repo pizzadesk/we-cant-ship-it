@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/placed_feature_tile.gd" id="1_11lwg"]
+
+[node name="PlacedFeatureTile" type="PanelContainer"]
+custom_minimum_size = Vector2(180, 86)
+script = ExtResource("1_11lwg")
+
+[node name="Padding" type="MarginContainer" parent="."]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="Padding"]
+theme_override_constants/separation = 4
+
+[node name="NameLabel" type="Label" parent="Padding/VBox"]
+text = "Placed Feature"
+custom_minimum_size = Vector2(0, 20)
+autowrap_mode = 3
+
+[node name="StatsLabel" type="Label" parent="Padding/VBox"]
+text = "AMB +0 | INST +0"
+
+[node name="TagsLabel" type="Label" parent="Padding/VBox"]
+text = "tags"
+custom_minimum_size = Vector2(0, 20)
+autowrap_mode = 3

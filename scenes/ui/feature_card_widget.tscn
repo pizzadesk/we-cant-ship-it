@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/feature_card_widget.gd" id="1_o5w1l"]
+
+[node name="FeatureCardWidget" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 118)
+size_flags_horizontal = 3
+script = ExtResource("1_o5w1l")
+
+[node name="Padding" type="MarginContainer" parent="."]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="Padding"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="NameLabel" type="Label" parent="Padding/VBox"]
+text = "Feature"
+custom_minimum_size = Vector2(0, 20)
+autowrap_mode = 3
+
+[node name="StatsLabel" type="Label" parent="Padding/VBox"]
+text = "Ambition +0 | Instability +0"
+
+[node name="TagsLabel" type="Label" parent="Padding/VBox"]
+text = "Tags"
+custom_minimum_size = Vector2(0, 20)
+autowrap_mode = 3

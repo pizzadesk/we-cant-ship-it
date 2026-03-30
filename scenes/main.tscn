@@ -1,0 +1,605 @@
+[gd_scene format=3 uid="uid://bij11f254hy8p"]
+
+[ext_resource type="Script" uid="uid://buxqbfarphxx8" path="res://scripts/main.gd" id="1_kf4jn"]
+[ext_resource type="Script" uid="uid://cw7q3moexv7o0" path="res://scripts/ui/feature_board.gd" id="2_1qn7e"]
+[ext_resource type="Script" uid="uid://d0fxywkgoojs6" path="res://scripts/ui/backlog_drop_zone.gd" id="3_5ga7v"]
+
+[sub_resource type="StyleBoxFlat" id="BoardBaseStyle"]
+bg_color = Color(0.08, 0.09, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.52, 0.68, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="BoardHighlightStyle"]
+bg_color = Color(0.11, 0.11, 0.16, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.56, 0.24, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+shadow_size = 14
+shadow_color = Color(1, 0.25, 0.18, 0.45)
+
+[node name="Main" type="Control" unique_id=510743200]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kf4jn")
+
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=95501612]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Shell" type="VBoxContainer" parent="RootMargin" unique_id=1090864395]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="HeaderPanel" type="PanelContainer" parent="RootMargin/Shell" unique_id=1578646832]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HeaderPadding" type="MarginContainer" parent="RootMargin/Shell/HeaderPanel" unique_id=1537304065]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="HeaderVBox" type="VBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPadding" unique_id=1840315852]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="HeaderTitle" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPadding/HeaderVBox" unique_id=567421043]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "WE CAN't SHIP IT"
+
+[node name="HeaderSubtitle" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPadding/HeaderVBox" unique_id=1788189231]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "You must to assemble ambitious disaster, manage fallout, and ship before money is evaporating completely."
+autowrap_mode = 3
+
+[node name="Body" type="HSplitContainer" parent="RootMargin/Shell" unique_id=1880076598]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offsets = PackedInt32Array(290)
+split_offset = 290
+
+[node name="LeftColumn" type="PanelContainer" parent="RootMargin/Shell/Body" unique_id=1176109674]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftPadding" type="MarginContainer" parent="RootMargin/Shell/Body/LeftColumn" unique_id=2114483121]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LeftVBox" type="VBoxContainer" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding" unique_id=2122058689]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="BacklogTitle" type="Label" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox" unique_id=487986984]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Here Is Chaos"
+
+[node name="BacklogHelp" type="Label" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox" unique_id=1306357010]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Drag feature cards into your build. Ambition higher, this is impressing people. Instability higher, this is impressing bugs more."
+autowrap_mode = 3
+
+[node name="CardScroll" type="ScrollContainer" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox" unique_id=436893366]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("3_5ga7v")
+
+[node name="CardList" type="VBoxContainer" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox/CardScroll" unique_id=1258609703]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BacklogFooter" type="Label" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox" unique_id=1658689947]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Important: risky tags, they are colliding always in spectacular ways."
+autowrap_mode = 3
+
+[node name="RightColumn" type="VBoxContainer" parent="RootMargin/Shell/Body" unique_id=1483489752]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="StatsPanel" type="PanelContainer" parent="RootMargin/Shell/Body/RightColumn" unique_id=154607478]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="StatsPadding" type="MarginContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel" unique_id=1353877784]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="StatsVBox" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding" unique_id=1774040588]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StatsTitle" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=648384309]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Studio Under Pressure"
+
+[node name="StatsHelp" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1383298499]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "You must to ship before runway is hitting zero. Ambition, this is selling dream. Instability, this is making legendary."
+autowrap_mode = 3
+
+[node name="StatGuide" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1477773321]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.9, 0.94, 1)
+theme_override_font_sizes/font_size = 14
+text = "Guide: Ambition boosts score. Instability creates jank but too much kills score and unlock quality. Soul turns weird bugs into fan love. Best outcomes come from controlled chaos, not total meltdown."
+autowrap_mode = 3
+
+[node name="IdentityValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1019906409]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Run Identity: Unformed"
+
+[node name="MetaValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1116139297]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Meta: Tier 0"
+
+[node name="StatsRow" type="HBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=191087163]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="AmbitionBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=583719299]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AmbitionLabel" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock" unique_id=112651071]
+layout_mode = 2
+text = "AMBITION"
+
+[node name="AmbitionValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock" unique_id=239846888]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Ambition: 0"
+
+[node name="InstabilityBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=174769472]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InstabilityLabel" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock" unique_id=1900947582]
+layout_mode = 2
+text = "INSTABILITY"
+
+[node name="InstabilityValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock" unique_id=389465147]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Instability: 0"
+
+[node name="RunwayBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=128585563]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RunwayLabel" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock" unique_id=1802323573]
+layout_mode = 2
+text = "RUNWAY"
+
+[node name="RunwayValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock" unique_id=1158915436]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Runway Days: 21"
+
+[node name="FeaturesBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=1826973748]
+layout_mode = 2
+
+[node name="FeaturesLabel" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock" unique_id=613448970]
+layout_mode = 2
+text = "SHIPPED"
+
+[node name="FeaturesValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock" unique_id=2069617158]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Features: 0"
+
+[node name="SoulBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=1777504767]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SoulLabel" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock" unique_id=1077724201]
+layout_mode = 2
+text = "SOUL"
+
+[node name="SoulValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock" unique_id=1849446013]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Soul: 10"
+
+[node name="FeatureBoard" type="PanelContainer" parent="RootMargin/Shell/Body/RightColumn" unique_id=3384402]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_1qn7e")
+base_style = SubResource("BoardBaseStyle")
+highlight_style = SubResource("BoardHighlightStyle")
+
+[node name="BoardPadding" type="MarginContainer" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard" unique_id=1425673372]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="BoardVBox" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding" unique_id=693510259]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BoardTitle" type="Label" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=361209283]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Your Disaster"
+
+[node name="BoardHelp" type="Label" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=2102759323]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Drag features here to assemble game. Tags overlapping, they are creating glorious side effects."
+autowrap_mode = 3
+
+[node name="BoardSeparator" type="HSeparator" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=176739966]
+layout_mode = 2
+
+[node name="BoardDropCue" type="Label" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=1704391669]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.705882, 0.333333, 1)
+theme_override_font_sizes/font_size = 21
+text = "HERE FEATURE DROPPING NOW"
+horizontal_alignment = 1
+
+[node name="BoardEmptyState" type="Label" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=1070202819]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "No features shipped yet, not one. Start by dragging one reckless idea from backlog."
+autowrap_mode = 3
+
+[node name="PlacedFeaturesScroll" type="ScrollContainer" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox" unique_id=194693405]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="PlacedFeaturesRow" type="HBoxContainer" parent="RootMargin/Shell/Body/RightColumn/FeatureBoard/BoardPadding/BoardVBox/PlacedFeaturesScroll" unique_id=180883302]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="LivePreviewSocket" type="PanelContainer" parent="RootMargin/Shell/Body/RightColumn" unique_id=1973045217]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="PreviewPadding" type="MarginContainer" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket" unique_id=1254700984]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PreviewVBox" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket/PreviewPadding" unique_id=1797214403]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PreviewTitle" type="Label" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket/PreviewPadding/PreviewVBox" unique_id=1563429681]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Live Preview (Reserved)"
+
+[node name="PreviewHelp" type="Label" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket/PreviewPadding/PreviewVBox" unique_id=1342255770]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Stage 1 socket only. No runtime logic yet."
+autowrap_mode = 3
+
+[node name="PreviewViewportContainer" type="SubViewportContainer" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket/PreviewPadding/PreviewVBox" unique_id=983470162]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="RootMargin/Shell/Body/RightColumn/LivePreviewSocket/PreviewPadding/PreviewVBox/PreviewViewportContainer" unique_id=1970564218]
+size = Vector2i(960, 540)
+transparent_bg = true
+render_target_update_mode = 0
+
+[node name="ActionPanel" type="PanelContainer" parent="RootMargin/Shell/Body/RightColumn" unique_id=258584038]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ActionPadding" type="MarginContainer" parent="RootMargin/Shell/Body/RightColumn/ActionPanel" unique_id=62339149]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ActionVBox" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding" unique_id=1453093540]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ActionTitle" type="Label" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=394241045]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "What We Can Do"
+
+[node name="ActionHelp" type="Label" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=741752190]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Buy stability with bug fixing, earn soul with dev logs, or you can ship in any moment and face reviews."
+autowrap_mode = 3
+
+[node name="FixBugsButton" type="Button" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=135072289]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Fix These Bugs"
+
+[node name="FixBugsHint" type="Label" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=1022916977]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Reduce instability, lose little soul, spend one day."
+autowrap_mode = 3
+
+[node name="DevLogButton" type="Button" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=1281533949]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Create Community Notes"
+
+[node name="DevLogHint" type="Label" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=1634110564]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Raise soul, invite little instability, spend one day, and feed the fan myth machine."
+autowrap_mode = 3
+
+[node name="ShipButton" type="Button" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=1110831133]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Ship It"
+
+[node name="ShipHint" type="Label" parent="RootMargin/Shell/Body/RightColumn/ActionPanel/ActionPadding/ActionVBox" unique_id=1785824651]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "End run now and trigger Review Roulette — is moment of truth."
+autowrap_mode = 3
+
+[node name="CrunchTimer" type="Timer" parent="." unique_id=1987069347]
+unique_name_in_owner = true
+wait_time = 8.0
+autostart = false
+
+[node name="ReviewDialog" type="AcceptDialog" parent="." unique_id=2067700570]
+unique_name_in_owner = true
+title = "Review Roulette / Judgment"
+initial_position = 1
+ok_button_text = "Close"
+
+[node name="EndRunDialog" type="ConfirmationDialog" parent="." unique_id=618902901]
+unique_name_in_owner = true
+title = "Run Is Complete"
+initial_position = 1
+ok_button_text = "New Run"
+dialog_text = "Start a new run?"
+cancel_button_text = "Main Menu"
+
+[node name="DilemmaDialog" type="ConfirmationDialog" parent="." unique_id=511329712]
+unique_name_in_owner = true
+title = "Big Problem For Studio"
+initial_position = 1
+ok_button_text = "Choice A"
+dialog_text = "A dilemma appears."
+cancel_button_text = "Choice B"
+
+[node name="DraftDialog" type="ConfirmationDialog" parent="." unique_id=387466824]
+unique_name_in_owner = true
+title = "Feature Direction / Choose Path"
+initial_position = 1
+ok_button_text = "Pick A"
+dialog_text = "Pick a direction for this run."
+cancel_button_text = "Pick B"
+
+[node name="PublisherDialog" type="ConfirmationDialog" parent="." unique_id=664451133]
+unique_name_in_owner = true
+title = "Publisher Meeting"
+initial_position = 1
+ok_button_text = "Stance A"
+dialog_text = "Present your current build and choose a stance."
+cancel_button_text = "Stance B"
+
+[node name="JankTint" type="ColorRect" parent="." unique_id=878493183]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.82, 0.14, 0.12, 0)
+
+[node name="ScanlineOverlay" type="ColorRect" parent="." unique_id=869541226]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="MainMenuLayer" type="CanvasLayer" parent="." unique_id=64126403]
+unique_name_in_owner = true
+
+follow_viewport_enabled = true
+
+[node name="MainMenuShade" type="ColorRect" parent="MainMenuLayer" unique_id=1162639412]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.02, 0.02, 0.86)
+
+[node name="MainMenuPanel" type="PanelContainer" parent="MainMenuLayer" unique_id=1680274557]
+custom_minimum_size = Vector2(520, 360)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuPadding" type="MarginContainer" parent="MainMenuLayer/MainMenuPanel" unique_id=1132809604]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="MenuVBox" type="VBoxContainer" parent="MainMenuLayer/MainMenuPanel/MenuPadding" unique_id=1389895779]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MenuTitle" type="Label" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=1948489959]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "WE CAN't SHIP IT"
+horizontal_alignment = 1
+
+[node name="MenuSubtitle" type="Label" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=1763277999]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Tiny studio, too many ideas, and budget with two digits left in account."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MenuHowTo" type="Label" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=998398043]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Drag cards into Your Disaster, manage instability, then ship before runway is expired."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MenuSpacer" type="Control" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=1777162968]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+
+[node name="PublisherTrustModeToggle" type="CheckBox" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enable Publisher Trust Mode (optional)"
+
+[node name="StartRunButton" type="Button" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=952626654]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Begin New Attempt"
+
+[node name="MenuHint" type="Label" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=221607457]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Jank, this is intentional. Maybe. Is not bug, is feature. Mostly."
+horizontal_alignment = 1
+autowrap_mode = 3

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
+
+[resource]
+script = ExtResource("1_featurecard")
+feature_name = "Your Card Name Here"
+ambition_value = 3
+instability_value = 3
+tier = "common"
+unlock_weight = 1.0
+tags = PackedStringArray("ui")
+interactions = {
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}

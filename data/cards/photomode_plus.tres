@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_s1l9u"]
+
+[resource]
+script = ExtResource("1_s1l9u")
+feature_name = "Photo Mode Plus"
+ambition_value = 6
+instability_value = 5
+tier = "common"
+unlock_weight = 1.8
+tags = PackedStringArray("ui", "lore", "weather")
+interactions = {
+"ui": {"instability": 2, "soul": 0},
+"lore": {"instability": 2, "soul": 0},
+"weather": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}

@@ -1,0 +1,67 @@
+{
+	"eras": [
+		"The Early Days",
+		"The Long Middle",
+		"The Difficult Period",
+		"The Comeback Attempt",
+		"The Final Push",
+		"The Regrettable Chapter",
+		"The Cult Years"
+	],
+	"templates": {
+		"celebrated": [
+			"games where the hero gets a redemption arc",
+			"games where the ending makes you pause",
+			"games where the horse physics actually worked",
+			"games where the side characters steal the show",
+			"games where the world feels lived-in",
+			"games that made people send bug reports with the word 'love' in them",
+			"games where something beautiful survived the deadline"
+		],
+		"notorious": [
+			"games where everything was on fire and somehow still ran",
+			"games where the patch notes were longer than the game",
+			"games that broke in interesting ways",
+			"games where the bugs became the feature",
+			"games that crashed at the credits, every time",
+			"games with a community dedicated to cataloguing disasters",
+			"games remembered for the wrong reasons, warmly"
+		],
+		"regretted": [
+			"games that were finished but not complete",
+			"games that shipped clean and meant nothing",
+			"games that scored well in reviews nobody read",
+			"games that played it safe and lost",
+			"games where polish replaced personality",
+			"games that made money and disappeared",
+			"games the studio doesn't mention in interviews"
+		],
+		"disaster": [
+			"games that became cautionary tales",
+			"games nobody played twice",
+			"games that were briefly trending for bad reasons",
+			"games the team learned from, slowly",
+			"games that ended partnerships",
+			"games that got the studio on a publisher blacklist",
+			"games that still have active refund threads"
+		],
+		"sellout": [
+			"games with a season pass nobody asked for",
+			"games optimised for review scores",
+			"games with very small ambitions and very large trailers",
+			"games that satisfied the spreadsheet",
+			"games described as 'polished' by people who meant 'empty'",
+			"games that ticked every box and felt nothing",
+			"games that could have been anything"
+		],
+		"cult_disaster": [
+			"games where the fanbase is sincerely wrong about everything",
+			"games with active preservation communities despite the bugs",
+			"games that technically failed and spiritually succeeded",
+			"games that speedrunners adopted out of pity",
+			"games with Discord servers larger than the launch playerbase",
+			"games where the brokenness was the whole point",
+			"games that shouldn't work but somehow do, emotionally"
+		]
+	}
+}

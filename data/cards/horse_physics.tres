@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_0yaac"]
+
+[resource]
+script = ExtResource("1_0yaac")
+feature_name = "Horse Physics Overhaul"
+ambition_value = 8
+instability_value = 6
+tier = "rare"
+unlock_weight = 4.6
+tags = PackedStringArray("physics", "horses", "animation")
+interactions = {
+"horses": {"instability": 4, "soul": 0},
+"physics": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}

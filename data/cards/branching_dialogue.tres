@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_8f0aq"]
+
+[resource]
+script = ExtResource("1_8f0aq")
+feature_name = "Deep Branching Dialogue"
+ambition_value = 5
+instability_value = 3
+tier = "common"
+unlock_weight = 1.5
+tags = PackedStringArray("quest", "lore", "ui")
+interactions = {
+"quest": {"instability": 2, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}

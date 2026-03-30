@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_t6a2e"]
+
+[resource]
+script = ExtResource("1_t6a2e")
+feature_name = "Dynamic Music System"
+ambition_value = 7
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("lore", "ui", "combat")
+interactions = {
+"lore": {"instability": 2, "soul": 0},
+"ui": {"instability": 3, "soul": 0},
+"combat": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}

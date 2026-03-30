@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_b8v7q"]
+
+[resource]
+script = ExtResource("1_b8v7q")
+feature_name = "Companion Romance"
+ambition_value = 8
+instability_value = 7
+tier = "common"
+unlock_weight = 2.2
+tags = PackedStringArray("quest", "lore", "ui")
+interactions = {
+"quest": {"instability": 3, "soul": 0},
+"lore": {"instability": 4, "soul": 0},
+"ui": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}

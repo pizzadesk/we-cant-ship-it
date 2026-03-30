@@ -1,0 +1,53 @@
+{
+	"dilemmas": [
+		{
+			"title": "Publisher Ultimatum",
+			"category": "intrusive",
+			"description": "Take marketing money now or stay independent and scrappy.",
+			"choices": [
+				{ "label": "Take money", "effects": { "ambition": 4, "instability": 3, "soul": -2 } },
+				{ "label": "Stay indie", "effects": { "soul": 4, "runway_days": -1 } }
+			]
+		},
+		{
+			"title": "Engine Rewrite Temptation",
+			"category": "creative",
+			"description": "Rewrite now for long-term gains or patch over the crater.",
+			"choices": [
+				{ "label": "Rewrite", "effects": { "ambition": 3, "runway_days": -2, "instability": -3 } },
+				{ "label": "Patch it", "effects": { "instability": 4, "soul": 2 } }
+			]
+		}
+	],
+	"dilemma_category_weights": {
+		"default": {
+			"intrusive": 1.0,
+			"creative": 1.0,
+			"default": 1.0
+		},
+		"high_trust": {
+			"intrusive": 0.5,
+			"creative": 1.5,
+			"default": 1.0
+		},
+		"low_trust": {
+			"intrusive": 1.8,
+			"creative": 0.6,
+			"default": 1.0
+		}
+	},
+	"draft_picks": {
+		"base": [
+			{ "title": "Hype Trailer Push", "effects": { "ambition": 3, "soul": 1, "instability": 2 } },
+			{ "title": "Stability Sprint", "effects": { "instability": -5, "runway_days": -1 } },
+			{ "title": "Community Patch Notes", "effects": { "soul": 4, "ambition": 1 } }
+		],
+		"soul_gated": [
+			{
+				"title": "We're Going For It",
+				"effects": { "ambition": 4, "soul": 6, "instability": 5 },
+				"soul_required": 30
+			}
+		]
+	}
+}

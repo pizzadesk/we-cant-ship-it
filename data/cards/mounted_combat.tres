@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_m9p22"]
+
+[resource]
+script = ExtResource("1_m9p22")
+feature_name = "Mounted Combat Rewrite"
+ambition_value = 10
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.1
+tags = PackedStringArray("combat", "horses", "physics")
+interactions = {
+"combat": {"instability": 5, "soul": 0},
+"horses": {"instability": 6, "soul": 0},
+"physics": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}

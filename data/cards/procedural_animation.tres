@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_g7hj9"]
+
+[resource]
+script = ExtResource("1_g7hj9")
+feature_name = "Procedural Animation"
+ambition_value = 9
+instability_value = 8
+tier = "uncommon"
+unlock_weight = 3.8
+tags = PackedStringArray("animation", "physics", "combat")
+interactions = {
+"animation": {"instability": 6, "soul": 0},
+"physics": {"instability": 5, "soul": 0},
+"combat": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}

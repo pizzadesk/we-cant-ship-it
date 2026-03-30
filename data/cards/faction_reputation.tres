@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_f4cn8"]
+
+[resource]
+script = ExtResource("1_f4cn8")
+feature_name = "Faction Reputation"
+ambition_value = 8
+instability_value = 6
+tier = "common"
+unlock_weight = 2.5
+tags = PackedStringArray("quest", "lore", "ui")
+interactions = {
+"quest": {"instability": 3, "soul": 0},
+"lore": {"instability": 3, "soul": 0},
+"ui": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}

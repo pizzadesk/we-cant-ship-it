@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StageTheme" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_theme.gd" id="1_stg1vsc"]
+
+[resource]
+script = ExtResource("1_stg1vsc")
+stage_index = 0
+stage_name = "VSCode"
+corruption_intensity_scale = 1.0

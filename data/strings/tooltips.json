@@ -1,0 +1,9 @@
+{
+  "fix_bugs_active": "Spend 1 day: reduce instability, but lose 3 Soul from crunch fatigue.",
+  "fix_bugs_depleted": "No runway days left. Emergency actions are closed; only shipping is possible.",
+  "dev_log_active": "Spend 1 day: gain 1 Soul and feed community hype.",
+  "dev_log_depleted": "No runway days left. Community update can no longer be posted this run.",
+  "ship_overloaded": "Ship now for maximal chaos branding, but review risk is high.",
+  "ship_underloaded": "Ship now for cleaner reviews, but you may lose cult-jank soul.",
+  "ship_default": "Ship now and lock your current ambition/instability/soul mix into Review Roulette."
+}

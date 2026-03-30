@@ -1,0 +1,174 @@
+{
+  "rules": [
+    {
+      "tags": ["physics", "horses"],
+      "instability_delta": 4,
+      "soul_delta": 3,
+      "flavors": [
+        "{tag_a} + {tag_b} = Clipping detected in 3 zones.",
+        "{new_feature} collides with {existing_feature}; horse launches into low orbit.",
+        "QA reports a reproducible bug: dismounting now teleports NPCs."
+      ]
+    },
+    {
+      "tags": ["combat", "inventory"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "{new_feature} + {existing_feature} = Equipping soup grants +12 armor.",
+        "Hotbar flicker evolves into accidental rhythm mini-game."
+      ]
+    },
+    {
+      "tags": ["ui", "multiplayer"],
+      "instability_delta": 5,
+      "soul_delta": 2,
+      "flavors": [
+        "Split-screen opens four menus at once and all are technically correct.",
+        "Ping spikes now animate the cursor like a haunted slideshow."
+      ]
+    },
+    {
+      "tags": ["quest", "lore"],
+      "instability_delta": 1,
+      "soul_delta": 2,
+      "flavors": [
+        "{new_feature} deepens {existing_feature}; players call it unexpectedly moving.",
+        "Patch notes become canon and fans love the sincerity."
+      ]
+    },
+    {
+      "tags": ["weather", "physics"],
+      "instability_delta": 2,
+      "soul_delta": 1,
+      "flavors": [
+        "Rain now applies force vectors to hats, arrows, and suspiciously stable wagons.",
+        "Wind simulation turns cape cloth into tactical radar."
+      ]
+    },
+    {
+      "tags": ["horses", "combat"],
+      "instability_delta": 5,
+      "soul_delta": 2,
+      "flavors": [
+        "{new_feature} + {existing_feature}: the cavalry arrived and refuses to leave the hitbox.",
+        "Mounted charge physics redefines 'melee range' as 'wherever the horse decides it is'.",
+        "{tag_a} system insists on occupying all {tag_b} collision volumes simultaneously. Legal review pending."
+      ]
+    },
+    {
+      "tags": ["animation", "physics"],
+      "instability_delta": 3,
+      "soul_delta": 3,
+      "soul_required": 20,
+      "flavors": [
+        "{new_feature} teaches {existing_feature} to ragdoll. Everyone is still learning.",
+        "Inverse kinematics meets Newtonian law. Newton loses. Fans cheer.",
+        "Procedural motion argues with rigid body solver. The argument is now visible in the physics layer."
+      ]
+    },
+    {
+      "tags": ["lore", "combat"],
+      "instability_delta": 2,
+      "soul_delta": 4,
+      "soul_required": 25,
+      "flavors": [
+        "Every sword swing now triggers a monologue. Players are taking notes.",
+        "{new_feature} makes {existing_feature} feel like a Greek tragedy. This appears to be intentional.",
+        "Kill counter gains a 'meaningful deaths' column. Speedrunners are furious. Critics are moved."
+      ]
+    },
+    {
+      "tags": ["quest", "weather"],
+      "instability_delta": 2,
+      "soul_delta": 2,
+      "flavors": [
+        "The NPC giving the tutorial quest is being rained on. He seems fine about it. This is now lore.",
+        "{new_feature} checks weather state before advancing narrative. Dense fog delays Act 2 indefinitely.",
+        "Umbrella dropped in 0.2.1 now blocks major questline. Forum thread concludes it is symbolic."
+      ]
+    },
+    {
+      "tags": ["inventory", "ui"],
+      "instability_delta": 4,
+      "soul_delta": 3,
+      "flavors": [
+        "Two item-grid systems load simultaneously. The screen briefly achieves sentience.",
+        "{new_feature} and {existing_feature} share the same panel anchor. They are not sharing well.",
+        "Drag-and-drop now contains drag-and-drop. Recursion detected. Performance unaffected, somehow."
+      ]
+    },
+    {
+      "tags": ["multiplayer", "combat"],
+      "instability_delta": 6,
+      "soul_delta": 2,
+      "flavors": [
+        "Host's hit registers. Client's hit is still in transit. Someone is technically alive in both states.",
+        "{new_feature} means every attack now exists in three locations, including the floor geometry.",
+        "PvP resolved by latency delta. Whoever has the worst connection wins. Community calls it fair."
+      ]
+    },
+    {
+      "tags": ["horses", "lore"],
+      "instability_delta": 2,
+      "soul_delta": 5,
+      "soul_required": 30,
+      "flavors": [
+        "Horse NPC now has a dialogue tree. Players ignore the critical path to hear it out.",
+        "{existing_feature} gains backstory via {tag_a} overlap. The horse has regrets. They are earned.",
+        "Fan wiki has three separate pages for the horse. One is an ending theory. It is correct."
+      ]
+    },
+    {
+      "tags": ["animation", "combat"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "Combat animation blending produces an accidental martial art. Studio is calling it a feature.",
+        "{new_feature} overrides {existing_feature} root motion. The fighter moonwalks into every engagement.",
+        "Finishing move plays in approximate T-pose. One review describes it as 'hauntingly abstract'."
+      ]
+    },
+    {
+      "tags": ["weather", "lore"],
+      "instability_delta": 1,
+      "soul_delta": 3,
+      "soul_required": 20,
+      "flavors": [
+        "It has been raining since the opening cutscene. The lore now confirms it always has.",
+        "{new_feature} and {existing_feature} merge: NPCs explain precipitation philosophically and at length.",
+        "Drought event triggers faction grief dialogue. No one expected the climate system to have feelings."
+      ]
+    },
+    {
+      "tags": ["multiplayer", "lore"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "All players receive the same vision quest simultaneously. No one discusses it. Everyone is changed.",
+        "{new_feature} replicates lore journal entries across all clients. Player B learns Player A's secrets.",
+        "Community discovers a second ending embedded inside the world-state sync packets. Mod authors weep."
+      ]
+    },
+    {
+      "tags": ["physics", "combat"],
+      "instability_delta": 4,
+      "soul_delta": 3,
+      "flavors": [
+        "Sword collision box extends 0.2m past the visible blade. Physics confirms this is correct behavior.",
+        "{new_feature} crumbles under {existing_feature} force values. The debris collider is its own boss.",
+        "Knockback sends enemy into a zone-load trigger. They return from a different region, angrier."
+      ]
+    },
+    {
+      "tags": ["quest", "inventory"],
+      "instability_delta": 2,
+      "soul_delta": 2,
+      "flavors": [
+        "The key item for the main quest is in the crafting grid, third slot, behind the soup.",
+        "{new_feature} marks quest objects with exclamation points. {existing_feature} sorts them by weight.",
+        "Critical side quest auto-completes when backpack is full. Community assumes this was intentional."
+      ]
+    }
+  ]
+}

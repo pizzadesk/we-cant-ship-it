@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_pv4ra"]
+
+[resource]
+script = ExtResource("1_pv4ra")
+feature_name = "Survival Crafting"
+ambition_value = 5
+instability_value = 5
+tier = "common"
+unlock_weight = 2
+tags = PackedStringArray("inventory", "lore", "ui")
+interactions = {
+"inventory": {"instability": 3, "soul": 0},
+"lore": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}

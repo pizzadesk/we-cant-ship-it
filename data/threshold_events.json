@@ -1,0 +1,43 @@
+[
+	{
+		"id": "ambition_investor_call",
+		"metric": "ambition",
+		"threshold": 20,
+		"severity": "info",
+		"message": "Investor call: Your pitch deck is terrifying, but strangely convincing.",
+		"effects": {"soul": 2}
+	},
+	{
+		"id": "instability_qa_redline",
+		"metric": "instability",
+		"threshold": 35,
+		"severity": "warning",
+		"message": "QA redline: The bug board now has its own bug board.",
+		"effects": {"soul": -2}
+	},
+	{
+		"id": "instability_team_burnout",
+		"metric": "instability",
+		"threshold": 60,
+		"severity": "danger",
+		"message": "Team burnout event: Build breaks become a daily ritual.",
+		"effects": {"soul": -3}
+	},
+	{
+		"id": "soul_community_hype",
+		"metric": "soul",
+		"threshold": 40,
+		"severity": "info",
+		"message": "Community hype spike: Players are calling your bugs immersive.",
+		"effects": {"instability": -3}
+	},
+	{
+		"id": "runway_budget_alarm",
+		"metric": "runway_days",
+		"threshold": 10,
+		"comparison": "lte",
+		"severity": "warning",
+		"message": "Budget alarm: Accounting switched to panic mode spreadsheets.",
+		"effects": {"instability": 2}
+	}
+]

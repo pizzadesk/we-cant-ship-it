@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_q0pe9"]
+
+[resource]
+script = ExtResource("1_q0pe9")
+feature_name = "Seamless Open World"
+ambition_value = 13
+instability_value = 12
+tier = "rare"
+unlock_weight = 5
+tags = PackedStringArray("quest", "lore", "weather")
+interactions = {
+"quest": {"instability": 4, "soul": 0},
+"lore": {"instability": 5, "soul": 0},
+"weather": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}
