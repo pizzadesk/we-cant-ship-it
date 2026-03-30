@@ -21,6 +21,7 @@ A Godot 4 card-based roguelite about shipping an over-ambitious indie RPG. Playe
 - **Extensible:** Add new cards, events, and endings via data files without code changes.
 
 ## Documentation
+- [GAME-DESIGN.md](GAME-DESIGN.md): Vision of the game.
 - [CURRENT-STATE-GAME-DESIGNER.md](CURRENT-STATE-GAME-DESIGNER.md): High-level, game-designer-style overview of the current implementation and its alignment with the design vision.
 - [CURRENT-STATE-TECHNICAL.md](CURRENT-STATE-TECHNICAL.md): Technical solution summary, detailing architecture, conventions, and code/data alignment.
 - [data/game_config.tres](data/game_config.tres): All tuning values and thresholds.
