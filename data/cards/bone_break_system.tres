@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_bone1"]
+
+[resource]
+script = ExtResource("1_bone1")
+feature_name = "Bone Break System"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 3.1
+tags = PackedStringArray("combat", "animation", "physics")
+interactions = {
+"combat": {"instability": 3, "soul": 0},
+"animation": {"instability": 2, "soul": 0},
+"physics": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

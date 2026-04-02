@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_loot1"]
+
+[resource]
+script = ExtResource("1_loot1")
+feature_name = "Loot Tables"
+ambition_value = 2
+instability_value = 3
+tier = "common"
+unlock_weight = 1.0
+tags = PackedStringArray("inventory", "combat", "world")
+interactions = {
+"inventory": {"instability": 2, "soul": 0},
+"combat": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

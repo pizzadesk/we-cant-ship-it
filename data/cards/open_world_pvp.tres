@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_pvp1"]
+
+[resource]
+script = ExtResource("1_pvp1")
+feature_name = "Open World PvP"
+ambition_value = 9
+instability_value = 10
+tier = "rare"
+unlock_weight = 5.2
+tags = PackedStringArray("multiplayer", "combat", "world")
+interactions = {
+"multiplayer": {"instability": 5, "soul": 0},
+"combat": {"instability": 4, "soul": 0},
+"world": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

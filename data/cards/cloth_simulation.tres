@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_clth1"]
+
+[resource]
+script = ExtResource("1_clth1")
+feature_name = "Cloth Simulation"
+ambition_value = 7
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.3
+tags = PackedStringArray("physics", "animation", "character")
+interactions = {
+"physics": {"instability": 4, "soul": 0},
+"animation": {"instability": 4, "soul": 0},
+"character": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

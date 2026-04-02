@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_dream1"]
+
+[resource]
+script = ExtResource("1_dream1")
+feature_name = "Dream Sequence Layer"
+ambition_value = 6
+instability_value = 8
+tier = "uncommon"
+unlock_weight = 3.5
+tags = PackedStringArray("lore", "character", "world")
+interactions = {
+"lore": {"instability": 2, "soul": 3},
+"character": {"instability": 2, "soul": 2},
+"world": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray()

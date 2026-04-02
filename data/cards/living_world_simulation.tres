@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_liv1"]
+
+[resource]
+script = ExtResource("1_liv1")
+feature_name = "Living World Simulation"
+ambition_value = 10
+instability_value = 9
+tier = "rare"
+unlock_weight = 5.0
+tags = PackedStringArray("world", "lore", "character", "weather")
+interactions = {
+"world": {"instability": 4, "soul": 0},
+"lore": {"instability": 2, "soul": 1},
+"weather": {"instability": 3, "soul": 0},
+"character": {"instability": 2, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

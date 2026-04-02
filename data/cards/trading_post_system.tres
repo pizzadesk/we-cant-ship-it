@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_trad1"]
+
+[resource]
+script = ExtResource("1_trad1")
+feature_name = "Trading Post System"
+ambition_value = 4
+instability_value = 3
+tier = "uncommon"
+unlock_weight = 2.2
+tags = PackedStringArray("world", "inventory", "character")
+interactions = {
+"world": {"instability": 1, "soul": 0},
+"inventory": {"instability": 2, "soul": 0},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

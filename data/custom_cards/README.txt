@@ -8,16 +8,16 @@ You have been given this pack to design Feature Cards for WE CANT SHIP IT.
 WHAT YOU NEED
 -------------
   A plain text editor -- one of these works perfectly:
-    Windows : Notepad  (already on your computer)
-    Mac     : TextEdit (already on your computer -- see Mac note below)
-    Linux   : gedit, mousepad, kate, or similar
+	Windows : Notepad  (already on your computer)
+	Mac     : TextEdit (already on your computer -- see Mac note below)
+	Linux   : gedit, mousepad, kate, or similar
 
   !! Do NOT use Microsoft Word, LibreOffice Writer, or Google Docs.
-     They add hidden formatting that breaks the file.
+	 They add hidden formatting that breaks the file.
 
   Mac / TextEdit note:
-    TextEdit defaults to rich text mode. Before editing any file, go to:
-    Format -> Make Plain Text
+	TextEdit defaults to rich text mode. Before editing any file, go to:
+	Format -> Make Plain Text
 
 
 WHAT IS IN THIS FOLDER
@@ -33,13 +33,13 @@ WHAT YOU ARE MAKING
   A Feature Card is one of the ideas your in-game studio can add to
   their game. Each card has:
 
-    A name            -- what shows up in-game
-    An ambition value -- how much scope/boldness the feature adds (1-10)
-    An instability value -- how much chaos/jank it causes (1-10)
-    Tags              -- what type of feature it is (affects interactions)
-    Archetype affinity -- which genres this card naturally suits
-                          (RPG / Shooter / Action-Adventure, or leave as
-                          the template default for safe universal coverage)
+	A name            -- what shows up in-game
+	An ambition value -- how much scope/boldness the feature adds (1-10)
+	An instability value -- how much chaos/jank it causes (1-10)
+	Tags              -- what type of feature it is (affects interactions)
+	Archetype affinity -- which genres this card naturally suits
+						  (RPG / Shooter / Action-Adventure, or leave as
+						  the template default for safe universal coverage)
 
   Cards can be anything: systems, mechanics, marketing stunts, bad ideas,
   great ideas, or things that only make sense at 2am during crunch.

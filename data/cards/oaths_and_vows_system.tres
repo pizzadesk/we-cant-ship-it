@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_oath1"]
+
+[resource]
+script = ExtResource("1_oath1")
+feature_name = "Oaths & Vows System"
+ambition_value = 5
+instability_value = 3
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("character", "quest", "lore")
+interactions = {
+"character": {"instability": 0, "soul": 2},
+"quest": {"instability": 1, "soul": 1},
+"lore": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg")

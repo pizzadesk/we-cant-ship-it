@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_kill1"]
+
+[resource]
+script = ExtResource("1_kill1")
+feature_name = "Kill Feed"
+ambition_value = 1
+instability_value = 1
+tier = "common"
+unlock_weight = 0.6
+tags = PackedStringArray("combat", "ui", "multiplayer")
+interactions = {
+"multiplayer": {"instability": 2, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter")

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_expl1"]
+
+[resource]
+script = ExtResource("1_expl1")
+feature_name = "Explosive Barrels"
+ambition_value = 2
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.0
+tags = PackedStringArray("physics", "combat", "world")
+interactions = {
+"physics": {"instability": 4, "soul": 0},
+"combat": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

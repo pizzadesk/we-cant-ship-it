@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_water1"]
+
+[resource]
+script = ExtResource("1_water1")
+feature_name = "Water Physics"
+ambition_value = 6
+instability_value = 7
+tier = "uncommon"
+unlock_weight = 3.2
+tags = PackedStringArray("physics", "world", "weather")
+interactions = {
+"physics": {"instability": 4, "soul": 0},
+"world": {"instability": 2, "soul": 0},
+"weather": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("action_adventure", "shooter")

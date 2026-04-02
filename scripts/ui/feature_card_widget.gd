@@ -19,15 +19,24 @@ func _ready() -> void:
 
 func _update_view() -> void:
 	super._update_view()
-	if _drag_heat_icon.is_empty() and _drag_mismatch_icon.is_empty():
-		return
-	# Append hint icons AFTER the base resets the label — this is the correct call site.
-	var suffix: String = ""
+	# Drag previews use pre-computed icons set before _ready() fires.
+	# Resting backlog cards compute heat live from AppState so the indicator
+	# is always current without a separate refresh signal.
+	var heat_suffix: String = ""
 	if not _drag_heat_icon.is_empty():
-		suffix += " " + _drag_heat_icon
+		# This is a drag preview duplicate — use the pre-calculated icon.
+		heat_suffix = _drag_heat_icon
+	elif feature_card is FeatureCard and drag_origin == "backlog" and AppState != null:
+		var heat: int = int(AppState.get_interaction_heat(feature_card as FeatureCard, AppState.feature_board))
+		var heat_icons: PackedStringArray = PackedStringArray(["", "*", "**", "***"])
+		heat_suffix = heat_icons[clampi(heat, 0, 3)]
+	var suffix: String = ""
+	if not heat_suffix.is_empty():
+		suffix += " " + heat_suffix
 	if not _drag_mismatch_icon.is_empty():
 		suffix += " " + _drag_mismatch_icon
-	_name_label.text += suffix
+	if not suffix.is_empty():
+		_name_label.text += suffix
 
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin
@@ -57,7 +66,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Set icons on the preview widget; _update_view() override appends them after _ready().
 	if heat > 0:
-		var heat_icons: PackedStringArray = PackedStringArray(["", "⚡", "⚡⚡", "⚡⚡⚡"])
+		var heat_icons: PackedStringArray = PackedStringArray(["", "*", "**", "***"])
 		preview._drag_heat_icon = heat_icons[clampi(heat, 0, 3)]
 	if mismatch_level > 0:
 		# 1=genre stretch (~), 2=wild swing (⚠), 3=alien (☠)

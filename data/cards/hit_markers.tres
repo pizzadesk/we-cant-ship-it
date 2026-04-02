@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_hit1"]
+
+[resource]
+script = ExtResource("1_hit1")
+feature_name = "Hit Markers"
+ambition_value = 1
+instability_value = 1
+tier = "common"
+unlock_weight = 0.5
+tags = PackedStringArray("combat", "ui")
+interactions = {
+"combat": {"instability": 1, "soul": 0},
+"ui": {"instability": 0, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

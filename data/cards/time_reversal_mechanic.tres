@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_alie2"]
+
+[resource]
+script = ExtResource("1_alie2")
+feature_name = "Time Reversal Mechanic"
+ambition_value = 9
+instability_value = 9
+tier = "rare"
+unlock_weight = 5.0
+tags = PackedStringArray("physics", "world", "ui")
+interactions = {
+"physics": {"instability": 5, "soul": 0},
+"world": {"instability": 4, "soul": 0},
+"ui": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray()

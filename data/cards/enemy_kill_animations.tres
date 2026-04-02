@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_kill2"]
+
+[resource]
+script = ExtResource("1_kill2")
+feature_name = "Enemy Kill Animations"
+ambition_value = 3
+instability_value = 3
+tier = "common"
+unlock_weight = 1.3
+tags = PackedStringArray("animation", "combat")
+interactions = {
+"animation": {"instability": 2, "soul": 0},
+"combat": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

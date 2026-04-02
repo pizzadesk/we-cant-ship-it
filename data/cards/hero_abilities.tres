@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_hero1"]
+
+[resource]
+script = ExtResource("1_hero1")
+feature_name = "Hero Abilities"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.5
+tags = PackedStringArray("combat", "character", "ui")
+interactions = {
+"combat": {"instability": 2, "soul": 0},
+"character": {"instability": 1, "soul": 1},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

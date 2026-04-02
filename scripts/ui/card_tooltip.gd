@@ -84,7 +84,7 @@ func _update_content() -> void:
 		else:
 			content += "[color=#ff8c42]\u26a0 Wild swing[/color] — specialized, wrong genre\n"
 			content += "+4 Inst, +2 Amb, -1 Soul on placement\n"
-		content += "\n[color=#555555][i]Drag icons: \u26a1 heat  ~ stretch  \u26a0 wild swing  \u2620 alien[/i][/color]"
+		content += "\n[color=#555555][i]Card icons: * interaction heat  ~ stretch  \u26a0 wild swing  \u2620 alien[/i][/color]"
 
 	if "[" in fc.feature_name and "]" in fc.feature_name:
 		content += "\n" + _S.get_string("card_ui", "variant_note")

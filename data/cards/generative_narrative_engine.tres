@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_gene1"]
+
+[resource]
+script = ExtResource("1_gene1")
+feature_name = "Generative Narrative Engine"
+ambition_value = 10
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.9
+tags = PackedStringArray("lore", "quest", "character", "world")
+interactions = {
+"lore": {"instability": 3, "soul": 2},
+"quest": {"instability": 3, "soul": 1},
+"character": {"instability": 2, "soul": 2},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg")

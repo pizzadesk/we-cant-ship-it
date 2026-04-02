@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_chess1"]
+
+[resource]
+script = ExtResource("1_chess1")
+feature_name = "In-World Chess Variant"
+ambition_value = 3
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 3.0
+tags = PackedStringArray("ui", "lore", "world")
+interactions = {
+"lore": {"instability": 0, "soul": 2},
+"ui": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray()

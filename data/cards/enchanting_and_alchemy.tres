@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ench1"]
+
+[resource]
+script = ExtResource("1_ench1")
+feature_name = "Enchanting & Alchemy"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("inventory", "lore", "character")
+interactions = {
+"inventory": {"instability": 2, "soul": 0},
+"lore": {"instability": 0, "soul": 2},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg")

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_thirst1"]
+
+[resource]
+script = ExtResource("1_thirst1")
+feature_name = "Thirst & Hunger Meters"
+ambition_value = 2
+instability_value = 3
+tier = "common"
+unlock_weight = 1.0
+tags = PackedStringArray("world", "inventory", "ui")
+interactions = {
+"inventory": {"instability": 1, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("action_adventure", "shooter")

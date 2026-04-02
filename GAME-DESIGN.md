@@ -122,9 +122,9 @@ Cards are `.tres` resources with the following schema:
 
 | Tier | Ambition range | Instability range | Availability |
 |------|---------------|-------------------|--------------|
-| Common | 1 – 4 | 1 – 4 | Run 1 only |
-| Uncommon | 1 – 6 | 1 – 6 | Run 2+ (cycle unlocks) |
-| Rare | 1 – 10 | 1 – 10 | Run 3 (strong cycle performance) |
+| Common | 1 – 4 | 1 – 4 | All runs (available from run 1, remains in pool) |
+| Uncommon | 1 – 6 | 1 – 6 | Run 2+ added to pool (cycle unlocks) |
+| Rare | 1 – 10 | 1 – 10 | Run 3 added to pool (strong cycle performance) |
 
 **Design intent:** The card pool available per run is the primary pacing mechanism. Run 1 common cards cannot reach Goldilocks thresholds reliably — this is by design. Pressure at midpoint happens naturally in runs 2–3 because the cards hit harder.
 

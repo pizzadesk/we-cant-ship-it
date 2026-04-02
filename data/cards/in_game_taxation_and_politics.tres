@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_tax1"]
+
+[resource]
+script = ExtResource("1_tax1")
+feature_name = "In-Game Taxation & Politics"
+ambition_value = 7
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.0
+tags = PackedStringArray("world", "lore", "character")
+interactions = {
+"world": {"instability": 4, "soul": 0},
+"lore": {"instability": 2, "soul": 2},
+"character": {"instability": 2, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray()

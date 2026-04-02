@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_veh1"]
+
+[resource]
+script = ExtResource("1_veh1")
+feature_name = "Vehicle Combat"
+ambition_value = 6
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 3.2
+tags = PackedStringArray("vehicles", "combat", "physics")
+interactions = {
+"vehicles": {"instability": 4, "soul": 0},
+"combat": {"instability": 3, "soul": 0},
+"physics": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

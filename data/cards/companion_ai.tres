@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_comp1"]
+
+[resource]
+script = ExtResource("1_comp1")
+feature_name = "Companion AI"
+ambition_value = 6
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 3.1
+tags = PackedStringArray("character", "combat", "quest")
+interactions = {
+"character": {"instability": 1, "soul": 2},
+"combat": {"instability": 3, "soul": 0},
+"quest": {"instability": 1, "soul": 1}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

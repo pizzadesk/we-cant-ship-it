@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_vrm1"]
+
+[resource]
+script = ExtResource("1_vrm1")
+feature_name = "VR Mode"
+ambition_value = 8
+instability_value = 10
+tier = "rare"
+unlock_weight = 5.3
+tags = PackedStringArray("ui", "physics", "combat")
+interactions = {
+"ui": {"instability": 5, "soul": 0},
+"physics": {"instability": 4, "soul": 0},
+"combat": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

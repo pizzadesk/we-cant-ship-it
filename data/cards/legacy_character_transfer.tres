@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_lchar1"]
+
+[resource]
+script = ExtResource("1_lchar1")
+feature_name = "Legacy Character Transfer"
+ambition_value = 8
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.4
+tags = PackedStringArray("character", "quest", "lore", "world")
+interactions = {
+"character": {"instability": 3, "soul": 2},
+"quest": {"instability": 2, "soul": 1},
+"lore": {"instability": 2, "soul": 2}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg")

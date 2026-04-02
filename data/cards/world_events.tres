@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_world1"]
+
+[resource]
+script = ExtResource("1_world1")
+feature_name = "World Events"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.4
+tags = PackedStringArray("world", "lore", "quest")
+interactions = {
+"world": {"instability": 2, "soul": 0},
+"lore": {"instability": 0, "soul": 1},
+"quest": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

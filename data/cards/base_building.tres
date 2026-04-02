@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_base1"]
+
+[resource]
+script = ExtResource("1_base1")
+feature_name = "Base Building"
+ambition_value = 6
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 3.3
+tags = PackedStringArray("world", "inventory", "multiplayer")
+interactions = {
+"world": {"instability": 3, "soul": 0},
+"inventory": {"instability": 2, "soul": 0},
+"multiplayer": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")
