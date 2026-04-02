@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_f4cn8")
 feature_name = "Faction Reputation"
-ambition_value = 8
-instability_value = 6
+ambition_value = 4
+instability_value = 3
 tier = "common"
 unlock_weight = 2.5
 tags = PackedStringArray("quest", "lore", "ui")
@@ -16,3 +16,4 @@ interactions = {
 "ui": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

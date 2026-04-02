@@ -20,7 +20,7 @@
 		"metric": "instability",
 		"threshold": 60,
 		"severity": "danger",
-		"message": "Team burnout event: Build breaks become a daily ritual.",
+		"message": "Build breaks are now a daily ritual.",
 		"effects": {"soul": -3}
 	},
 	{
@@ -28,8 +28,8 @@
 		"metric": "soul",
 		"threshold": 40,
 		"severity": "info",
-		"message": "Community hype spike: Players are calling your bugs immersive.",
-		"effects": {"instability": -3}
+		"message": "Players are calling your bugs immersive.",
+		"effects": {}
 	},
 	{
 		"id": "runway_budget_alarm",
@@ -37,7 +37,7 @@
 		"threshold": 10,
 		"comparison": "lte",
 		"severity": "warning",
-		"message": "Budget alarm: Accounting switched to panic mode spreadsheets.",
+		"message": "Accounting switched to panic spreadsheets.",
 		"effects": {"instability": 2}
 	}
 ]

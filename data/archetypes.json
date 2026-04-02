@@ -1,0 +1,17 @@
+[
+	{
+		"label": "RPG",
+		"key": "rpg",
+		"description": "Deep systems, faction rep, narrative weight"
+	},
+	{
+		"label": "Shooter",
+		"key": "shooter",
+		"description": "Kinetic action, destruction, co-op"
+	},
+	{
+		"label": "Action-Adventure",
+		"key": "action_adventure",
+		"description": "Open world, exploration, physics"
+	}
+]

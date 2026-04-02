@@ -1,0 +1,249 @@
+WE CAN'T SHIP IT -- Collaborator Guide
+=======================================
+
+No game dev experience needed. This guide tells you what you can change,
+how to change it, and where to look if something breaks.
+
+Everything editable is a plain text file. No special software, no coding.
+
+
+------------------------------------------------------------------------
+THE THREE THINGS YOU CAN CHANGE
+------------------------------------------------------------------------
+
+  1. GAME RULES (numbers, thresholds, balance)
+     -> File: data/game_config_override.json
+     -> Full guide: data/TUTORIAL-game-config.txt
+
+  2. FEATURE CARDS (the cards players drag onto the board)
+     -> Folder: data/custom_cards/
+     -> Full guide: data/custom_cards/TUTORIAL.txt
+     -> Start by reading: data/custom_cards/README.txt
+
+  3. ALL IN-GAME TEXT (button labels, popup text, review flavour, etc.)
+     -> Folder: data/strings/
+     -> No special guide needed -- just open the file, change the text,
+        save. See the section below for what each file controls.
+
+
+------------------------------------------------------------------------
+WHERE EVERYTHING IS
+------------------------------------------------------------------------
+
+  data/
+  |
+  |-- game_config_override.json     <- Game rule overrides (numbers)
+  |-- TUTORIAL-game-config.txt      <- Guide for the above
+  |
+  |-- cards/                        <- Built-in feature cards (read-only)
+  |-- custom_cards/                 <- YOUR cards go here
+  |     |-- card_template.tres      <- Copy this to make a new card
+  |     |-- TUTORIAL.txt            <- Step-by-step card creation guide
+  |     `-- README.txt              <- Overview of the card system
+  |
+  |-- strings/                      <- All player-facing text
+  |     |-- buttons.json            <- Button labels
+  |     |-- tooltips.json           <- Hover text on action buttons
+  |     |-- popups.json             <- Dialog content, ending descriptions
+  |     |-- log_messages.json       <- In-game event feed messages
+  |     |-- help.json               <- Help screen content
+  |     |-- card_ui.json            <- Text on card widgets
+  |     `-- publisher.json          <- Publisher meeting dialog text
+  |
+  |-- archetypes.json               <- The three genre options (RPG etc.)
+  |-- interaction_rules.json        <- What happens when card tags overlap
+  |-- offers.json                   <- Dilemma / draft / publisher events
+  |-- threshold_events.json         <- Stat milestone pop-ups
+  `-- review_pools.json             <- Reviewer text (critics, fans, etc.)
+
+
+------------------------------------------------------------------------
+1. CHANGING GAME RULES
+------------------------------------------------------------------------
+
+  Open: data/game_config_override.json in Notepad.
+
+  Contains: every numeric parameter in the game.
+    - Score formula weights
+    - What ambition / instability / soul threshold gives which ending
+    - What Fix Bugs and Dev Log cost and return
+    - How often dilemmas fire
+    - What the ship timing bonuses are
+
+  Read data/TUTORIAL-game-config.txt for the full parameter list with
+  explanations and experiment suggestions.
+
+  To revert to defaults: delete game_config_override.json entirely.
+
+
+------------------------------------------------------------------------
+2. MAKING FEATURE CARDS
+------------------------------------------------------------------------
+
+  Open: data/custom_cards/TUTORIAL.txt and follow it top to bottom.
+  The short version:
+
+    1. Copy data/custom_cards/card_template.tres
+    2. Rename the copy (no spaces, must end in .tres, no word "template")
+    3. Open in Notepad
+    4. Change feature_name, ambition_value, instability_value, tags,
+       and archetype_affinity
+    5. Save
+    6. Run the game -- your card appears in the daily offer pool
+
+  Your card gets mixed into the same offer pool as the built-in cards.
+  There is no registration step -- the folder is scanned automatically.
+
+  QUICK VALUES GUIDE:
+
+    ambition_value    1-2 = minor polish   5-6 = big bet   9-10 = hubris
+    instability_value 1-2 = safe           5-6 = risky      9-10 = chaos
+
+    tags (pick from this list -- lowercase, inside "quotes"):
+      animation  audio  camera  combat  crafting  dialogue  horses
+      inventory  lore   modding  multiplayer  physics  progression
+      quest  romance  ui  weather  world
+
+    archetype_affinity (genre fit):
+      "rpg"              -- narrative, depth, systems
+      "shooter"          -- kinetic, destruction, co-op
+      "action_adventure" -- open world, exploration
+      All three genres   -- universal card, no placement friction
+      One genre only     -- specialized, high mismatch potential
+
+
+------------------------------------------------------------------------
+3. EDITING TEXT
+------------------------------------------------------------------------
+
+  All player-facing text is in data/strings/. Open any file in Notepad.
+  Change the text between the quotes. Do not touch the key names (left
+  side of the colon). Save. Run the game.
+
+  WHAT IS IN EACH FILE:
+
+    buttons.json
+      Labels on every button: "Ship It!", "Fix Bugs", "Dev Log" etc.
+
+    tooltips.json
+      Hover text for the three action buttons. Context-sensitive variants
+      exist for when the board is empty (ship_empty), fixes are needed, etc.
+
+    popups.json
+      Almost everything: dialog titles, ship summary headers, jank meter
+      flavour text, ending descriptions (ending_desc_* keys), ending
+      epilogues (epilogue_* keys), review roulette intros, cycle recap.
+
+    log_messages.json
+      Messages printed to the debug console during a run. These are not
+      visible to players in real time but appear in the Godot Output panel.
+
+    help.json
+      The content of the in-game help screen. Each item in the array is
+      one line or paragraph. Add or remove lines freely.
+
+    card_ui.json
+      Text on the card widgets: stat format strings, "Feature Unknown",
+      the "Draft Pick" label, progress bar labels, etc.
+
+    publisher.json
+      The publisher meeting dialogs. Formatted in cold bureaucratic prose.
+      Keys: memorandum_header, grades, summaries, labels, effect_names.
+
+  JSON TEXT RULES:
+    - Text goes between double quotes: "like this"
+    - To include a quote inside text: write \" instead of "
+    - Line breaks inside text: write \n
+    - Do not remove the commas after entries
+    - The last entry in a block has no comma
+
+
+------------------------------------------------------------------------
+COMMON MISTAKES AND FIXES
+------------------------------------------------------------------------
+
+  "The game won't start / shows a parse error"
+    -> You have a JSON formatting mistake in one of the files you edited.
+    -> Most common: missing comma, extra comma at the very end of a block,
+       or a number accidentally put inside quotes.
+    -> Fix: compare your change to the line above or below it.
+       Pattern for numbers:    "key": 5,
+       Pattern for text:       "key": "words here",
+       The comma lives AFTER the closing quote or number, not inside.
+
+  "My card doesn't appear"
+    -> Filename contains "template" (game skips those -- rename it)
+    -> Filename has a space or odd character
+    -> feature_name is blank
+    -> tags is empty (need at least one)
+    -> See data/custom_cards/TUTORIAL.txt Troubleshooting section
+
+  "My config override didn't do anything"
+    -> File must be named exactly: game_config_override.json
+    -> File must be in the data/ folder (not inside cards/ or strings/)
+    -> Check the Godot Output panel -- a successful load prints:
+       [GameConfig] Override applied from '...': N/N parameters set.
+
+  "I broke a string file and text is missing in-game"
+    -> Run the game -- the Output panel will show which key failed
+    -> Fix the formatting in the file and re-run
+    -> Worst case: restore the affected file from the git history
+       (right-click in VS Code -> Open Timeline, or ask the developer)
+
+  "I don't know if my change worked"
+    -> For card changes: run the game and watch the daily offer panel
+    -> For config changes: check the Output panel for the [GameConfig] line
+    -> For text changes: navigate to the dialog that uses the text in-game
+
+
+------------------------------------------------------------------------
+READING THE NUMBERS: QUICK ENDING REFERENCE
+------------------------------------------------------------------------
+
+  When you ship, your stats are checked against these thresholds in order:
+
+    DEFINING GAME (best)
+      All of: ambition >= 25, instability 18-42, soul >= 7
+
+    CULT DISASTER
+      instability >= 41 AND soul <= 4
+
+    ROUGH DIAMOND
+      ambition <= 14, instability <= 14, soul >= 8
+
+    LEGENDARY JANK
+      cult_jank style dominant AND instability >= 52
+
+    CULT CLASSIC
+      cult_jank or community_darling dominant, other thresholds missed
+
+    SURPRISE HIT
+      community_darling dominant, soul >= 8, score >= 6.5
+
+    PRESTIGE COLLAPSE
+      prestige_collapse dominant, ambition >= 25, soul <= 6
+
+    FINANCIAL CATASTROPHE
+      prestige_collapse dominant AND soul <= 3
+      (also forced if you ship with zero cards on the board)
+
+    ROUGH DIAMOND (fallback)
+      Everything else
+
+  Note: Legendary Jank (instability 52+) and Defining Game (instability
+  18-42) cannot happen in the same run. They live in non-overlapping zones.
+  Use Fix Bugs to pull instability down from Legendary Jank territory into
+  the Defining Game zone.
+
+
+------------------------------------------------------------------------
+ASKING FOR HELP
+------------------------------------------------------------------------
+
+  When something goes wrong, include:
+    1. Which file you edited
+    2. What you changed (the line before and after is helpful)
+    3. What happened when you ran the game (error message text if any)
+
+  The Godot Output panel (bottom of the editor, "Output" tab) usually
+  shows what went wrong and which file caused it.

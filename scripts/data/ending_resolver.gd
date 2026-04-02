@@ -1,27 +1,20 @@
 extends RefCounted
 class_name EndingResolver
 
+const _S = preload("res://scripts/ui/ui_strings.gd")
+
+## Returns the full description string for a known ending label (e.g. "Financial Catastrophe").
+## Looks up via the same JSON key used by resolve_ending_description.
+static func description_for_label(label: String) -> String:
+	var key: String = "ending_desc_" + label.to_lower().replace(" ", "_")
+	var desc: String = _S.get_string("popups", key)
+	if desc.is_empty():
+		return _S.get_string("popups", "ending_desc_rough_diamond")
+	return desc
+
 static func resolve_ending_description(config: GameConfig, ambition: int, instability: int, soul: int, review_score: float, dominant_bucket: String) -> String:
 	var label: String = resolve_ending_label(config, ambition, instability, soul, review_score, dominant_bucket)
-	match label:
-		"Defining Game":
-			return "Defining Game: A janky masterpiece held together by conviction and duct tape."
-		"Cult Disaster":
-			return "Cult Disaster: The studio poured everything into a build the market refused to understand."
-		"Rough Diamond":
-			return "Rough Diamond: Mixed reviews, loyal fans, and enough runway for one more update."
-		"Legendary Jank":
-			return "Legendary Jank: It barely runs, but speedrunners turn it into religion."
-		"Cult Classic":
-			return "Cult Classic: Players preserve every bug in community-made museum builds."
-		"Surprise Hit":
-			return "Surprise Hit: Publishers ask for a sequel before your patch notes are done."
-		"Financial Catastrophe":
-			return "Financial Catastrophe: The studio survives on contract work and stubborn hope."
-		"Prestige Collapse":
-			return "Prestige Collapse: It works. Every system works. Nobody can explain why it feels like a eulogy."
-		_:
-			return "Rough Diamond: Mixed reviews, loyal fans, and enough runway for one more update."
+	return description_for_label(label)
 
 static func resolve_ending_label(config: GameConfig, ambition: int, instability: int, soul: int, review_score: float, dominant_bucket: String) -> String:
 	if config == null:
@@ -46,7 +39,9 @@ static func resolve_ending_label(config: GameConfig, ambition: int, instability:
 				return "Surprise Hit"
 			return "Cult Classic"
 		"prestige_collapse":
-			if ambition >= config.prestige_collapse_ambition_min and soul <= config.financial_catastrophe_soul_max:
+			# Financial Catastrophe is bucket-conditioned only — no ambition floor.
+			# A studio that grinds Fix Bugs into oblivion (soul ≤ 3) hits this regardless of scope.
+			if soul <= config.financial_catastrophe_soul_max:
 				return "Financial Catastrophe"
 			if ambition >= config.prestige_collapse_ambition_min and soul <= config.prestige_collapse_soul_max:
 				return "Prestige Collapse"

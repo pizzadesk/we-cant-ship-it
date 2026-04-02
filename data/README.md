@@ -2,6 +2,15 @@
 
 All game content lives here. **No GDScript knowledge required to edit these files** — they are plain text (JSON, `.tres`).
 
+**For collaborators and playtesters:** start with [`COLLABORATOR-GUIDE.txt`](COLLABORATOR-GUIDE.txt). It covers all three things you can change (game rules, cards, text) without touching any code.
+
+| File | Purpose |
+|---|---|
+| `COLLABORATOR-GUIDE.txt` | Entry point — read this first |
+| `TUTORIAL-game-config.txt` | Full parameter reference for `game_config_override.json` |
+| `game_config_override.json` | Drop-in numeric override for all game balance values |
+| `custom_cards/TUTORIAL.txt` | Step-by-step guide for making a custom feature card |
+
 ---
 
 ## strings/

@@ -1,0 +1,77 @@
+{
+	"__info": "Drop this file in data/ or user:// to override game_config.tres. ALL keys are required — any key not present is treated as 0. Delete this file entirely to revert to game_config.tres. Keys starting with __ are ignored.",
+
+	"__section_scoring": "=== SCORING FORMULA ===",
+	"score_base": 5.0,
+	"ambition_coefficient": 0.14,
+	"instability_coefficient": 0.05,
+	"soul_coefficient": 0.15,
+	"soul_mitigation_factor": 40.0,
+
+	"__section_action_economy": "=== ACTION ECONOMY ===",
+	"soul_start": 12,
+	"soul_max": 15,
+	"fix_bugs_instability_reduction": 12,
+	"fix_bugs_soul_cost": 3,
+	"dev_log_soul_gain": 1,
+
+	"__section_goldilocks": "=== DEFINING GAME (GOLDILOCKS GATE) === Requires ALL four conditions simultaneously.",
+	"goldilocks_ambition_min": 25,
+	"goldilocks_instability_min": 18,
+	"goldilocks_instability_max": 42,
+	"goldilocks_soul_min": 7,
+
+	"__section_stat_gated_endings": "=== STAT-GATED ENDINGS (checked before bucket) ===",
+	"cult_disaster_instability_min": 41,
+	"cult_disaster_soul_max": 4,
+	"rough_diamond_ambition_max": 14,
+	"rough_diamond_instability_max": 14,
+	"rough_diamond_soul_min": 8,
+
+	"__section_bucket_endings": "=== BUCKET-WEIGHTED ENDING THRESHOLDS ===",
+	"cult_jank_legendary_instability_min": 52,
+	"community_darling_surprise_hit_soul_min": 8,
+	"community_darling_surprise_hit_score_min": 6.5,
+	"prestige_collapse_ambition_min": 25,
+	"prestige_collapse_soul_max": 6,
+	"financial_catastrophe_soul_max": 3,
+
+	"__section_ship_window": "=== SHIP WINDOW TIMING ===",
+	"sweet_spot_runway_min": 4,
+	"sweet_spot_runway_max": 9,
+	"sweet_spot_instability_min": 18,
+	"sweet_spot_instability_max": 45,
+	"too_early_runway_threshold": 13,
+	"panic_ship_runway_threshold": 2,
+
+	"__section_ship_modifiers": "=== SHIP WINDOW SCORE MODIFIERS ===",
+	"sweet_spot_score_bonus": 1.2,
+	"too_early_score_penalty": -0.5,
+	"panic_ship_score_penalty": -0.4,
+
+	"__section_jank": "=== JANK STATUS CLASSIFICATION ===",
+	"polished_instability_max": 22,
+	"polished_score_min": 7.0,
+	"broken_instability_min": 78,
+	"sweet_spot_instability_zone_min": 38,
+	"sweet_spot_instability_zone_max": 62,
+
+	"__section_card_progression": "=== CARD PROGRESSION === stage_threshold_runways: runway day thresholds for visual stage changes [stage0, stage1, stage2, stage3]",
+	"initial_card_unlock_count": 8,
+	"stage_threshold_runways": [15, 10, 5, 0],
+
+	"__section_archetype": "=== ARCHETYPE MISMATCH SYSTEM === alien = card has no genre affinity at all. mismatch = card has some affinity but not the chosen genre.",
+	"genre_stretch_instability_bonus": 2,
+	"archetype_mismatch_instability_bonus": 4,
+	"archetype_mismatch_ambition_bonus": 2,
+	"archetype_mismatch_soul_penalty": 1,
+	"alien_card_instability_bonus": 8,
+	"alien_card_ambition_bonus": 4,
+	"alien_card_soul_penalty": 3,
+	"alien_card_soul_gate": 5,
+
+	"__section_offer_scheduling": "=== OFFER SCHEDULING === Intervals in runway days between dilemma/draft/publisher offers.",
+	"dilemma_offer_interval": 6,
+	"draft_offer_interval": 5,
+	"publisher_meeting_interval": 7
+}

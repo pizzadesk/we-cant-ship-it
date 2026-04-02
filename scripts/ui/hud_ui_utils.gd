@@ -42,10 +42,14 @@ static func create_card_unlock_progress_label(left_column: Control) -> Label:
 	left_column.add_child(label)
 	return label
 
-static func update_action_tooltips(fix_bugs_button: Button, dev_log_button: Button, ship_button: Button, runway_days: int, instability: int) -> void:
+static func update_action_tooltips(fix_bugs_button: Button, dev_log_button: Button, ship_button: Button, runway_days: int, instability: int, soul: int = 0) -> void:
 	if runway_days <= 0:
 		fix_bugs_button.tooltip_text = _S.get_string("tooltips", "fix_bugs_depleted")
 		dev_log_button.tooltip_text = _S.get_string("tooltips", "dev_log_depleted")
+	elif soul <= 6:
+		# GDD: tooltip shifts at Soul ≤ 6 to signal exhaustion without explaining the trap.
+		fix_bugs_button.tooltip_text = _S.get_string("tooltips", "fix_bugs_exhausted")
+		dev_log_button.tooltip_text = _S.get_string("tooltips", "dev_log_active")
 	else:
 		fix_bugs_button.tooltip_text = _S.get_string("tooltips", "fix_bugs_active")
 		dev_log_button.tooltip_text = _S.get_string("tooltips", "dev_log_active")
@@ -67,7 +71,7 @@ static func create_stat_gauges(
 	refs.ambition = _create_stat_gauge(Color(0.2, 0.8, 0.3), 100, ambition_block)
 	refs.instability = _create_stat_gauge(Color(1.0, 0.3, 0.2), 100, instability_block)
 	refs.runway = _create_stat_gauge(Color(0.3, 0.6, 1.0), 21, runway_block)
-	refs.soul = _create_stat_gauge(Color(1.0, 0.6, 0.8), 100, soul_block)
+	refs.soul = _create_stat_gauge(Color(1.0, 0.6, 0.8), 15, soul_block)
 	return refs
 
 static func _create_stat_gauge(color: Color, max_value: int, parent: VBoxContainer) -> ProgressBar:

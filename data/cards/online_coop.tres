@@ -15,3 +15,4 @@ interactions = {
 "ui": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

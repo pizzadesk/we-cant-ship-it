@@ -11,3 +11,4 @@ var review_scroll: ScrollContainer = null
 var review_content: RichTextLabel = null
 var draft_pick_c_button: Button = null
 var publisher_pick_c_button: Button = null
+var archetype_dialog: ConfirmationDialog = null

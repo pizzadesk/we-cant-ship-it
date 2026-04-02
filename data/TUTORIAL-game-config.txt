@@ -1,0 +1,313 @@
+TUTORIAL: Changing Game Rules with game_config_override.json
+=============================================================
+
+No coding required. This file lets you override every number in the game
+by editing a single JSON file. You do not need to open the project.
+
+
+WHAT IS THIS FOR?
+-----------------
+
+  All the numbers that control how the game plays -- the score formula,
+  what counts as a good ending, how many days each action costs,
+  how much instability each card adds before the game flags it -- live in
+  one config file.
+
+  By default the game uses data/game_config.tres (which you need special
+  software to edit). This override system lets you change those same
+  numbers in a plain text .json file that opens in any text editor.
+
+
+WHAT YOU NEED
+-------------
+
+  A plain text editor:
+    Windows: Notepad (already there)
+    Mac:     TextEdit -- go to Format -> Make Plain Text before editing
+    Any:     VS Code, Notepad++, Sublime Text
+
+  Do NOT use Word, Google Docs, or LibreOffice. They corrupt the format.
+
+
+------------------------------------------------------------------------
+GETTING STARTED
+------------------------------------------------------------------------
+
+  The override file already exists at:
+
+    data/game_config_override.json
+
+  Open it in Notepad (right-click -> Open with -> Notepad).
+
+  You will see blocks like this:
+
+    "score_base": 5.0,
+    "soul_start": 12,
+
+  Each line is:  "parameter name": value,
+
+  Change the number after the colon. That is all.
+
+
+------------------------------------------------------------------------
+IMPORTANT RULES BEFORE YOU EDIT
+------------------------------------------------------------------------
+
+  1. KEEP THE COMMAS
+     Every line except the very last entry in the file must end in a comma.
+     Removing or adding commas incorrectly will break the file.
+
+     RIGHT:    "soul_start": 12,
+     WRONG:    "soul_start": 12
+
+  2. DO NOT TOUCH LINES STARTING WITH __
+     Lines like "__section_scoring" are labels. The game ignores them.
+     They are there to help you find things. Do not delete them.
+
+  3. NUMBERS DO NOT HAVE QUOTES. ONLY TEXT HAS QUOTES.
+     "soul_start": 12       <-- correct (number, no quotes)
+     "soul_start": "12"     <-- wrong (do not add quotes around numbers)
+
+  4. SAVE AS PLAIN TEXT
+     If Notepad asks about encoding: choose UTF-8.
+     Do not save as Unicode or ANSI.
+
+  5. TO REVERT EVERYTHING: just delete the file.
+     The game will fall back to its built-in values automatically.
+
+
+------------------------------------------------------------------------
+PARAMETER REFERENCE
+------------------------------------------------------------------------
+
+
+=== SCORING ===
+
+  How your final review score is calculated.
+  Formula (roughly): score = base + (ambition * A) - (instability * B) + (soul * C)
+
+  "score_base": 5.0
+    The starting score before any stats are applied. 5.0 means you begin
+    at a 5-out-of-10 and go up or down from there.
+
+  "ambition_coefficient": 0.14
+    How much each ambition point improves your score.
+    Raise this to reward big feature sets more.
+
+  "instability_coefficient": 0.05
+    How much each instability point hurts your score.
+    Raise this to punish chaotic builds more.
+
+  "soul_coefficient": 0.15
+    How much soul improves your score.
+    Soul also partially cancels out the instability penalty -- see below.
+
+  "soul_mitigation_factor": 40.0
+    Controls how effectively soul softens the instability penalty.
+    Lower = soul protects you more. Higher = instability hurts more even
+    when soul is high. Do not set this below 10.
+
+
+=== ACTION ECONOMY ===
+
+  "soul_start": 12
+    How much soul you begin each run with. Max is 15.
+
+  "soul_max": 15
+    The ceiling for soul. You cannot go above this at any point.
+
+  "fix_bugs_instability_reduction": 12
+    How many instability points Fix Bugs removes per use.
+
+  "fix_bugs_soul_cost": 3
+    How many soul points Fix Bugs costs per use.
+    The design intent: Fix Bugs hurts you to use. It is a desperation tool.
+
+  "dev_log_soul_gain": 1
+    How much soul you recover per Dev Log action.
+
+
+=== DEFINING GAME (THE GOLDILOCKS ENDING) ===
+
+  Reaching "Defining Game" requires ALL FOUR of these at the moment you ship.
+  It is the hardest and best outcome. Miss any one of the four: no Defining Game.
+
+  "goldilocks_ambition_min": 25
+    You need at least this much ambition accumulated on your board.
+
+  "goldilocks_instability_min": 18
+  "goldilocks_instability_max": 42
+    Instability must be inside this range (not too low, not too high).
+    Below 18 = too polished, no jank culture.
+    Above 42 = too chaotic, studio implodes.
+
+  "goldilocks_soul_min": 7
+    You must still have at least this much soul left when you ship.
+
+  TIP: In Run 1, you probably cannot reach 25 ambition -- it requires
+  uncommon or rare cards that only unlock in Run 2 and 3. That is intended.
+
+
+=== OTHER ENDINGS ===
+
+  Cult Disaster -- high instability + low soul:
+    "cult_disaster_instability_min": 41
+    "cult_disaster_soul_max": 4
+
+  Rough Diamond -- low scope, low chaos, decent soul:
+    "rough_diamond_ambition_max": 14
+    "rough_diamond_instability_max": 14
+    "rough_diamond_soul_min": 8
+
+  Legendary Jank -- extremely high instability (checked after Goldilocks):
+    "cult_jank_legendary_instability_min": 52
+    NOTE: Legendary Jank and Defining Game are mutually exclusive by design.
+    They require instability ranges that do not overlap (18-42 vs 52+).
+
+  Surprise Hit -- community energy + good score:
+    "community_darling_surprise_hit_soul_min": 8
+    "community_darling_surprise_hit_score_min": 6.5
+
+  Prestige Collapse -- too much ambition, too little soul:
+    "prestige_collapse_ambition_min": 25
+    "prestige_collapse_soul_max": 6
+
+  Financial Catastrophe -- complete soul drain:
+    "financial_catastrophe_soul_max": 3
+
+
+=== SHIP TIMING ===
+
+  The game rewards or punishes you based on WHEN you ship.
+
+  Sweet Spot -- shipping in a specific window = score bonus:
+    "sweet_spot_runway_min": 4
+    "sweet_spot_runway_max": 9
+    (runway days remaining when you hit Ship)
+    "sweet_spot_instability_min": 18
+    "sweet_spot_instability_max": 45
+    (instability must also be in this range for Sweet Spot to apply)
+
+  "sweet_spot_score_bonus": 1.2
+    Added to score when you ship in the Sweet Spot.
+
+  "too_early_runway_threshold": 13
+    If you ship with more than this many days left: Too Early penalty.
+  "too_early_score_penalty": -0.5
+
+  "panic_ship_runway_threshold": 2
+    If you ship with 2 or fewer days left: Last-Minute Panic penalty.
+  "panic_ship_score_penalty": -0.4
+
+
+=== JANK STATUS ===
+
+  Classifies how your build looks at ship time (affects aesthetic/flavour).
+
+  Polished -- very low instability AND decent score:
+    "polished_instability_max": 22
+    "polished_score_min": 7.0
+
+  Broken -- extreme instability:
+    "broken_instability_min": 78
+
+  Sweet Spot jank -- instability in the artistic chaos zone:
+    "sweet_spot_instability_zone_min": 38
+    "sweet_spot_instability_zone_max": 62
+
+
+=== CARD PROGRESSION ===
+
+  "initial_card_unlock_count": 8
+    How many common cards you start with unlocked at the beginning of each cycle.
+    The pool only has 5 common cards currently, so this is effectively capped at 5.
+
+  "stage_threshold_runways": [15, 10, 5, 0]
+    The visual stage of the game changes as runway days count down.
+    These are the thresholds: when runway hits 15, 10, 5, or 0 days,
+    the stage shifts. You can make stages longer or shorter by changing
+    these numbers. Must be in descending order.
+
+
+=== ARCHETYPE MISMATCH ===
+
+  When a player places a card that does not match their chosen genre,
+  there is a friction penalty.
+
+  Genre Stretch (card is adjacent genre, 2 out of 3 affinity):
+    "genre_stretch_instability_bonus": 2
+
+  Mismatch (card only has 1 of 3 genre affinities):
+    "archetype_mismatch_instability_bonus": 4
+    "archetype_mismatch_ambition_bonus": 2
+    "archetype_mismatch_soul_penalty": 1
+
+  Alien card (card has no genre affinity at all):
+    "alien_card_instability_bonus": 8
+    "alien_card_ambition_bonus": 4
+    "alien_card_soul_penalty": 3
+    "alien_card_soul_gate": 5
+      (you need at least this much soul to place an alien card at all)
+
+
+=== OFFER SCHEDULING ===
+
+  How often dilemma / draft / publisher events interrupt the run.
+  Numbers are in runway days between offers.
+
+  "dilemma_offer_interval": 6
+  "draft_offer_interval": 5
+  "publisher_meeting_interval": 7
+
+
+------------------------------------------------------------------------
+EXPERIMENT IDEAS
+------------------------------------------------------------------------
+
+  Make soul almost useless:
+    "soul_coefficient": 0.05
+    "soul_mitigation_factor": 200.0
+
+  Make ambition everything:
+    "ambition_coefficient": 0.30
+    "score_base": 3.0
+
+  Make Defining Game easier to reach:
+    "goldilocks_ambition_min": 15
+    "goldilocks_instability_max": 55
+
+  Make every run feel chaotic:
+    "fix_bugs_soul_cost": 6
+    "fix_bugs_instability_reduction": 6
+
+  Reward shipping late:
+    "too_early_runway_threshold": 18
+    "panic_ship_runway_threshold": 0
+
+
+------------------------------------------------------------------------
+TROUBLESHOOTING
+------------------------------------------------------------------------
+
+  The game does not seem to use my numbers:
+    - Check the file is named exactly: game_config_override.json
+    - Make sure it is in the data/ folder inside the project
+    - Open the Godot console (Output tab at the bottom of the editor)
+      A line starting with [GameConfig] Override applied confirms it loaded
+    - If you see an error, the JSON format has a problem (see below)
+
+  The game crashed or shows an error about JSON:
+    - You have a formatting mistake in the file
+    - Most common causes: missing comma, extra comma after the last entry,
+      number accidentally put inside quotes
+    - The easiest fix: re-open the original backup (if you made one) or
+      compare your file to the original -- each value should match the format
+
+  I don't know if it worked:
+    - Run the game. In the Godot Output panel you will see:
+      [GameConfig] Override applied from '...': 39/39 parameters set.
+    - If you see 39/39 everything loaded correctly
+
+  I want to go back to the original settings:
+    - Delete data/game_config_override.json
+    - The game will use game_config.tres automatically

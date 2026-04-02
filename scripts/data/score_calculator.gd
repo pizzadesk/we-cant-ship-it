@@ -12,13 +12,15 @@ static func calculate_final_score(
 	features_shipped: int,
 	ship_window: Dictionary
 ) -> float:
-	var features_multiplier: float = 1.0 if features_shipped > 0 else 0.2
-	var base_score: float = config.score_base * features_multiplier
+	# Nothing shipped = nothing reviewable; bypass all positive contributions.
+	if features_shipped == 0:
+		return 0.1
+	var base_score: float = config.score_base
 	var soul_factor: float = float(soul) / float(soul + config.soul_mitigation_factor)
 	var instability_penalty: float = -config.instability_coefficient * float(instability) * (1.0 - soul_factor)
 	return clampf(
 		base_score
-		+ (ambition * config.ambition_coefficient * features_multiplier)
+		+ (ambition * config.ambition_coefficient)
 		+ instability_penalty
 		+ (soul * config.soul_coefficient)
 		+ float(ship_window.get("score_bonus", 0.0)),

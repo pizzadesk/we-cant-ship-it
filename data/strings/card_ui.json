@@ -5,10 +5,10 @@
   "stats_format": "AMB +%d | INST +%d",
   "ambition_stat_format": "Ambition: +%d",
   "instability_stat_format": "Instability: +%d",
-  "variant_note": "\n[i]This variant has slightly\nrandomized stats.[/i]",
+  "variant_note": "\n[i]Stats randomized slightly.[/i]",
   "progress_calculating": "Deck: calculating...",
   "progress_format": "Deck Unlocked: %d/%d (%d%%)",
-  "progress_low_suffix": " -> Ship more runs to unlock!",
-  "progress_mid_suffix": " -> Almost full chaos!",
+  "progress_low_suffix": " \u2014 ship more to unlock.",
+  "progress_mid_suffix": " \u2014 almost full.",
   "deck_loading": "Loading deck progression..."
 }

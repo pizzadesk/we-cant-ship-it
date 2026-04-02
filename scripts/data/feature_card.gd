@@ -17,6 +17,9 @@ class_name FeatureCard
 @export var interactions: Dictionary = {}
 # Per-tag feed flavor strings. Example: {"ui": "UI + systems wobble into charm."}
 @export var interaction_flavor: Dictionary = {}
+# Which archetypes this card naturally belongs to.
+# Empty = alien card (penalised by all archetype choices, soul-gated).
+@export var archetype_affinity: PackedStringArray = PackedStringArray()
 
 func get_interaction_delta(tag: String, stat_name: String) -> int:
 	var raw: Variant = interactions.get(tag, {})

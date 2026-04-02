@@ -64,6 +64,19 @@ static func show_synergy_toast(
 	if label != null:
 		label.text = toast_text
 
+	var net_effect: int = soul_delta - instability_delta
+	var style: StyleBoxFlat = toast.get_theme_stylebox("panel") as StyleBoxFlat
+	if style != null:
+		if net_effect > 0:
+			style.bg_color = Color(0.22, 0.62, 0.28, 0.95)
+			style.border_color = Color(0.60, 0.95, 0.72, 1.0)
+		elif net_effect < 0:
+			style.bg_color = Color(0.62, 0.22, 0.22, 0.95)
+			style.border_color = Color(0.95, 0.60, 0.60, 1.0)
+		else:
+			style.bg_color = Color(0.35, 0.35, 0.40, 0.95)
+			style.border_color = Color(0.65, 0.65, 0.72, 1.0)
+
 	if existing_timer != null:
 		existing_timer.queue_free()
 

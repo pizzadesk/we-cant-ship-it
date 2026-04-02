@@ -17,7 +17,6 @@ var reviews: Array[Dictionary] = []
 var mechanics_highlights: Array[String] = []
 var run_identity: String = ""
 var unlock_defining_game: bool = false
-var meta_progress: Dictionary = {}
 
 func to_dictionary() -> Dictionary:
 	return {
@@ -33,5 +32,4 @@ func to_dictionary() -> Dictionary:
 		"mechanics_highlights": mechanics_highlights,
 		"run_identity": run_identity,
 		"unlock_defining_game": unlock_defining_game,
-		"meta_progress": meta_progress,
 	}

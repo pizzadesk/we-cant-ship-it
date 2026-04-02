@@ -76,13 +76,14 @@ func maybe_offer_dilemma(
 	_soul: int,
 	publisher_trust_mode_enabled: bool,
 	publisher_trust: int,
-	runs_played: int,
+	pressure_modifier: float,
 ) -> Dictionary:
 	if runway_days <= 0:
 		return {}
 	if _popup_offered_on_runway_day == runway_days:
 		return {}
-	if not (runway_days % config.dilemma_offer_interval == 0):
+	var effective_interval: int = maxi(1, int(float(config.dilemma_offer_interval) / pressure_modifier))
+	if not (runway_days % effective_interval == 0):
 		return {}
 	if _dilemma_days_offered.get(runway_days, false):
 		return {}
@@ -92,7 +93,7 @@ func maybe_offer_dilemma(
 		push_warning("No dilemmas loaded from offers.json — skipping dilemma offer")
 		return {}
 
-	_pending_dilemma = _pick_weighted_dilemma(dilemmas, offers, publisher_trust_mode_enabled, publisher_trust, runs_played)
+	_pending_dilemma = _pick_weighted_dilemma(dilemmas, offers, publisher_trust_mode_enabled, publisher_trust, pressure_modifier)
 	if _pending_dilemma.is_empty():
 		return {}
 	_pending_dilemma["runway_day"] = runway_days
@@ -105,7 +106,7 @@ func _pick_weighted_dilemma(
 	offers: Dictionary,
 	publisher_trust_mode_enabled: bool,
 	publisher_trust: int,
-	runs_played: int,
+	_pressure_modifier: float,
 ) -> Dictionary:
 	var weighted_entries: Array[Dictionary] = []
 	var total_weight: float = 0.0
@@ -114,7 +115,7 @@ func _pick_weighted_dilemma(
 			continue
 		var dilemma: Dictionary = raw_dilemma as Dictionary
 		var category: String = String(dilemma.get("category", "default"))
-		var weight: float = _get_dilemma_category_weight(category, offers, publisher_trust_mode_enabled, publisher_trust, runs_played)
+		var weight: float = _get_dilemma_category_weight(category, offers, publisher_trust_mode_enabled, publisher_trust)
 		if weight <= 0.0:
 			continue
 		total_weight += weight
@@ -139,7 +140,6 @@ func _get_dilemma_category_weight(
 	offers: Dictionary,
 	publisher_trust_mode_enabled: bool,
 	publisher_trust: int,
-	_runs_played: int,
 ) -> float:
 	var all_weights: Variant = offers.get("dilemma_category_weights", {})
 	if all_weights is not Dictionary:
@@ -170,6 +170,7 @@ func maybe_offer_draft(
 	runway_days: int,
 	soul: int,
 	feature_board_empty: bool,
+	pressure_modifier: float,
 ) -> Dictionary:
 	if runway_days <= 0:
 		return {}
@@ -177,7 +178,8 @@ func maybe_offer_draft(
 		return {}
 	if _popup_offered_on_runway_day == runway_days:
 		return {}
-	if runway_days % config.draft_offer_interval != 0:
+	var effective_interval: int = maxi(1, int(float(config.draft_offer_interval) / pressure_modifier))
+	if runway_days % effective_interval != 0:
 		return {}
 	if _last_draft_day_offered == runway_days:
 		return {}
@@ -206,7 +208,7 @@ func maybe_offer_publisher_meeting(
 	feature_board_size: int,
 	publisher_trust_mode_enabled: bool,
 	publisher_trust: int,
-	runs_played: int,
+	pressure_modifier: float,
 ) -> Dictionary:
 	if runway_days <= 0:
 		return {}
@@ -216,7 +218,8 @@ func maybe_offer_publisher_meeting(
 		return {}
 	if _popup_offered_on_runway_day == runway_days:
 		return {}
-	if runway_days % config.publisher_meeting_interval != 0:
+	var effective_interval: int = maxi(1, int(float(config.publisher_meeting_interval) / pressure_modifier))
+	if runway_days % effective_interval != 0:
 		return {}
 	if _last_publisher_meeting_day_offered == runway_days:
 		return {}
@@ -228,7 +231,7 @@ func maybe_offer_publisher_meeting(
 
 	var grade_info: Dictionary = _grade_publisher_meeting_state(instability, soul, feature_board_size, runway_days)
 	var topic: String = _pick_publisher_topic()
-	var options: Array[Dictionary] = _build_publisher_meeting_options(topic, runs_played, publisher_trust)
+	var options: Array[Dictionary] = _build_publisher_meeting_options(topic, pressure_modifier, publisher_trust)
 	_pending_publisher_meeting = {
 		"title": "Publisher Meeting / Day %d" % runway_days,
 		"topic": topic,
@@ -275,7 +278,7 @@ func _pick_publisher_topic() -> String:
 	var topics: PackedStringArray = PackedStringArray(["Scope", "Tech Debt", "Community", "Production"])
 	return topics[_rng.randi_range(0, topics.size() - 1)]
 
-func _build_publisher_meeting_options(topic: String, runs_played: int, publisher_trust: int) -> Array[Dictionary]:
+func _build_publisher_meeting_options(topic: String, pressure_modifier: float, publisher_trust: int) -> Array[Dictionary]:
 	var options: Array[Dictionary] = [
 		{
 			"label": "Polish Promise",
@@ -305,7 +308,7 @@ func _build_publisher_meeting_options(topic: String, runs_played: int, publisher
 			(options[0]["effects"] as Dictionary)["runway_days"] = 1
 			(options[1]["effects"] as Dictionary)["runway_days"] = -1
 
-	if runs_played >= 1:
+	if pressure_modifier > 1.0:
 		if publisher_trust < -10:
 			(options[1]["effects"] as Dictionary)["instability"] = int((options[1]["effects"] as Dictionary).get("instability", 0)) + 2
 		if publisher_trust > 10:

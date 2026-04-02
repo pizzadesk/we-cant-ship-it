@@ -1,4 +1,5 @@
 const _S = preload("res://scripts/ui/ui_strings.gd")
+const _JsonDataLoader = preload("res://scripts/data/json_data_loader.gd")
 
 static func build_help_dialog(owner: Node, on_confirmed: Callable, help_text: String) -> AcceptDialog:
 	var help_dialog: AcceptDialog = AcceptDialog.new()
@@ -177,42 +178,6 @@ static func build_jank_meter_dialog(owner: Node, on_confirmed: Callable) -> Dict
 		"content": content,
 	}
 
-static func build_studio_briefing_dialog(owner: Node, on_keep: Callable, on_replace: Callable) -> Dictionary:
-	# ConfirmationDialog: OK = "Keep Current Legacy", Cancel = "Take New Legacy".
-	# Only shown when a pending_legacy exists in meta_progress.
-	var dialog: ConfirmationDialog = ConfirmationDialog.new()
-	dialog.name = "StudioBriefingDialog"
-	dialog.title = _S.get_string("popups", "studio_briefing_title")
-	dialog.set_close_on_escape(false)
-	dialog.min_size = Vector2i(680, 480)
-	dialog.get_label().visible = false
-	dialog.get_ok_button().text = _S.get_string("buttons", "studio_briefing_ok")
-	dialog.get_cancel_button().text = _S.get_string("buttons", "studio_briefing_cancel")
-	dialog.confirmed.connect(on_keep)
-	dialog.canceled.connect(on_replace)
-
-	var content: RichTextLabel = RichTextLabel.new()
-	content.name = "BriefingContent"
-	content.bbcode_enabled = true
-	content.scroll_active = true
-	content.selection_enabled = false
-	content.fit_content = false
-	content.set_anchors_preset(Control.PRESET_FULL_RECT)
-	content.offset_left = 16.0
-	content.offset_top = 52.0
-	content.offset_right = -16.0
-	content.offset_bottom = -66.0
-	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	content.add_theme_font_size_override("normal_font_size", 15)
-
-	dialog.add_child(content)
-	owner.add_child(dialog)
-	return {
-		"dialog": dialog,
-		"content": content,
-	}
-
 static func setup_runtime_dialogs(
 	owner: Node,
 	review_dialog: AcceptDialog,
@@ -339,7 +304,55 @@ static func setup_runtime_dialogs(
 	refs.review_content = review_content
 	refs.draft_pick_c_button = draft_pick_c_button
 	refs.publisher_pick_c_button = publisher_pick_c_button
+	refs.archetype_dialog = build_archetype_select_dialog(owner)
 	return refs
+
+static func build_archetype_select_dialog(owner: Node) -> ConfirmationDialog:
+	var archetypes: Array = _JsonDataLoader.load_array("res://data/archetypes.json", "archetypes")
+	if archetypes.is_empty():
+		archetypes = [
+			{"label": "RPG", "key": "rpg", "description": "Deep systems, faction rep, narrative weight"},
+			{"label": "Shooter", "key": "shooter", "description": "Kinetic action, destruction, co-op"},
+			{"label": "Action-Adventure", "key": "action_adventure", "description": "Open world, exploration, physics"},
+		]
+	var dialog: ConfirmationDialog = ConfirmationDialog.new()
+	dialog.name = "ArchetypeSelectDialog"
+	dialog.title = "Target Genre"
+	dialog.set_close_on_escape(false)
+	dialog.min_size = Vector2i(560, 360)
+	dialog.get_label().visible = false
+	var first: Dictionary = archetypes[0]
+	dialog.get_ok_button().text = first.get("label", "RPG")
+	dialog.get_ok_button().add_theme_font_size_override("font_size", 20)
+	dialog.set_meta("ok_archetype_key", first.get("key", "rpg"))
+	dialog.get_cancel_button().text = "No Archetype"
+	dialog.get_cancel_button().add_theme_font_size_override("font_size", 20)
+	for i in range(1, archetypes.size()):
+		var arch: Dictionary = archetypes[i]
+		var btn: Button = dialog.add_button(arch.get("label", ""), false, arch.get("key", ""))
+		btn.add_theme_font_size_override("font_size", 20)
+	var content: RichTextLabel = RichTextLabel.new()
+	content.name = "ArchetypeContent"
+	content.bbcode_enabled = true
+	content.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.scroll_active = false
+	content.selection_enabled = false
+	content.set_anchors_preset(Control.PRESET_FULL_RECT)
+	content.offset_left = 16.0
+	content.offset_top = 52.0
+	content.offset_right = -16.0
+	content.offset_bottom = -90.0
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_theme_font_size_override("normal_font_size", 15)
+	var body: String = _S.get_string("popups", "archetype_dialog_intro") + "\n\n"
+	for arch in archetypes:
+		body += "[b]%s[/b] — %s\n" % [arch.get("label", ""), arch.get("description", "")]
+	body += "\n" + _S.get_string("popups", "archetype_dialog_no_archetype_note")
+	content.text = body
+	dialog.add_child(content)
+	owner.add_child(dialog)
+	return dialog
 
 static func configure_locked_dialog(
 	dlg: AcceptDialog,

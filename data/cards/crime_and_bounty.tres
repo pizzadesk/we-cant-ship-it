@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_k4w2m")
 feature_name = "Crime & Bounty"
-ambition_value = 9
-instability_value = 8
+ambition_value = 6
+instability_value = 6
 tier = "uncommon"
 unlock_weight = 3.2
 tags = PackedStringArray("quest", "combat", "lore")
@@ -16,3 +16,4 @@ interactions = {
 "lore": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

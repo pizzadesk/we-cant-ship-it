@@ -37,6 +37,9 @@ WHAT YOU ARE MAKING
     An ambition value -- how much scope/boldness the feature adds (1-10)
     An instability value -- how much chaos/jank it causes (1-10)
     Tags              -- what type of feature it is (affects interactions)
+    Archetype affinity -- which genres this card naturally suits
+                          (RPG / Shooter / Action-Adventure, or leave as
+                          the template default for safe universal coverage)
 
   Cards can be anything: systems, mechanics, marketing stunts, bad ideas,
   great ideas, or things that only make sense at 2am during crunch.
@@ -52,6 +55,7 @@ QUICK RULES
 -----------
   OK  Always copy the template -- never edit card_template.tres directly
   OK  Rename your copy  (example: my_water_physics.tres)
+  OK  archetype_affinity can list one, two, or all three genres
   NO  Do not include the word "template" in your filename
   NO  Do not use Word, Google Docs, or any rich-text editor
   NO  Do not change or delete the first 5 lines of the file
@@ -61,6 +65,6 @@ QUICK RULES
 
 IF SOMETHING LOOKS WRONG
 -------------------------
-  Open your file and example_photo_mode_challenge.tres side by side
+  Open your file and debug.tres side by side
   in Notepad. The structure must be identical -- only the values differ.
   Read TUTORIAL.txt for detailed troubleshooting.

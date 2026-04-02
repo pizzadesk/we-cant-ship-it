@@ -33,29 +33,60 @@ func _on_show_timer_timeout() -> void:
 	hide()
 
 func _update_content() -> void:
-	if _feature_card == null:
+	if _feature_card == null or not (_feature_card is FeatureCard):
 		_content_label.text = _S.get_string("card_ui", "no_card_selected")
 		return
 
-	var feature_name: String = _feature_card.feature_name
-	var ambition: int = int(_feature_card.ambition_value)
-	var instability: int = int(_feature_card.instability_value)
-	var tags: PackedStringArray = PackedStringArray()
-	if _feature_card is FeatureCard:
-		tags = (_feature_card as FeatureCard).tags
+	var fc: FeatureCard = _feature_card as FeatureCard
+
+	# Read live archetype state for contextual mismatch display.
+	var chosen_archetype: String = ""
+	var mismatch_level: int = 0
+	var can_place: bool = true
+	if AppState != null:
+		chosen_archetype = String(AppState.chosen_archetype)
+		mismatch_level = int(AppState.get_archetype_mismatch_level(fc))
+		can_place = bool(AppState.can_place_card(fc))
+
+	# Tier color: common=grey, uncommon=steel blue, rare=gold.
+	var tier_color: String
+	match fc.tier.to_lower():
+		"uncommon": tier_color = "74c0fc"
+		"rare":     tier_color = "ffd43b"
+		_:          tier_color = "adb5bd"
 
 	var content: String = ""
-	content += "[b]%s[/b]\n" % feature_name
-	content += "\n[u]Stats:[/u]\n"
-	content += _S.get_string("card_ui", "ambition_stat_format") % ambition + "\n"
-	content += _S.get_string("card_ui", "instability_stat_format") % instability + "\n"
+	content += "[b]%s[/b]\n" % fc.feature_name
+	content += "[color=#%s]%s[/color]\n\n" % [tier_color, fc.tier.capitalize()]
 
-	if tags.size() > 0:
-		content += "\n[u]Tags:[/u]\n"
-		content += "%s\n" % ", ".join(tags)
+	content += "[u]Stats[/u]\n"
+	content += _S.get_string("card_ui", "ambition_stat_format") % fc.ambition_value + "\n"
+	content += _S.get_string("card_ui", "instability_stat_format") % fc.instability_value + "\n"
 
-	# If it has a [number], explain the variant system
-	if "[" in feature_name and "]" in feature_name:
+	if fc.tags.size() > 0:
+		content += "\n[u]Tags[/u]\n"
+		content += "%s\n" % ", ".join(fc.tags)
+
+	# Archetype section — only meaningful when a genre is active this run.
+	if not chosen_archetype.is_empty():
+		content += "\n[u]Archetype[/u]\n"
+		if fc.archetype_affinity.is_empty():
+			content += "[color=#ff6b6b]\u2620 Alien card[/color] — radically off-genre\n"
+			content += "+8 Inst, +4 Amb, -3 Soul on placement\n"
+			if not can_place:
+				var gate: int = AppState.get_game_config().alien_card_soul_gate if AppState != null else 5
+				content += "[color=#ff6b6b]Blocked — Soul < %d[/color]\n" % gate
+		elif mismatch_level == 0:
+			content += "[color=#51cf66]\u2713 On-archetype — no penalty[/color]\n"
+		elif mismatch_level == 1:
+			content += "[color=#ffd43b]~ Genre stretch[/color] — adjacent genre\n"
+			content += "+2 Instability on placement\n"
+		else:
+			content += "[color=#ff8c42]\u26a0 Wild swing[/color] — specialized, wrong genre\n"
+			content += "+4 Inst, +2 Amb, -1 Soul on placement\n"
+		content += "\n[color=#555555][i]Drag icons: \u26a1 heat  ~ stretch  \u26a0 wild swing  \u2620 alien[/i][/color]"
+
+	if "[" in fc.feature_name and "]" in fc.feature_name:
 		content += "\n" + _S.get_string("card_ui", "variant_note")
 
 	_content_label.text = content

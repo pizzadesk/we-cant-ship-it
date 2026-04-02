@@ -2,6 +2,51 @@ const ReviewMarkupUtils = preload("res://scripts/ui/review_markup_utils.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 const EndingResolver = preload("res://scripts/data/ending_resolver.gd")
 
+## Builds the cycle legacy screen text shown after run 3 ships.
+## cycle_state must be the full dictionary from AppState.get_cycle_state()
+## after complete_run() has already recorded run_3_ending.
+static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
+	var lines: PackedStringArray = PackedStringArray()
+
+	lines.append(_S.get_string("popups", "cycle_legacy_arc_header") + "\n")
+
+	var ending_colors: Dictionary = {
+		"defining game":       "51cf66",
+		"legendary jank":      "ff8c42",
+		"cult classic":        "ff8c42",
+		"surprise hit":        "74c0fc",
+		"rough diamond":       "adb5bd",
+		"cult disaster":       "ff6b6b",
+		"prestige collapse":   "cc5de8",
+		"financial catastrophe": "ff6b6b",
+	}
+
+	var any_defining: bool = false
+	for run_num in [1, 2, 3]:
+		var ending: String = String(cycle_state.get("run_%d_ending" % run_num, ""))
+		var label: String = _S.get_string("popups", "cycle_legacy_run_header") % run_num
+		var normalized: String = EndingResolver.normalize_ending_name(ending)
+		var color: String = String(ending_colors.get(normalized, "ffffff"))
+		var ending_display: String = _extract_ending_label(ending)
+		lines.append("%s  [color=#%s]%s[/color]" % [label, color, ending_display if not ending_display.is_empty() else "—"])
+		if normalized == "defining game":
+			any_defining = true
+
+	lines.append("")
+
+	if any_defining:
+		lines.append(_S.get_string("popups", "cycle_legacy_goldilocks_reached"))
+	else:
+		lines.append(_S.get_string("popups", "cycle_legacy_goldilocks_missed"))
+		lines.append(_S.get_string("popups", "cycle_legacy_reset_note"))
+
+	return "\n".join(lines)
+
+static func _extract_ending_label(ending: String) -> String:
+	if ending.contains(":"):
+		return ending.split(":", false, 1)[0].strip_edges()
+	return ending.strip_edges()
+
 static func build_review_roulette_text(results: Dictionary) -> String:
 	var review_lines: PackedStringArray = []
 	review_lines.append(_S.get_string("popups", "review_roulette_header") + "\n")
@@ -69,7 +114,7 @@ static func build_mechanics_highlights_text(mechanics_highlights: Array) -> Stri
 		content += "[color=#ff9900][%s][/color] %s\n\n" % [rank, highlight]
 	return content
 
-static func build_jank_meter_text(results: Dictionary, instability: int, soul: int) -> String:
+static func build_jank_meter_text(results: Dictionary, ambition: int, instability: int, soul: int, config: GameConfig) -> String:
 	var review_score: float = float(results.get("review_score", 0.0))
 	var jank_status: String = String(results.get("jank_status", "volatile"))
 	var ending: String = String(results.get("ending", "Unknown"))
@@ -112,15 +157,16 @@ static func build_jank_meter_text(results: Dictionary, instability: int, soul: i
 	content += "%s\n\n" % ending
 	content += "[i]%s[/i]\n\n" % _build_ending_epilogue(ending)
 	content += _S.get_string("popups", "jank_postmortem_header") + "\n"
-	content += "Instability: %d | Soul: %d\n" % [instability, soul]
+	content += "Instability: %d | Soul: %d\n\n" % [instability, soul]
+
+	if config != null:
+		content += _build_goldilocks_gap_section(ambition, instability, soul, config) + "\n"
 
 	var card_unlock: Dictionary = results.get("card_unlock", {})
 	if not card_unlock.is_empty():
 		content += "\n" + _S.get_string("popups", "jank_card_unlock_header") + "\n"
-		content += "%s (Quality: %.2f)\n" % [
-			String(card_unlock.get("card_id", "unknown")),
-			float(card_unlock.get("unlock_quality", 0.0))
-		]
+		var card_display_name: String = String(card_unlock.get("card_name", card_unlock.get("card_id", "?")))
+		content += "%s  (quality: %.0f%%)\n" % [card_display_name, float(card_unlock.get("unlock_quality", 0.0)) * 100.0]
 		content += _S.get_string("popups", "jank_card_unlock_note") + "\n"
 
 	var defining_unlock: bool = bool(results.get("unlock_defining_game", false))
@@ -175,3 +221,53 @@ static func _predict_ending_label(game_state: Node, predicted_score: float) -> S
 	if game_state.has_method("get_dominant_style_bucket"):
 		bucket = String(game_state.get_dominant_style_bucket())
 	return EndingResolver.resolve_ending_label(config, ambition, instability, soul, predicted_score, bucket)
+
+## Renders the Goldilocks gap visualizer — proportional bars, no numbers.
+## Shown in the jank meter after every run so the player learns the gap intuitively.
+static func _build_goldilocks_gap_section(ambition: int, instability: int, soul: int, cfg: GameConfig) -> String:
+	const BAR_LEN: int = 14
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("[b]GOLDILOCKS GAP[/b]")
+	lines.append("[i]How close you came to the Defining Game gate.[/i]")
+	lines.append("")
+
+	# Ambition: must reach goldilocks_ambition_min
+	var amb_ratio: float = clampf(float(ambition) / float(cfg.goldilocks_ambition_min), 0.0, 1.0)
+	var amb_label: String
+	if ambition >= cfg.goldilocks_ambition_min:
+		amb_label = "\u2713"
+	elif amb_ratio >= 0.80:
+		amb_label = "close"
+	else:
+		amb_label = "needs more"
+	lines.append("AMBITION    %s  %s" % [_gap_bar(amb_ratio, BAR_LEN), amb_label])
+
+	# Instability: must land in [goldilocks_instability_min, goldilocks_instability_max]
+	var inst_ratio: float
+	var inst_label: String
+	if instability < cfg.goldilocks_instability_min:
+		inst_ratio = clampf(float(instability) / float(cfg.goldilocks_instability_min), 0.0, 1.0)
+		inst_label = "close" if inst_ratio >= 0.70 else "too low"
+	elif instability > cfg.goldilocks_instability_max:
+		inst_ratio = 1.0
+		inst_label = "too high"
+	else:
+		inst_ratio = 1.0
+		inst_label = "\u2713"
+	lines.append("INSTABILITY %s  %s" % [_gap_bar(inst_ratio, BAR_LEN), inst_label])
+
+	# Soul: must reach goldilocks_soul_min
+	var soul_ratio: float = clampf(float(soul) / float(cfg.goldilocks_soul_min), 0.0, 1.0)
+	var soul_label: String
+	if soul >= cfg.goldilocks_soul_min:
+		soul_label = "\u2713"
+	elif soul_ratio >= 0.80:
+		soul_label = "close"
+	else:
+		soul_label = "needs more"
+	lines.append("SOUL        %s  %s" % [_gap_bar(soul_ratio, BAR_LEN), soul_label])
+	return "\n".join(lines)
+
+static func _gap_bar(ratio: float, length: int) -> String:
+	var filled: int = clampi(int(round(ratio * float(length))), 0, length)
+	return "\u2588".repeat(filled) + "\u2591".repeat(length - filled)

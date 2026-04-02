@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_m3x6z")
 feature_name = "Mod Support SDK"
-ambition_value = 10
-instability_value = 8
+ambition_value = 6
+instability_value = 5
 tier = "uncommon"
 unlock_weight = 3.6
 tags = PackedStringArray("ui", "lore", "multiplayer")
@@ -16,3 +16,4 @@ interactions = {
 "multiplayer": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

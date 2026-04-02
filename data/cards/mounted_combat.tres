@@ -16,3 +16,4 @@ interactions = {
 "physics": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure")

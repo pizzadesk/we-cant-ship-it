@@ -6,6 +6,9 @@ signal card_clicked(card: Resource)
 var drag_origin: String = "backlog"
 var _base_rotation: float = 0.0
 var _hover_tween: Tween
+# Drag hint icons — stored on the preview duplicate so they survive _ready() → _update_view().
+var _drag_heat_icon: String = ""
+var _drag_mismatch_icon: String = ""
 
 func _ready() -> void:
 	super()
@@ -14,15 +17,31 @@ func _ready() -> void:
 	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
 
+func _update_view() -> void:
+	super._update_view()
+	if _drag_heat_icon.is_empty() and _drag_mismatch_icon.is_empty():
+		return
+	# Append hint icons AFTER the base resets the label — this is the correct call site.
+	var suffix: String = ""
+	if not _drag_heat_icon.is_empty():
+		suffix += " " + _drag_heat_icon
+	if not _drag_mismatch_icon.is_empty():
+		suffix += " " + _drag_mismatch_icon
+	_name_label.text += suffix
+
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if feature_card == null:
 		return null
-	var should_show_hint: bool = false
+
+	# Determine interaction heat level for the hint icon on the drag preview.
+	var heat: int = 0
+	var mismatch_level: int = 0
 	if drag_origin == "backlog" and feature_card is FeatureCard and AppState != null:
-		should_show_hint = bool(AppState.has_potential_interaction(feature_card as FeatureCard, AppState.feature_board))
+		heat = int(AppState.get_interaction_heat(feature_card as FeatureCard, AppState.feature_board))
+		mismatch_level = int(AppState.get_archetype_mismatch_level(feature_card as FeatureCard))
 
 	var preview: FeatureCardWidget = duplicate() as FeatureCardWidget
 	var preview_size: Vector2 = size
@@ -36,10 +55,14 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.rotation_degrees = 0.0
 	preview.modulate = Color(1.0, 1.0, 1.0, 0.75)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if should_show_hint:
-		var preview_name_label: Label = preview.get_node_or_null("Padding/VBox/NameLabel") as Label
-		if preview_name_label != null and not preview_name_label.text.ends_with(" ⚡"):
-			preview_name_label.text = "%s ⚡" % preview_name_label.text
+	# Set icons on the preview widget; _update_view() override appends them after _ready().
+	if heat > 0:
+		var heat_icons: PackedStringArray = PackedStringArray(["", "⚡", "⚡⚡", "⚡⚡⚡"])
+		preview._drag_heat_icon = heat_icons[clampi(heat, 0, 3)]
+	if mismatch_level > 0:
+		# 1=genre stretch (~), 2=wild swing (⚠), 3=alien (☠)
+		var mismatch_icons: PackedStringArray = PackedStringArray(["", "~", "⚠", "☠"])
+		preview._drag_mismatch_icon = mismatch_icons[clampi(mismatch_level, 0, 3)]
 	set_drag_preview(preview)
 	var payload: FeatureCardDragPayload = FeatureCardDragPayload.new()
 	payload.card = feature_card

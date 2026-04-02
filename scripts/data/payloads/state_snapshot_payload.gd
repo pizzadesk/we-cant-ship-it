@@ -7,7 +7,7 @@ var runway_days: int = 0
 var soul: int = 0
 var features_shipped: int = 0
 var run_identity: String = "Unformed"
-var meta_studio_tier: int = 1
+var current_run: int = 1
 # Style pressure accumulators — three competing identities; whichever leads sets run_identity.
 var style_points: Dictionary = {}
 
@@ -19,7 +19,7 @@ static func from_dictionary(snapshot: Dictionary) -> StateSnapshotPayload:
 	payload.soul = int(snapshot.get("soul", 0))
 	payload.features_shipped = int(snapshot.get("features_shipped", 0))
 	payload.run_identity = String(snapshot.get("run_identity", "Unformed"))
-	payload.meta_studio_tier = int(snapshot.get("meta_studio_tier", 1))
+	payload.current_run = int(snapshot.get("current_run", 1))
 	var sp: Variant = snapshot.get("style_points", {})
 	payload.style_points = sp if sp is Dictionary else {}
 	return payload
@@ -32,6 +32,6 @@ func to_dictionary() -> Dictionary:
 		"soul": soul,
 		"features_shipped": features_shipped,
 		"run_identity": run_identity,
-		"meta_studio_tier": meta_studio_tier,
+		"current_run": current_run,
 		"style_points": style_points,
 	}

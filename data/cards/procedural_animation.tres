@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_g7hj9")
 feature_name = "Procedural Animation"
-ambition_value = 9
-instability_value = 8
+ambition_value = 5
+instability_value = 6
 tier = "uncommon"
 unlock_weight = 3.8
 tags = PackedStringArray("animation", "physics", "combat")
@@ -16,3 +16,4 @@ interactions = {
 "combat": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("shooter", "action_adventure")

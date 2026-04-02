@@ -3,35 +3,34 @@ extends Node
 const INTERACTION_RULES_PATH: String = "res://data/interaction_rules.json"
 const THRESHOLD_EVENTS_PATH: String = "res://data/threshold_events.json"
 const OFFERS_PATH: String = "res://data/offers.json"
-const META_SAVE_PATH: String = "user://meta_progress.json"
 const CARDS_PATH: String = "res://data/cards"
 const CUSTOM_CARDS_PATH: String = "res://data/custom_cards"
-# Card unlock count moved to GameConfig.initial_card_unlock_count (default 8)
 const GAME_CONFIG_PATH: String = "res://data/game_config.tres"
+var GAME_CONFIG_OVERRIDE_PATHS: Array[String] = [
+	"res://data/game_config_override.json",
+	"user://game_config_override.json",
+]
 
-# --- Preloads for legacy system classes (avoids class_name scan-order issues) ---
-@warning_ignore("shadowed_global_identifier")
-const LegacyRecord = preload("res://scripts/data/legacy_record.gd")
-@warning_ignore("shadowed_global_identifier")
-const LegacyPayload = preload("res://scripts/data/payloads/legacy_payload.gd")
-@warning_ignore("shadowed_global_identifier")
-const LegacyUtils = preload("res://scripts/ui/legacy_utils.gd")
-
-# --- Preloads for extracted collaborator classes ---
 @warning_ignore("shadowed_global_identifier")
 const ScoreCalculator = preload("res://scripts/data/score_calculator.gd")
 @warning_ignore("shadowed_global_identifier")
-const MetaProgressManager = preload("res://scripts/data/meta_progress_manager.gd")
+const CycleStateManager = preload("res://scripts/data/cycle_state_manager.gd")
 @warning_ignore("shadowed_global_identifier")
 const OfferScheduler = preload("res://scripts/data/offer_scheduler.gd")
 @warning_ignore("shadowed_global_identifier")
 const CardUnlockResolver = preload("res://scripts/data/card_unlock_resolver.gd")
+const _S = preload("res://scripts/ui/ui_strings.gd")
 
+# --- Run state ---
 var ambition: int = 0
 var instability: int = 0
 var runway_days: int = 21
-var soul: int = 10
+var soul: int = 12
 var feature_board: Array[FeatureCard] = []
+var chosen_archetype: String = ""
+
+# Cycle-level state visible to UI.
+var current_run: int = 1
 
 var _game_config: GameConfig
 var _offers: Dictionary = {}
@@ -47,24 +46,27 @@ var _pending_draft_offer: Dictionary = {}
 var _pending_publisher_meeting: Dictionary = {}
 var _publisher_trust_run: int = 0
 var _publisher_trust_mode_enabled_run: bool = false
-var _meta_progress: Dictionary = {}  # Aliased to _meta_mgr._meta in _ready()
 var _all_card_ids: PackedStringArray = PackedStringArray()
-var _card_metadata_cache: Dictionary = {}  # {card_id: {"tier": str, "unlock_weight": float}}
+var _card_metadata_cache: Dictionary = {}
 var _threshold_events: Array[Dictionary] = []
-var _meta_mgr: MetaProgressManager
+var _cycle_mgr: CycleStateManager
 var _offer_sched: OfferScheduler
+# Transient: which run was just completed via ship_it(). Used by UI post-ship dialogs.
+var _last_completed_run: int = 0
 
 func _ready() -> void:
 	_rng.randomize()
 	_event_bus = GameEvents
 	_review_generator = ReviewService
-	_meta_mgr = MetaProgressManager.new()
+	_cycle_mgr = CycleStateManager.new()
 	_offer_sched = OfferScheduler.new(_rng)
 	_load_game_config()
-	_meta_mgr.load_from_disk()
-	_meta_progress = _meta_mgr._meta
+	_cycle_mgr.load_from_disk()
+	current_run = _cycle_mgr.get_current_run()
 	_rebuild_all_card_ids()
-	_ensure_card_unlock_state()
+	_cycle_mgr.ensure_initial_card_unlock_state(
+		_all_card_ids, Callable(self, "_get_card_tier"), _game_config.initial_card_unlock_count
+	)
 	_load_interaction_rules()
 	_load_threshold_events()
 	_load_offers()
@@ -74,15 +76,17 @@ func reset_run() -> void:
 	ambition = 0
 	instability = 0
 	runway_days = 21
-	soul = 10
+	soul = _game_config.soul_start
 	feature_board.clear()
 	_triggered_thresholds.clear()
 	_style_points = {"cult_jank": 0, "prestige_collapse": 0, "community_darling": 0}
 	_current_identity = "Unformed"
+	chosen_archetype = ""
+	current_run = _cycle_mgr.get_current_run()
 	_offer_sched.reset()
-	_publisher_trust_mode_enabled_run = bool(_meta_progress.get("publisher_trust_mode_enabled", false))
+	_publisher_trust_mode_enabled_run = _cycle_mgr.is_publisher_trust_mode_enabled()
 	if _publisher_trust_mode_enabled_run:
-		_publisher_trust_run = int(_meta_progress.get("publisher_profile_trust", 0))
+		_publisher_trust_run = _cycle_mgr.get_publisher_trust()
 	else:
 		_publisher_trust_run = 0
 	_emit_state()
@@ -93,29 +97,71 @@ func get_game_config() -> GameConfig:
 func get_dominant_style_bucket() -> String:
 	return _get_dominant_style_bucket()
 
+func get_cycle_state() -> Dictionary:
+	return _cycle_mgr.get_cycle_state()
+
+func get_last_completed_run() -> int:
+	return _last_completed_run
+
+func get_run_identity() -> String:
+	return _current_identity
+
+func get_style_points() -> Dictionary:
+	return _style_points.duplicate(true)
+
+func is_cycle_complete() -> bool:
+	return _cycle_mgr.is_cycle_complete()
+
+func start_new_cycle() -> void:
+	_cycle_mgr.reset_cycle()
+	# Re-seed common cards so the new cycle always starts with a playable deck.
+	_cycle_mgr.ensure_initial_card_unlock_state(
+		_all_card_ids, Callable(self, "_get_card_tier"), _game_config.initial_card_unlock_count
+	)
+	current_run = 1
+	reset_run()
+
+func save_cycle_state() -> void:
+	_cycle_mgr.save()
+
 func is_publisher_trust_mode_enabled() -> bool:
-	return bool(_meta_progress.get("publisher_trust_mode_enabled", false))
+	return _cycle_mgr.is_publisher_trust_mode_enabled()
 
 func set_publisher_trust_mode_enabled(enabled: bool) -> void:
-	_meta_progress["publisher_trust_mode_enabled"] = enabled
-	_save_meta_progress()
+	_cycle_mgr.set_publisher_trust_mode_enabled(enabled)
 
+## Returns true when a card is placeable. Alien cards (no archetype_affinity) are blocked
+## below the soul gate when an archetype has been chosen.
+func can_place_card(card: FeatureCard) -> bool:
+	if card == null:
+		return false
+	if not chosen_archetype.is_empty() and card.archetype_affinity.is_empty():
+		return soul >= _game_config.alien_card_soul_gate
+	return true
+
+func set_archetype(archetype: String) -> void:
+	chosen_archetype = archetype
+	if _event_bus != null:
+		_event_bus.archetype_chosen.emit(archetype)
+
+## Tier availability is gated by current run number in the three-run cycle.
 func is_tier_available(tier: String) -> bool:
-	var normalized_tier: String = tier.to_lower()
-	var studio_tier: int = int(_meta_progress.get("studio_tier", 1))
-	match normalized_tier:
+	match tier.to_lower():
 		"common":
 			return true
 		"uncommon":
-			return studio_tier >= 2
+			return current_run >= 2
 		"rare":
-			return studio_tier >= 3 or bool(_meta_progress.get("defining_game_unlocked", false))
+			return current_run >= 3
 		_:
 			return true
 
-func has_potential_interaction(card: FeatureCard, board: Array[FeatureCard]) -> bool:
+## Returns interaction heat level for pre-placement hint display.
+## 0 = no interaction, 1 = low (delta 1-4), 2 = medium (5-9), 3 = high (10+).
+func get_interaction_heat(card: FeatureCard, board: Array[FeatureCard]) -> int:
 	if card == null:
-		return false
+		return 0
+	var total_delta: int = 0
 	for existing in board:
 		if existing == null:
 			continue
@@ -124,27 +170,48 @@ func has_potential_interaction(card: FeatureCard, board: Array[FeatureCard]) -> 
 				var rule: Dictionary = _get_rule(String(new_tag), String(existing_tag))
 				if _is_rule_blocked_by_soul(rule):
 					continue
-				if String(new_tag) == String(existing_tag) or not rule.is_empty():
-					return true
-	return false
+				if String(new_tag) == String(existing_tag):
+					total_delta += 2
+				total_delta += abs(int(rule.get("instability_delta", 0)))
+				total_delta += abs(int(rule.get("soul_delta", 0)))
+	if total_delta == 0:
+		return 0
+	if total_delta < 5:
+		return 1
+	if total_delta < 10:
+		return 2
+	return 3
 
 func add_feature_card(card: Resource) -> void:
-	if card == null:
-		return
-	if runway_days <= 0:
+	if card == null or runway_days <= 0:
 		return
 	if card is not FeatureCard:
 		return
 	var placed_card: FeatureCard = card as FeatureCard
 
+	if not can_place_card(placed_card):
+		push_warning("add_feature_card: placement blocked by soul gate for alien card")
+		return
+
 	var interaction_events: Array[Dictionary] = _build_interaction_events(placed_card)
 	feature_board.append(placed_card)
 	ambition += placed_card.ambition_value
 	instability += placed_card.instability_value
-	_style_points["prestige_collapse"] += max(placed_card.ambition_value, 0)
+
+	# Style points: prestige accumulates only when ambition outpaces soul.
+	if placed_card.ambition_value > soul:
+		_style_points["prestige_collapse"] += max(placed_card.ambition_value, 0)
+	else:
+		_style_points["community_darling"] += 1
+
 	_style_points["cult_jank"] += max(placed_card.instability_value, 0)
-	if placed_card.tags.has("lore") or placed_card.tags.has("quest"):
-		_style_points["community_darling"] += 2
+
+	# Community darling bonus for narrative/character/world/lore/quest tags.
+	var darling_tags: PackedStringArray = PackedStringArray(["lore", "quest", "narrative", "character", "world"])
+	for tag in darling_tags:
+		if placed_card.tags.has(tag):
+			_style_points["community_darling"] += 3
+			break
 
 	for event_data in interaction_events:
 		instability += int(event_data.get("instability_delta", 0))
@@ -157,12 +224,16 @@ func add_feature_card(card: Resource) -> void:
 			var payload: InteractionEventPayload = InteractionEventPayload.from_dictionary(event_data)
 			_event_bus.interaction_triggered.emit(payload)
 
-	soul = max(soul, 0)
+	# Archetype mismatch resolved after interaction events.
+	_apply_archetype_mismatch(placed_card)
+
+	soul = clampi(soul, 0, _game_config.soul_max)
 	_update_run_identity()
 	spend_day("add_feature")
 	if _event_bus != null:
 		_event_bus.feature_added.emit(placed_card)
-	_emit_state()
+	# Note: spend_day() already calls _emit_state(); a second call here would
+	# double-fire threshold evaluation and send redundant state_changed events.
 
 func fix_bugs() -> void:
 	if runway_days <= 0:
@@ -175,14 +246,9 @@ func fix_bugs() -> void:
 func do_dev_log() -> void:
 	if runway_days <= 0:
 		return
-	soul += _game_config.dev_log_soul_gain
-	_style_points["community_darling"] += 6
+	soul = mini(soul + _game_config.dev_log_soul_gain, _game_config.soul_max)
+	_style_points["community_darling"] += 4
 	spend_day("dev_log")
-
-func tick_runway_day() -> void:
-	# Intentionally no-op: runway no longer auto-advances on timer ticks.
-	# Day spend is reserved for explicit card placement or popup runway effects.
-	return
 
 func spend_day(reason: String) -> void:
 	runway_days = max(runway_days - 1, 0)
@@ -201,34 +267,48 @@ func spend_day(reason: String) -> void:
 func ship_it() -> Dictionary:
 	var features_shipped: int = feature_board.size()
 
-	# Validate that at least one feature was shipped (design requirement)
-	if features_shipped == 0:
-		push_warning("Attempted to ship with 0 features - this is an edge case, defaulting to 'Financial Catastrophe' ending")
-
-	var ship_window: Dictionary = _compute_ship_window()
-	var review_score: float = _calculate_final_score(ship_window)
-	var jank_status: String = _compute_jank_status(review_score)
-	var meeting_quality: float = _average_meeting_quality()
-	var ship_window_quality: float = _ship_window_quality(String(ship_window.get("label", "Standard Launch")))
+	var ship_window: Dictionary = ScoreCalculator.compute_ship_window(_game_config, runway_days, instability)
+	var review_score: float = ScoreCalculator.calculate_final_score(
+		_game_config, ambition, instability, soul, features_shipped, ship_window
+	)
+	var jank_status: String = ScoreCalculator.compute_jank_status(_game_config, instability, review_score)
+	var meeting_quality: float = _offer_sched.average_meeting_quality()
+	var ship_window_quality: float = ScoreCalculator.ship_window_quality(String(ship_window.get("label", "")))
 	var reviews: Array[Dictionary] = []
 	var mechanics_highlights: Array[String] = []
 	if _review_generator != null:
-		reviews = _review_generator.generate_reviews(review_score, instability, soul, features_shipped, feature_board, _current_identity, String(ship_window.get("label", "")))
+		reviews = _review_generator.generate_reviews(
+			review_score, instability, soul, features_shipped, feature_board,
+			_current_identity, String(ship_window.get("label", ""))
+		)
 		mechanics_highlights = _review_generator.generate_mechanics_highlights(feature_board)
-	var ending: String = _resolve_ending(review_score)
-	var unlocked_defining_game: bool = String(ending).begins_with("Defining Game")
-	if unlocked_defining_game and not bool(_meta_progress.get("defining_game_unlocked", false)):
-		_meta_progress["defining_game_unlocked"] = true
-	update_meta_progress(review_score, ending, false, false)
-	var card_unlock: Dictionary = _unlock_cards_for_run(ending, jank_status, meeting_quality, ship_window_quality)
 
-	# Crystallise the legacy record now that tier has been updated by update_meta_progress.
-	var pending: LegacyRecord = _compute_legacy_record(review_score)
-	var active_dict: Variant = _meta_progress.get("active_legacy", {})
-	var active: LegacyRecord = LegacyRecord.from_dictionary(active_dict if active_dict is Dictionary else {})
-	_meta_progress["pending_legacy"] = pending.to_dictionary()
-	_save_meta_progress()
-	_emit_meta_progress_updated()
+	var ending: String = EndingResolver.resolve_ending_description(
+		_game_config, ambition, instability, soul, review_score, _get_dominant_style_bucket()
+	)
+	# Nothing shipped = unrateable. Override all outcomes regardless of stats.
+	if features_shipped == 0:
+		review_score = 0.1
+		jank_status = "broken"
+		ending = _S.get_string("popups", "ending_desc_financial_catastrophe")
+
+	# Unlock cards for next run in this cycle.
+	var unlocked: PackedStringArray = _cycle_mgr.get_unlocked_card_ids()
+	var unlock_result: Dictionary = CardUnlockResolver.resolve_unlock(
+		_all_card_ids, unlocked, ending, jank_status,
+		meeting_quality, ship_window_quality,
+		_card_metadata_cache, _rng, Callable(self, "_load_card_by_id")
+	)
+	# Enrich with display name so UI never renders raw file IDs.
+	var _unlocked_card_id: String = String(unlock_result.get("card_id", ""))
+	if not _unlocked_card_id.is_empty():
+		var _unlocked_card: FeatureCard = _load_card_by_id(_unlocked_card_id)
+		unlock_result["card_name"] = _unlocked_card.feature_name if _unlocked_card != null else _unlocked_card_id.replace("_", " ").capitalize()
+	var new_unlocked: PackedStringArray = PackedStringArray(unlock_result.get("new_unlocked_ids", unlocked))
+
+	# Advance cycle state — saves immediately to disk.
+	_last_completed_run = _cycle_mgr.complete_run(ending, new_unlocked)
+	current_run = _cycle_mgr.get_current_run()
 
 	var result: ShipResult = ShipResult.new()
 	result.review_score = review_score
@@ -237,43 +317,25 @@ func ship_it() -> Dictionary:
 	result.ship_window = ship_window
 	result.publisher_meeting_quality = meeting_quality
 	result.publisher_trust = _publisher_trust_run
-	result.card_unlock = card_unlock
+	result.card_unlock = unlock_result
 	result.features_shipped = features_shipped
 	result.reviews = reviews
 	result.mechanics_highlights = mechanics_highlights
 	result.run_identity = _current_identity
-	result.unlock_defining_game = unlocked_defining_game
-	result.meta_progress = _meta_progress.duplicate(true)
-
-	if _event_bus != null and _event_bus.has_signal("legacy_resolved"):
-		var legacy_payload: LegacyPayload = LegacyPayload.build(
-			pending, active, int(_meta_progress.get("studio_tier", 1))
-		)
-		_event_bus.legacy_resolved.emit(legacy_payload)
+	result.unlock_defining_game = EndingResolver.normalize_ending_name(ending) == "defining game"
 
 	if _event_bus != null:
-		var payload: ReviewsGeneratedPayload = ReviewsGeneratedPayload.from_dictionary(result.to_dictionary())
-		_event_bus.reviews_generated.emit(payload)
+		_event_bus.reviews_generated.emit(ReviewsGeneratedPayload.from_dictionary(result.to_dictionary()))
 	return result.to_dictionary()
-
-# Pure score calculation shared by ship_it() and calculate_predicted_score().
-# Delegates to ScoreCalculator for formula logic.
-func _calculate_final_score(ship_window: Dictionary) -> float:
-	return ScoreCalculator.calculate_final_score(
-		_game_config, ambition, instability, soul, feature_board.size(), ship_window
-	)
 
 func apply_dilemma_choice(choice_index: int) -> void:
 	if _pending_dilemma.is_empty():
 		return
-
 	var choices: Array = _pending_dilemma.get("choices", [])
 	if choices.is_empty():
 		_pending_dilemma.clear()
 		return
-
-	var selected_index: int = clampi(choice_index, 0, choices.size() - 1)
-	var selected: Dictionary = choices[selected_index]
+	var selected: Dictionary = choices[clampi(choice_index, 0, choices.size() - 1)]
 	_apply_threshold_effects(selected.get("effects", {}))
 	_emit_threshold_event(
 		"dilemma_choice",
@@ -286,14 +348,11 @@ func apply_dilemma_choice(choice_index: int) -> void:
 func apply_draft_pick(pick_index: int) -> void:
 	if _pending_draft_offer.is_empty():
 		return
-
 	var picks: Array = _pending_draft_offer.get("picks", [])
 	if picks.is_empty():
 		_pending_draft_offer.clear()
 		return
-
-	var selected_index: int = clampi(pick_index, 0, picks.size() - 1)
-	var selected: Dictionary = picks[selected_index]
+	var selected: Dictionary = picks[clampi(pick_index, 0, picks.size() - 1)]
 	_apply_threshold_effects(selected.get("effects", {}))
 	_emit_threshold_event(
 		"draft_pick",
@@ -303,40 +362,166 @@ func apply_draft_pick(pick_index: int) -> void:
 	_pending_draft_offer.clear()
 	_emit_state()
 
+func apply_publisher_meeting_choice(choice_index: int) -> void:
+	if _pending_publisher_meeting.is_empty():
+		return
+	var options: Array = _pending_publisher_meeting.get("options", [])
+	if options.is_empty():
+		_pending_publisher_meeting.clear()
+		return
+	var selected: Dictionary = options[clampi(choice_index, 0, options.size() - 1)]
+	_apply_threshold_effects(selected.get("effects", {}))
+	_publisher_trust_run += int(_pending_publisher_meeting.get("grade_trust_delta", 0))
+	_publisher_trust_run += int(selected.get("trust_delta", 0))
+	_publisher_trust_run = clampi(_publisher_trust_run, -100, 100)
+	if _publisher_trust_mode_enabled_run:
+		_cycle_mgr.set_publisher_trust(_publisher_trust_run)
+	_offer_sched.record_meeting_quality(float(_pending_publisher_meeting.get("grade_quality", 0.5)))
+	_emit_threshold_event(
+		"publisher_meeting_choice",
+		"Publisher meeting stance chosen: %s" % String(selected.get("label", "Unknown")),
+		selected.get("effects", {})
+	)
+	_pending_publisher_meeting.clear()
+	_emit_state()
+
+func calculate_predicted_score() -> float:
+	var ship_window: Dictionary = ScoreCalculator.compute_ship_window(_game_config, runway_days, instability)
+	return ScoreCalculator.calculate_final_score(
+		_game_config, ambition, instability, soul, feature_board.size(), ship_window
+	)
+
+func get_unlocked_card_ids() -> PackedStringArray:
+	return _cycle_mgr.get_unlocked_card_ids()
+
+func get_all_card_ids() -> PackedStringArray:
+	return _all_card_ids.duplicate()
+
+func is_card_unlocked(card_id: String) -> bool:
+	if card_id.is_empty():
+		return false
+	return _cycle_mgr.get_unlocked_card_ids().has(card_id)
+
+## Returns pre-placement mismatch level against the chosen archetype.
+## 0 = no mismatch (none chosen, universal card, or on-archetype)
+## 1 = genre stretch   (2/3 affinity, chosen archetype not included)
+## 2 = wild swing      (1/3 affinity, chosen archetype not included)
+## 3 = alien card      (0/3 affinity, soul-gated)
+func get_archetype_mismatch_level(card: FeatureCard) -> int:
+	if card == null or chosen_archetype.is_empty():
+		return 0
+	var count: int = card.archetype_affinity.size()
+	if count >= 3:
+		return 0
+	if count > 0 and card.archetype_affinity.has(chosen_archetype):
+		return 0
+	match count:
+		0: return 3
+		1: return 2
+		2: return 1
+	return 0
+
+func _apply_archetype_mismatch(card: FeatureCard) -> void:
+	if chosen_archetype.is_empty():
+		return
+	var count: int = card.archetype_affinity.size()
+	# Universal cards (cover all 3 archetypes) never clash.
+	if count >= 3:
+		return
+	# On-archetype card — no penalty.
+	if count > 0 and card.archetype_affinity.has(chosen_archetype):
+		return
+	var genre_label: String = chosen_archetype.capitalize().replace("_", "-")
+	if count == 0:
+		# Alien card — should be blocked by can_place_card(), but guard defensively.
+		if soul < _game_config.alien_card_soul_gate:
+			return
+		instability += _game_config.alien_card_instability_bonus
+		ambition += _game_config.alien_card_ambition_bonus
+		soul = max(soul - _game_config.alien_card_soul_penalty, 0)
+		_style_points["cult_jank"] += _game_config.alien_card_instability_bonus
+		_emit_threshold_event(
+			"archetype_alien",
+			"%s in a %s — this card belongs to another universe entirely. +%d Instability, +%d Ambition, -%d Soul" % [
+				card.feature_name, genre_label,
+				_game_config.alien_card_instability_bonus,
+				_game_config.alien_card_ambition_bonus,
+				_game_config.alien_card_soul_penalty,
+			],
+			{"instability": _game_config.alien_card_instability_bonus,
+			 "ambition": _game_config.alien_card_ambition_bonus,
+			 "soul": -_game_config.alien_card_soul_penalty},
+			"warning"
+		)
+		return
+	if count == 2:
+		# Genre stretch — adjacent genre, small dissonance.
+		instability += _game_config.genre_stretch_instability_bonus
+		_style_points["cult_jank"] += _game_config.genre_stretch_instability_bonus
+		_emit_threshold_event(
+			"archetype_genre_stretch",
+			"%s in a %s — familiar territory, slightly off-brief. +%d Instability" % [
+				card.feature_name, genre_label,
+				_game_config.genre_stretch_instability_bonus,
+			],
+			{"instability": _game_config.genre_stretch_instability_bonus},
+			"info"
+		)
+		return
+	# count == 1: wild swing — specialized card, wrong genre.
+	instability += _game_config.archetype_mismatch_instability_bonus
+	ambition += _game_config.archetype_mismatch_ambition_bonus
+	soul = max(soul - _game_config.archetype_mismatch_soul_penalty, 0)
+	_style_points["cult_jank"] += _game_config.archetype_mismatch_instability_bonus
+	_emit_threshold_event(
+		"archetype_mismatch",
+		"%s in a %s — the team is confused but intrigued. +%d Instability, +%d Ambition, -%d Soul" % [
+			card.feature_name, genre_label,
+			_game_config.archetype_mismatch_instability_bonus,
+			_game_config.archetype_mismatch_ambition_bonus,
+			_game_config.archetype_mismatch_soul_penalty,
+		],
+		{"instability": _game_config.archetype_mismatch_instability_bonus,
+		 "ambition": _game_config.archetype_mismatch_ambition_bonus,
+		 "soul": -_game_config.archetype_mismatch_soul_penalty},
+		"warning"
+	)
+
 func _build_interaction_events(new_card: FeatureCard) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
 	for existing_card in feature_board:
 		if existing_card == null:
 			continue
-
 		for new_tag in new_card.tags:
 			for existing_tag in existing_card.tags:
-				var maybe_event: Dictionary = _create_event_for_tag_pair(new_card, existing_card, String(new_tag), String(existing_tag))
+				var maybe_event: Dictionary = _create_event_for_tag_pair(
+					new_card, existing_card, String(new_tag), String(existing_tag)
+				)
 				if not maybe_event.is_empty():
 					events.append(maybe_event)
 	return events
 
-func _create_event_for_tag_pair(new_card: FeatureCard, existing_card: FeatureCard, new_tag: String, existing_tag: String) -> Dictionary:
+func _create_event_for_tag_pair(
+	new_card: FeatureCard,
+	existing_card: FeatureCard,
+	new_tag: String,
+	existing_tag: String,
+) -> Dictionary:
 	var has_overlap: bool = new_tag == existing_tag
 	var rule: Dictionary = _get_rule(new_tag, existing_tag)
-
-	# Soul gate suppresses the entire pair interaction until enough conviction is accumulated.
 	if _is_rule_blocked_by_soul(rule):
 		return {}
-
 	if not has_overlap and rule.is_empty():
 		return {}
 
 	var instability_delta: int = 0
 	var soul_delta: int = 0
-
 	if has_overlap:
 		instability_delta += 2
 		instability_delta += new_card.get_interaction_delta(new_tag, "instability")
 		instability_delta += existing_card.get_interaction_delta(existing_tag, "instability")
 		soul_delta += new_card.get_interaction_delta(new_tag, "soul")
 		soul_delta += existing_card.get_interaction_delta(existing_tag, "soul")
-
 	if not rule.is_empty():
 		instability_delta += int(rule.get("instability_delta", 0))
 		soul_delta += int(rule.get("soul_delta", 0))
@@ -347,10 +532,16 @@ func _create_event_for_tag_pair(new_card: FeatureCard, existing_card: FeatureCar
 		"existing_feature": existing_card.feature_name,
 		"instability_delta": instability_delta,
 		"soul_delta": soul_delta,
-		"flavor": flavor
+		"flavor": flavor,
 	}
 
-func _pick_interaction_flavor(rule: Dictionary, new_card: FeatureCard, existing_card: FeatureCard, new_tag: String, existing_tag: String) -> String:
+func _pick_interaction_flavor(
+	rule: Dictionary,
+	new_card: FeatureCard,
+	existing_card: FeatureCard,
+	new_tag: String,
+	existing_tag: String,
+) -> String:
 	if new_tag == existing_tag:
 		var new_flavor: String = new_card.get_interaction_flavor_for_tag(new_tag)
 		if not new_flavor.is_empty():
@@ -358,14 +549,9 @@ func _pick_interaction_flavor(rule: Dictionary, new_card: FeatureCard, existing_
 		var existing_flavor: String = existing_card.get_interaction_flavor_for_tag(existing_tag)
 		if not existing_flavor.is_empty():
 			return existing_flavor
-
-	var flavors: Array = []
-	if not rule.is_empty():
-		flavors = rule.get("flavors", [])
-
+	var flavors: Array = rule.get("flavors", [])
 	if flavors.is_empty():
 		return "%s + %s = Build monitor now shows six warning colors." % [new_card.feature_name, existing_card.feature_name]
-
 	var picked: String = String(flavors[_rng.randi_range(0, flavors.size() - 1)])
 	picked = picked.replace("{new_feature}", new_card.feature_name)
 	picked = picked.replace("{existing_feature}", existing_card.feature_name)
@@ -392,6 +578,72 @@ func _load_game_config() -> void:
 	if _game_config == null:
 		push_warning("GameConfig not found at %s — falling back to defaults" % GAME_CONFIG_PATH)
 		_game_config = GameConfig.new()
+	_try_apply_game_config_override()
+
+func _try_apply_game_config_override() -> void:
+	for path in GAME_CONFIG_OVERRIDE_PATHS:
+		if not FileAccess.file_exists(path):
+			continue
+		var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+		if file == null:
+			push_warning("game_config_override: cannot open '%s'" % path)
+			continue
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if parsed is not Dictionary:
+			push_warning("game_config_override: '%s' is not a valid JSON object — skipped" % path)
+			continue
+		# Duplicate so we never mutate the engine-cached .tres resource.
+		_game_config = _game_config.duplicate() as GameConfig
+		_apply_game_config_override(parsed as Dictionary, path)
+		return  # First valid file wins; user:// only checked if data/ not present.
+
+func _apply_game_config_override(data: Dictionary, source_path: String) -> void:
+	# Build a map of all script-defined exported properties.
+	var prop_map: Dictionary = {}
+	for prop in _game_config.get_property_list():
+		if prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			prop_map[prop.name] = prop
+
+	# Full-replacement: zero all overridable properties so any key absent from
+	# the JSON is explicit 0/[] rather than inheriting a .tres value.
+	for prop_name: String in prop_map:
+		var t: int = int((prop_map[prop_name] as Dictionary).get("type", TYPE_NIL))
+		match t:
+			TYPE_INT:   _game_config.set(prop_name, 0)
+			TYPE_FLOAT: _game_config.set(prop_name, 0.0)
+			TYPE_ARRAY: _game_config.set(prop_name, [])
+
+	# Apply values from JSON with safe type coercion.
+	var applied: int = 0
+	var unknown: PackedStringArray = PackedStringArray()
+	for key: String in data:
+		if key.begins_with("__"):
+			continue  # __ prefix = informational comment key; skip silently.
+		if not prop_map.has(key):
+			unknown.append(key)
+			continue
+		var raw: Variant = data[key]
+		var prop_type: int = int((prop_map[key] as Dictionary).get("type", TYPE_NIL))
+		match prop_type:
+			TYPE_INT:
+				_game_config.set(key, int(raw))
+				applied += 1
+			TYPE_FLOAT:
+				_game_config.set(key, float(raw))
+				applied += 1
+			TYPE_ARRAY:
+				var typed: Array[int] = []
+				if raw is Array:
+					for v: Variant in (raw as Array):
+						typed.append(int(v))
+				_game_config.set(key, typed)
+				applied += 1
+			_:
+				_game_config.set(key, raw)
+				applied += 1
+	print("[GameConfig] Override applied from '%s': %d/%d parameters set." % [source_path, applied, prop_map.size()])
+	if not unknown.is_empty():
+		push_warning("[GameConfig] Override: unrecognized keys (ignored): %s" % ", ".join(unknown))
 
 func _load_offers() -> void:
 	_offers = JsonDataLoader.load_dictionary(OFFERS_PATH, "Offers")
@@ -401,12 +653,11 @@ func _load_interaction_rules() -> void:
 	var rules: Variant = interaction_data.get("rules", [])
 	if rules is not Array:
 		return
-
 	for rule_entry in rules:
 		if rule_entry is Dictionary:
 			var tags: Variant = rule_entry.get("tags", [])
-			if tags is Array and tags.size() == 2:
-				var key: String = "%s|%s" % [String(tags[0]), String(tags[1])]
+			if tags is Array and (tags as Array).size() == 2:
+				var key: String = "%s|%s" % [String((tags as Array)[0]), String((tags as Array)[1])]
 				_interaction_rules[key] = rule_entry
 
 func _load_threshold_events() -> void:
@@ -415,35 +666,39 @@ func _load_threshold_events() -> void:
 	for event_entry in parse_result:
 		if event_entry is Dictionary:
 			loaded_events.append(event_entry)
-
 	_threshold_events = loaded_events
 
-func _resolve_ending(review_score: float) -> String:
-	return EndingResolver.resolve_ending_description(
-		_game_config,
-		ambition,
-		instability,
-		soul,
-		review_score,
-		_get_dominant_style_bucket()
-	)
+func _emit_state() -> void:
+	_evaluate_threshold_events()
+	_update_run_identity()
+	if _event_bus != null:
+		var snapshot: StateSnapshotPayload = StateSnapshotPayload.new()
+		snapshot.ambition = ambition
+		snapshot.instability = instability
+		snapshot.runway_days = runway_days
+		snapshot.soul = soul
+		snapshot.features_shipped = feature_board.size()
+		snapshot.run_identity = _current_identity
+		snapshot.current_run = current_run
+		snapshot.style_points = _style_points.duplicate(true)
+		_event_bus.state_changed.emit(snapshot)
 
-func _is_defining_game_gate_met() -> bool:
-	return ambition >= _game_config.goldilocks_ambition_min \
-		and instability >= _game_config.goldilocks_instability_min \
-		and instability <= _game_config.goldilocks_instability_max \
-		and soul >= _game_config.goldilocks_soul_min
+func _update_run_identity() -> void:
+	var new_identity: String = "Unformed"
+	if _style_points["cult_jank"] > _style_points["prestige_collapse"] and _style_points["cult_jank"] > _style_points["community_darling"]:
+		new_identity = "Cult Jank"
+	elif _style_points["prestige_collapse"] > _style_points["community_darling"]:
+		new_identity = "Prestige Collapse"
+	elif _style_points["community_darling"] > 0:
+		new_identity = "Community Darling"
 
-func _is_cult_disaster_gate_met() -> bool:
-	return instability >= _game_config.cult_disaster_instability_min and soul <= _game_config.cult_disaster_soul_max
-
-func _is_rough_diamond_gate_met() -> bool:
-	return ambition <= _game_config.rough_diamond_ambition_max \
-		and instability <= _game_config.rough_diamond_instability_max \
-		and soul >= _game_config.rough_diamond_soul_min
-
-func _normalize_ending_name(ending: String) -> String:
-	return EndingResolver.normalize_ending_name(ending)
+	if new_identity != _current_identity:
+		_current_identity = new_identity
+		if _event_bus != null:
+			var payload: RunIdentityPayload = RunIdentityPayload.new()
+			payload.identity = _current_identity
+			payload.style_points = _style_points.duplicate(true)
+			_event_bus.run_identity_changed.emit(payload)
 
 func _get_dominant_style_bucket() -> String:
 	var cult: int = int(_style_points.get("cult_jank", 0))
@@ -467,259 +722,61 @@ func _get_dominant_style_bucket() -> String:
 		return "prestige_collapse"
 	return "community_darling"
 
-func _emit_state() -> void:
-	_evaluate_threshold_events()
-	_update_run_identity()
-	if _event_bus != null:
-		var snapshot: StateSnapshotPayload = StateSnapshotPayload.new()
-		snapshot.ambition = ambition
-		snapshot.instability = instability
-		snapshot.runway_days = runway_days
-		snapshot.soul = soul
-		snapshot.features_shipped = feature_board.size()
-		snapshot.run_identity = _current_identity
-		snapshot.meta_studio_tier = int(_meta_progress.get("studio_tier", 1))
-		snapshot.style_points = _style_points.duplicate(true)
-		_event_bus.state_changed.emit(snapshot)
-
-func _update_run_identity() -> void:
-	var new_identity: String = "Unformed"
-	if _style_points["cult_jank"] > _style_points["prestige_collapse"] and _style_points["cult_jank"] > _style_points["community_darling"]:
-		new_identity = "Cult Jank"
-	elif _style_points["prestige_collapse"] > _style_points["community_darling"]:
-		new_identity = "Prestige Collapse"
-	elif _style_points["community_darling"] > 0:
-		new_identity = "Community Darling"
-
-	if new_identity != _current_identity:
-		_current_identity = new_identity
-		if _event_bus != null and _event_bus.has_signal("run_identity_changed"):
-			var payload: RunIdentityPayload = RunIdentityPayload.new()
-			payload.identity = _current_identity
-			payload.style_points = _style_points.duplicate(true)
-			_event_bus.run_identity_changed.emit(payload)
-
-func _compute_ship_window() -> Dictionary:
-	return ScoreCalculator.compute_ship_window(_game_config, runway_days, instability)
-
-func _compute_jank_status(review_score: float) -> String:
-	return ScoreCalculator.compute_jank_status(_game_config, instability, review_score)
-
-func _unlock_cards_for_run(ending: String, jank_status: String, meeting_quality: float, ship_window_quality: float) -> Dictionary:
-	var unlocked: PackedStringArray = get_unlocked_card_ids()
-	var result: Dictionary = CardUnlockResolver.resolve_unlock(
-		_all_card_ids, unlocked, ending, jank_status,
-		meeting_quality, ship_window_quality,
-		_card_metadata_cache, _rng, Callable(self, "_load_card_by_id")
-	)
-	if result.is_empty():
-		return {}
-	_meta_progress["unlocked_card_ids"] = result.get("new_unlocked_ids", unlocked)
-	result.erase("new_unlocked_ids")
-	return result
-
-func _get_card_unlock_weight(card_id: String) -> float:
-	if _card_metadata_cache.has(card_id):
-		return float(_card_metadata_cache[card_id].get("unlock_weight", 1.0))
-	return 1.0
-
-func _get_card_tier(card_id: String) -> String:
-	if _card_metadata_cache.has(card_id):
-		return String(_card_metadata_cache[card_id].get("tier", "common"))
-	return "common"
-
-func _load_card_by_id(card_id: String) -> FeatureCard:
-	var card_path: String = "%s/%s.tres" % [CARDS_PATH, card_id]
-	var card: FeatureCard = load(card_path) as FeatureCard
-	if card == null:
-		card_path = "%s/%s.tres" % [CUSTOM_CARDS_PATH, card_id]
-		card = load(card_path) as FeatureCard
-	return card
-
-func _average_meeting_quality() -> float:
-	return _offer_sched.average_meeting_quality()
-
-func _ship_window_quality(label: String) -> float:
-	return ScoreCalculator.ship_window_quality(label)
-
 func _maybe_offer_dilemma() -> bool:
 	var result: Dictionary = _offer_sched.maybe_offer_dilemma(
 		_game_config, _offers, runway_days, soul,
 		_publisher_trust_mode_enabled_run, _publisher_trust_run,
-		int(_meta_progress.get("runs_played", 0))
+		_cycle_mgr.get_pressure_modifier()
 	)
 	if result.is_empty():
 		return false
 	_pending_dilemma = result
 	if _event_bus != null:
-		var payload: DilemmaOfferPayload = DilemmaOfferPayload.from_dictionary(_pending_dilemma)
-		_event_bus.dilemma_offered.emit(payload)
+		_event_bus.dilemma_offered.emit(DilemmaOfferPayload.from_dictionary(_pending_dilemma))
 	return true
 
 func _maybe_offer_draft() -> bool:
 	var result: Dictionary = _offer_sched.maybe_offer_draft(
-		_game_config, _offers, runway_days, soul, feature_board.is_empty()
+		_game_config, _offers, runway_days, soul, feature_board.is_empty(),
+		_cycle_mgr.get_pressure_modifier()
 	)
 	if result.is_empty():
 		return false
 	_pending_draft_offer = result
 	if _event_bus != null:
-		var payload: DraftOfferPayload = DraftOfferPayload.from_dictionary(_pending_draft_offer)
-		_event_bus.draft_offer.emit(payload)
+		_event_bus.draft_offer.emit(DraftOfferPayload.from_dictionary(_pending_draft_offer))
 	return true
 
 func _maybe_offer_publisher_meeting() -> bool:
 	var result: Dictionary = _offer_sched.maybe_offer_publisher_meeting(
 		_game_config, runway_days, instability, soul, feature_board.size(),
 		_publisher_trust_mode_enabled_run, _publisher_trust_run,
-		int(_meta_progress.get("runs_played", 0))
+		_cycle_mgr.get_pressure_modifier()
 	)
 	if result.is_empty():
 		return false
 	_pending_publisher_meeting = result
 	if _event_bus != null:
-		var payload: PublisherMeetingOfferPayload = PublisherMeetingOfferPayload.from_dictionary(_pending_publisher_meeting)
-		_event_bus.publisher_meeting_offered.emit(payload)
+		_event_bus.publisher_meeting_offered.emit(
+			PublisherMeetingOfferPayload.from_dictionary(_pending_publisher_meeting)
+		)
 	return true
-
-func apply_publisher_meeting_choice(choice_index: int) -> void:
-	if _pending_publisher_meeting.is_empty():
-		return
-
-	var options: Array = _pending_publisher_meeting.get("options", [])
-	if options.is_empty():
-		_pending_publisher_meeting.clear()
-		return
-
-	var selected_index: int = clampi(choice_index, 0, options.size() - 1)
-	var selected: Dictionary = options[selected_index]
-	_apply_threshold_effects(selected.get("effects", {}))
-
-	_publisher_trust_run += int(_pending_publisher_meeting.get("grade_trust_delta", 0))
-	_publisher_trust_run += int(selected.get("trust_delta", 0))
-	_publisher_trust_run = clampi(_publisher_trust_run, -100, 100)
-	if _publisher_trust_mode_enabled_run:
-		_meta_progress["publisher_profile_trust"] = _publisher_trust_run
-
-	_offer_sched.record_meeting_quality(float(_pending_publisher_meeting.get("grade_quality", 0.5)))
-
-	_emit_threshold_event(
-		"publisher_meeting_choice",
-		"Publisher meeting stance chosen: %s" % String(selected.get("label", "Unknown")),
-		selected.get("effects", {})
-	)
-
-	_pending_publisher_meeting.clear()
-	_emit_state()
-
-func update_meta_progress(review_score: float, ending: String, persist: bool = true, emit_event: bool = true) -> void:
-	var milestone_data: Dictionary = _meta_mgr.update_progress(_game_config, review_score, ending)
-
-	if not milestone_data.is_empty():
-		if _event_bus != null and _event_bus.has_signal("milestone_reached"):
-			var payload: MilestonePayload = MilestonePayload.from_dictionary(milestone_data)
-			_event_bus.milestone_reached.emit(payload)
-
-	if persist:
-		_save_meta_progress()
-	if emit_event:
-		_emit_meta_progress_updated()
-
-func _emit_meta_progress_updated() -> void:
-	if _event_bus == null or not _event_bus.has_signal("meta_progress_updated"):
-		return
-	var payload: MetaProgressPayload = MetaProgressPayload.from_dictionary(_meta_progress)
-	_event_bus.meta_progress_updated.emit(payload)
-
-func _reputation_for_ending(ending: String) -> int:
-	return MetaProgressManager.reputation_for_ending(_game_config, ending)
-
-func _compute_studio_tier() -> int:
-	return _meta_mgr.compute_studio_tier(_game_config)
-
-func _maybe_record_milestone(ending: String) -> void:
-	# Delegation kept for any remaining callers; primary path is via update_meta_progress.
-	var milestone_data: Dictionary = _meta_mgr._maybe_record_milestone(_game_config, ending)
-	if not milestone_data.is_empty():
-		if _event_bus != null and _event_bus.has_signal("milestone_reached"):
-			var payload: MilestonePayload = MilestonePayload.from_dictionary(milestone_data)
-			_event_bus.milestone_reached.emit(payload)
-
-func _compute_legacy_record(review_score: float) -> LegacyRecord:
-	var legacy_type: String = LegacyUtils.determine_legacy_type(
-		review_score, soul, instability, ambition, _current_identity
-	)
-	var runs_played: int = int(_meta_progress.get("runs_played", 0))
-	var record: LegacyRecord = LegacyRecord.new()
-	record.name = LegacyUtils.generate_legacy_name(legacy_type, _rng)
-	record.type = legacy_type
-	record.tier = int(_meta_progress.get("studio_tier", 1))
-	record.run_identity = _current_identity
-	record.review_score = review_score
-	record.era_label = LegacyUtils.generate_era_label(runs_played, _rng)
-	return record
-
-func _load_meta_progress() -> void:
-	_meta_mgr.load_from_disk()
-	_meta_progress = _meta_mgr._meta
-
-func _save_meta_progress() -> void:
-	_meta_mgr.save()
-
-func get_unlocked_card_ids() -> PackedStringArray:
-	var ids: PackedStringArray = PackedStringArray(_meta_progress.get("unlocked_card_ids", PackedStringArray()))
-	return ids
-
-func get_all_card_ids() -> PackedStringArray:
-	return _all_card_ids.duplicate()
-
-func get_meta_progress() -> Dictionary:
-	return _meta_progress.duplicate(true)
-
-func get_active_legacy() -> LegacyRecord:
-	return LegacyRecord.from_dictionary(_meta_mgr.get_active_legacy())
-
-func get_pending_legacy() -> LegacyRecord:
-	return LegacyRecord.from_dictionary(_meta_mgr.get_pending_legacy())
-
-# Called from main.gd after the player makes a displacement choice in the studio briefing.
-# keep_current = true  → discard pending, retain active
-# keep_current = false → pending becomes active, pending cleared
-func resolve_legacy_displacement(keep_current: bool) -> void:
-	_meta_mgr.resolve_legacy_displacement(keep_current)
-
-func calculate_predicted_score() -> float:
-	# Calls the same calculation as ship_it() — formula drift is impossible.
-	return _calculate_final_score(_compute_ship_window())
-
-func is_card_unlocked(card_id: String) -> bool:
-	if card_id.is_empty():
-		return false
-	var unlocked: PackedStringArray = get_unlocked_card_ids()
-	return unlocked.has(card_id)
-
-func _ensure_card_unlock_state() -> void:
-	_meta_mgr.ensure_card_unlock_state(_game_config, _all_card_ids, _get_card_tier)
 
 func _evaluate_threshold_events() -> void:
 	for threshold_event in _threshold_events:
 		if threshold_event is not Dictionary:
 			continue
-
 		var event_id: String = String(threshold_event.get("id", ""))
 		if event_id.is_empty() or _triggered_thresholds.get(event_id, false):
 			continue
-
 		if not _is_threshold_reached(threshold_event):
 			continue
-
 		_triggered_thresholds[event_id] = true
 		var threshold_effects: Dictionary = threshold_event.get("effects", {}).duplicate(true)
-		# Safety invariant: threshold events are automatic; they must never move runway days.
+		# Threshold events must never move runway days.
 		if threshold_effects.has("runway_days"):
 			threshold_effects.erase("runway_days")
 		_apply_threshold_effects(threshold_effects)
-
 		_emit_threshold_event(
 			event_id,
 			String(threshold_event.get("message", "Threshold event triggered.")),
@@ -727,8 +784,13 @@ func _evaluate_threshold_events() -> void:
 			String(threshold_event.get("severity", "info"))
 		)
 
-func _emit_threshold_event(event_id: String, message: String, effects: Variant, severity: String = "info") -> void:
-	if _event_bus == null or not _event_bus.has_signal("threshold_event"):
+func _emit_threshold_event(
+	event_id: String,
+	message: String,
+	effects: Variant,
+	severity: String = "info",
+) -> void:
+	if _event_bus == null:
 		return
 	var safe_effects: Dictionary = {}
 	if effects is Dictionary:
@@ -745,11 +807,9 @@ func _is_threshold_reached(threshold_event: Dictionary) -> bool:
 	var metric_name: String = String(threshold_event.get("metric", ""))
 	var threshold_value: int = int(threshold_event.get("threshold", 0))
 	var comparison: String = String(threshold_event.get("comparison", "gte"))
-	var current_value: int = _get_metric_value(metric_name)
-
 	if comparison == "lte":
-		return current_value <= threshold_value
-	return current_value >= threshold_value
+		return _get_metric_value(metric_name) <= threshold_value
+	return _get_metric_value(metric_name) >= threshold_value
 
 func _get_metric_value(metric_name: String) -> int:
 	match metric_name:
@@ -767,27 +827,27 @@ func _get_metric_value(metric_name: String) -> int:
 func _apply_threshold_effects(effects: Variant) -> void:
 	if effects is not Dictionary:
 		return
-
 	var ambition_delta: int = int(effects.get("ambition", 0))
 	var instability_delta: int = int(effects.get("instability", 0))
 	var soul_delta: int = int(effects.get("soul", 0))
-
 	ambition += ambition_delta
 	instability += instability_delta
 	runway_days += int(effects.get("runway_days", 0))
 	soul += soul_delta
-
+	# Mirror the card-placement rule: ambition that outpaces current soul → prestige pressure.
 	if ambition_delta > 0:
-		_style_points["prestige_collapse"] += ambition_delta
+		if ambition_delta > soul:
+			_style_points["prestige_collapse"] += ambition_delta
+		else:
+			_style_points["community_darling"] += 1
 	if instability_delta > 0:
 		_style_points["cult_jank"] += instability_delta
 	if soul_delta > 0:
 		_style_points["community_darling"] += soul_delta
-
 	ambition = max(ambition, 0)
 	instability = max(instability, 0)
 	runway_days = max(runway_days, 0)
-	soul = max(soul, 0)
+	soul = clampi(soul, 0, _game_config.soul_max)
 
 func _rebuild_all_card_ids() -> void:
 	_all_card_ids.clear()
@@ -833,12 +893,24 @@ func _card_id_from_file_name(file_name: String) -> String:
 	return ""
 
 func _populate_card_metadata_cache() -> void:
-	# Load tier and unlock_weight for all cards into O(1) cache
 	for card_id in _all_card_ids:
 		var card: FeatureCard = _load_card_by_id(card_id)
 		if card == null:
 			continue
 		_card_metadata_cache[card_id] = {
 			"tier": String(card.tier).to_lower(),
-			"unlock_weight": float(card.unlock_weight)
+			"unlock_weight": float(card.unlock_weight),
 		}
+
+func _get_card_tier(card_id: String) -> String:
+	if _card_metadata_cache.has(card_id):
+		return String(_card_metadata_cache[card_id].get("tier", "common"))
+	return "common"
+
+func _load_card_by_id(card_id: String) -> FeatureCard:
+	var card_path: String = "%s/%s.tres" % [CARDS_PATH, card_id]
+	var card: FeatureCard = load(card_path) as FeatureCard
+	if card == null:
+		card_path = "%s/%s.tres" % [CUSTOM_CARDS_PATH, card_id]
+		card = load(card_path) as FeatureCard
+	return card

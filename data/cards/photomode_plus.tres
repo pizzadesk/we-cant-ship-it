@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_s1l9u")
 feature_name = "Photo Mode Plus"
-ambition_value = 6
-instability_value = 5
+ambition_value = 2
+instability_value = 2
 tier = "common"
 unlock_weight = 1.8
 tags = PackedStringArray("ui", "lore", "weather")
@@ -16,3 +16,4 @@ interactions = {
 "weather": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")
