@@ -29,12 +29,16 @@ static func update_ship_button_danger(ship_button: Button, runway_days: int, ini
 
 static func next_glitch_offset(current_offset: Vector2, instability_visual: float, delta: float, ui_rng: RandomNumberGenerator) -> Vector2:
 	var glitch_offset: Vector2 = current_offset
-	if instability_visual > 0.58 and ui_rng.randi_range(0, 120) == 0:
-		glitch_offset = Vector2(ui_rng.randf_range(-3.4, 3.4), ui_rng.randf_range(-2.2, 2.2))
+	if instability_visual > 0.28:
+		var t: float = (instability_visual - 0.28) / 0.72
+		var chance_range: int = int(lerp(140.0, 22.0, t))
+		if ui_rng.randi_range(0, chance_range) == 0:
+			var mag: float = lerp(1.8, 7.5, t)
+			glitch_offset = Vector2(ui_rng.randf_range(-mag, mag), ui_rng.randf_range(-mag * 0.6, mag * 0.6))
 	return glitch_offset.lerp(Vector2.ZERO, min(1.0, delta * 11.0))
 
 static func compute_wobble_position(jank_time: float, instability_visual: float, glitch_offset: Vector2, wobble_clamp: float) -> Vector2:
-	var amp: float = instability_visual * 3.2
+	var amp: float = instability_visual * instability_visual * 7.0
 	var wobble: Vector2 = Vector2(
 		sin(jank_time * 2.5) * amp,
 		cos(jank_time * 1.7) * amp * 0.62
@@ -64,14 +68,22 @@ static func should_show_scanline(instability_visual: float) -> bool:
 	return instability_visual > 0.08
 
 static func compute_scanline_opacity(instability_visual: float) -> float:
-	return 0.01 + (instability_visual * 0.13)
+	return 0.02 + (instability_visual * 0.22)
+
+static func compute_scanline_speed(instability_visual: float) -> float:
+	return 1.5 + (instability_visual * instability_visual * 9.0)
+
+static func compute_scanline_density(instability_visual: float) -> float:
+	return 380.0 - (instability_visual * instability_visual * 270.0)
 
 static func step_text_corruption_timer(current_timer: float, delta: float, instability_visual: float) -> Dictionary:
-	if instability_visual >= 0.72:
+	if instability_visual >= 0.38:
+		var t: float = (instability_visual - 0.38) / 0.62
 		var next_timer: float = current_timer - delta
 		if next_timer <= 0.0:
+			var interval: float = lerp(3.2, 0.35, t)
 			return {
-				"timer": 0.55 + ((1.0 - instability_visual) * 0.85),
+				"timer": interval,
 				"apply_corruption": true,
 				"restore_text": false,
 			}
@@ -108,9 +120,9 @@ static func corrupt_text(base_text: String, ui_rng: RandomNumberGenerator, insta
 	if base_text.is_empty():
 		return base_text
 	var swaps: int = 0
-	if instability_visual >= 0.9 and base_text.length() > 10:
+	if instability_visual >= 0.72 and base_text.length() > 10:
 		swaps = 2
-	elif instability_visual >= 0.72 and base_text.length() > 6:
+	elif instability_visual >= 0.38 and base_text.length() > 6:
 		swaps = 1
 	if swaps == 0:
 		return base_text

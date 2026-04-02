@@ -54,6 +54,7 @@ const SCANLINE_SHADER: Shader = preload("res://shaders/scanline.gdshader")
 @onready var _publisher_dialog: ConfirmationDialog = $"%PublisherDialog"
 @onready var _main_menu_layer: CanvasLayer = $"%MainMenuLayer"
 @onready var _start_run_button: Button = $"%StartRunButton"
+@onready var _reset_game_button: Button = $"%ResetGameButton"
 @onready var _publisher_trust_mode_toggle: CheckBox = $"%PublisherTrustModeToggle"
 
 # Visual corruption
@@ -102,6 +103,7 @@ var _jank_meter_dialog: AcceptDialog = null
 var _jank_meter_content: RichTextLabel = null
 var _cycle_legacy_dialog: AcceptDialog = null
 var _cycle_legacy_content: RichTextLabel = null
+var _reset_confirm_dialog: ConfirmationDialog = null
 var _current_ship_results: Dictionary = {}
 var _current_reviews_payload: ReviewsGeneratedPayload = ReviewsGeneratedPayload.new()
 var _post_ship_sequence: Array[Callable] = []
@@ -171,6 +173,11 @@ func _setup_dialog_runtime() -> void:
 	_publisher_pick_c_button = refs.publisher_pick_c_button
 	_archetype_select_dialog = refs.archetype_dialog
 	_cycle_legacy_dialog = _build_cycle_legacy_dialog()
+	_reset_confirm_dialog = ConfirmationDialog.new()
+	_reset_confirm_dialog.title = "Reset Campaign?"
+	_reset_confirm_dialog.dialog_text = "Erase all three-run progress and start a fresh campaign?"
+	_reset_confirm_dialog.min_size = Vector2(460, 100)
+	add_child(_reset_confirm_dialog)
 
 func _setup_stat_gauges() -> void:
 	var ambition_block: VBoxContainer = $"%AmbitionBlock"
@@ -241,6 +248,7 @@ func _wire_events() -> void:
 	_ship_button.pressed.connect(_on_ship_pressed)
 	_crunch_timer.timeout.connect(_on_crunch_timer_timeout)
 	_start_run_button.pressed.connect(_on_start_run_pressed)
+	_reset_game_button.pressed.connect(_on_reset_game_button_pressed)
 	_publisher_trust_mode_toggle.toggled.connect(_on_publisher_trust_mode_toggled)
 	_review_dialog.confirmed.connect(_on_review_dialog_closed)
 	_end_run_dialog.confirmed.connect(_on_end_run_dialog_new_run)
@@ -274,6 +282,9 @@ func _wire_events() -> void:
 
 	if _cycle_legacy_dialog != null:
 		_cycle_legacy_dialog.confirmed.connect(_on_cycle_legacy_confirmed)
+
+	if _reset_confirm_dialog != null:
+		_reset_confirm_dialog.confirmed.connect(_on_reset_game_confirmed)
 
 	if _game_state != null:
 		_on_state_changed(_snapshot_from_state())
@@ -612,6 +623,8 @@ func _process(delta: float) -> void:
 	_scanline_overlay.visible = JankVisualUtils.should_show_scanline(_instability_visual)
 	if _scanline_material != null:
 		_scanline_material.set_shader_parameter("opacity", JankVisualUtils.compute_scanline_opacity(_instability_visual))
+		_scanline_material.set_shader_parameter("speed", JankVisualUtils.compute_scanline_speed(_instability_visual))
+		_scanline_material.set_shader_parameter("density", JankVisualUtils.compute_scanline_density(_instability_visual))
 
 	var text_step: Dictionary = JankVisualUtils.step_text_corruption_timer(_text_corruption_timer, delta, _instability_visual)
 	_text_corruption_timer = float(text_step.get("timer", _text_corruption_timer))
@@ -643,6 +656,15 @@ func _update_ship_button_danger(runway_days: int) -> void:
 func _on_start_run_pressed() -> void:
 	_apply_run_start_settings()
 	_start_new_run()
+
+func _on_reset_game_button_pressed() -> void:
+	if _reset_confirm_dialog != null:
+		_reset_confirm_dialog.popup_centered(_reset_confirm_dialog.min_size)
+
+func _on_reset_game_confirmed() -> void:
+	if _game_state != null:
+		_game_state.start_new_cycle()
+	_show_main_menu()
 
 func _on_publisher_trust_mode_toggled(enabled: bool) -> void:
 	if _game_state != null:
@@ -894,6 +916,10 @@ func _show_main_menu() -> void:
 	if _game_state != null and _start_run_button != null:
 		var run_num: int = _game_state.current_run
 		_start_run_button.text = "START RUN %d OF 3" % run_num
+		# Reset button only makes sense once there is a campaign in progress.
+		if _reset_game_button != null:
+			_reset_game_button.visible = run_num > 1
+			_reset_game_button.add_theme_color_override("font_color", Color(0.75, 0.45, 0.45))
 
 # --- HUD helpers ---
 
