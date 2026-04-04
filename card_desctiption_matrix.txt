@@ -1,0 +1,46 @@
+Every description was built from one or two of these patterns, mixed to fit the card's personality:
+
+Pattern A — The observer trap
+
+[System does X]. [Player does Y]. [Unintended consequence Z]. [Neutral verdict].
+
+→ "Crouch. Move slowly. Hold breath near guards. The guard walks into a wall and stays. Both of you have succeeded." (Stealth)
+
+Pattern B — The spec vs. reality split
+
+[Impressive technical claim]. [What actually ships].
+
+→ "Gravity-affected, wind-adjusted, arc-calculated. Missed by six inches. The physics are working correctly." (Archery)
+
+Pattern C — The player indictment
+
+[Setup]. [Player makes obvious mistake]. [Game confirms it without mercy].
+
+→ "You trusted them. The game told you not to in the environmental narrative. You did not read the environment." (Trust & Betrayal)
+
+Pattern D — The designer alibi
+
+[Feature with visible flaw]. [Flaw named plainly]. [Absolution granted anyway].
+
+→ "The cape flows with physics-accurate weight and clips through the spine with physics-accurate precision." (Cloth Simulation)
+
+Pattern E — The contained universe
+
+[World is fully simulated]. [One thing breaks the simulation]. [Nobody comments].
+
+→ "Wolves hunt deer. Deer eat grass. Grass regrows. By hour two the wolves are gone. The grass has quietly won." (Ecosystem Simulation)
+
+Pattern F — The known issue as feature
+
+[Bug or failure]. [Stated without alarm]. [Shipped anyway].
+
+→ "Bans three legitimate players, misses the aimbotters, introduces two new exploits. Shipped with confidence." (Anti-Cheat)
+
+Tone axes used across all patterns:
+
+Axis	Low end	High end
+Target	System	Player
+Affect	Deadpan	Resigned
+Accuracy	Precise technical	Vague institutional
+Verdict	None given	Quietly absurd
+The rule: never use exclamation marks, never editorialise, never explain the joke. The flatness is the voice.

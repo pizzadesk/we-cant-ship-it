@@ -5,7 +5,7 @@
   "feature_added": "Feature added: %s",
   "interaction": "Interaction: %s (Instability %+d, Soul %+d)",
   "day_spent": "Day spent on %s. %d runway days remain.",
-  "run_started": "Run started. Don't let the runway collapse before ship.",
+  "run_started": "Run started. The runway is shorter than it looks.",
   "main_menu": "Main menu: start a run when ready.",
   "dilemma_a": "Dilemma choice locked: A",
   "dilemma_b": "Dilemma choice locked: B",

@@ -1,11 +1,11 @@
 {
-  "ship_empty": "Place at least one feature card before shipping — nothing to rate.",
-  "fix_bugs_active": "Spend 1 day: −10 Instability, −2 Ambition, −2 Soul. The team loses momentum while debugging.",
-  "fix_bugs_exhausted": "Running on fumes. Debugging costs what little conviction remains.",
-  "fix_bugs_depleted": "No runway days left. Emergency actions are closed; only shipping is possible.",
-  "dev_log_active": "Spend 1 day: gain 1 Soul and feed community hype.",
-  "dev_log_depleted": "No runway days left. Community update can no longer be posted this run.",
-  "ship_overloaded": "Ship now for maximal chaos branding, but review risk is high.",
-  "ship_underloaded": "Ship now for cleaner reviews, but you may lose cult-jank soul.",
-  "ship_default": "Ship now and lock your current ambition/instability/soul mix into Review Roulette."
+  "ship_empty": "Nothing shipped. Critics are not known for rating the concept.",
+  "fix_bugs_active": "-10 Instability, -2 Ambition, -2 Soul. The team has opinions about this decision.",
+  "fix_bugs_exhausted": "-10 Instability, -2 Ambition, -2 Soul. Soul is critically low. The team will document this grievance.",
+  "fix_bugs_depleted": "No runway days remaining. Only shipping is available.",
+  "dev_log_active": "+1 Soul. The community will mythologize whatever you post.",
+  "dev_log_depleted": "No runway days remaining. The update will be late. The community will survive.",
+  "ship_overloaded": "High Instability. Review risk is real. The chaos, however, is authentic.",
+  "ship_underloaded": "Low Instability. Reviews should be friendly. Whether that is the goal is another matter.",
+  "ship_default": "Locks current stats into Review Roulette. The critics are waiting."
 }
