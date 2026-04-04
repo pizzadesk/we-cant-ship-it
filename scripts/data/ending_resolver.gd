@@ -65,6 +65,16 @@ static func _get_goldilocks_window(config: GameConfig, archetype: String) -> Arr
 static func get_goldilocks_window_for_archetype(config: GameConfig, archetype: String) -> Array[int]:
 	return _get_goldilocks_window(config, archetype)
 
+## Returns true if Defining Game conditions are all met right now.
+## Used pre-ship to decide whether to suppress timing penalties.
+static func is_defining_game_eligible(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, run: int) -> bool:
+	if config == null or run < 2:
+		return false
+	var window: Array[int] = _get_goldilocks_window(config, archetype)
+	return ambition >= config.goldilocks_ambition_min \
+		and instability >= window[0] and instability <= window[1] \
+		and soul >= config.goldilocks_soul_min
+
 static func normalize_ending_name(ending: String) -> String:
 	if ending.contains(":"):
 		return String(ending.split(":", false, 1)[0]).strip_edges().to_lower()

@@ -28,6 +28,12 @@ func _update_view() -> void:
 	# Drag previews use pre-computed icon set before _ready() fires.
 	if not _drag_mismatch_icon.is_empty():
 		_name_label.text += " " + _drag_mismatch_icon
+	# Alien card blocked by soul gate: dim and label so the player knows before dragging.
+	if drag_origin == "backlog" and feature_card is FeatureCard and AppState != null:
+		var fc: FeatureCard = feature_card as FeatureCard
+		if fc.archetype_affinity.is_empty() and not AppState.can_place_card(fc):
+			modulate = Color(1.0, 0.4, 0.4, 0.6)
+			_name_label.text += " ☠ SOUL GATED"
 
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin

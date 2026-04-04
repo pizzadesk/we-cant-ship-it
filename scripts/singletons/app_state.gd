@@ -21,6 +21,8 @@ const OfferScheduler = preload("res://scripts/data/offer_scheduler.gd")
 const CardUnlockResolver = preload("res://scripts/data/card_unlock_resolver.gd")
 @warning_ignore("shadowed_global_identifier")
 const JankResolver = preload("res://scripts/data/jank_resolver.gd")
+@warning_ignore("shadowed_global_identifier")
+const EndingResolver = preload("res://scripts/data/ending_resolver.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
 # --- Run state ---
@@ -210,8 +212,11 @@ func ship_it() -> Dictionary:
 	var features_shipped: int = feature_board.size()
 
 	var ship_window: Dictionary = ScoreCalculator.compute_ship_window(_game_config, runway_days, instability)
+	var dg_eligible: bool = EndingResolver.is_defining_game_eligible(
+		_game_config, ambition, instability, soul, chosen_archetype, current_run
+	)
 	var review_score: float = ScoreCalculator.calculate_final_score(
-		_game_config, ambition, instability, soul, features_shipped, ship_window
+		_game_config, ambition, instability, soul, features_shipped, ship_window, dg_eligible
 	)
 	var jank_status: String = ScoreCalculator.compute_jank_status(_game_config, instability, review_score)
 	var reviews: Array[Dictionary] = []

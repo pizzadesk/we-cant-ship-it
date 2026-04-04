@@ -26,7 +26,8 @@ static func rebuild_daily_offer(
 	initial_runway_days: int,
 	daily_visible_cards: int,
 	ui_rng: RandomNumberGenerator,
-	is_template_unlocked_cb: Callable
+	is_template_unlocked_cb: Callable,
+	already_offered_paths: PackedStringArray = PackedStringArray()
 ) -> DailyOfferResult:
 	var result: DailyOfferResult = DailyOfferResult.new()
 	if template_cards.is_empty():
@@ -46,6 +47,9 @@ static func rebuild_daily_offer(
 	var chosen_archetype: String = ""
 	if game_state != null and game_state.has_method("get_chosen_archetype"):
 		chosen_archetype = String(game_state.get_chosen_archetype())
+
+	# Build the eligible pool, respecting tier, archetype, and unlock rules.
+	var eligible_templates: Array[Resource] = []
 	for template in template_cards:
 		if not is_template_unlocked_cb.call(template):
 			continue
@@ -55,7 +59,20 @@ static func rebuild_daily_offer(
 				continue
 			if not _is_card_available_for_archetype(feature, chosen_archetype):
 				continue
-			available_templates.append(template)
+			eligible_templates.append(template)
+
+	# Apply day-scoped discard filter. Wrap when fewer than daily_visible_cards
+	# remain — guarantees a full offer every day.
+	if not already_offered_paths.is_empty():
+		for template in eligible_templates:
+			if not already_offered_paths.has(template.resource_path):
+				available_templates.append(template)
+		if available_templates.size() < daily_visible_cards:
+			# Pool nearly or fully exhausted — wrap to the full eligible pool.
+			available_templates = eligible_templates.duplicate()
+			result.pool_reset = true
+	else:
+		available_templates = eligible_templates.duplicate()
 
 	var backlog_cards: Array[Resource] = []
 	if runway_today <= 0 or available_templates.is_empty():
@@ -73,6 +90,8 @@ static func rebuild_daily_offer(
 		if variant == null:
 			continue
 		backlog_cards.append(variant)
+		if not template.resource_path.is_empty():
+			result.offered_paths.append(template.resource_path)
 
 	result.backlog_cards = backlog_cards
 	result.last_offer_runway_day = runway_today

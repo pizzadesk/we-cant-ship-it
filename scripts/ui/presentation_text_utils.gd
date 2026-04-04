@@ -185,7 +185,11 @@ static func build_previously_on_text(run_summary: Dictionary, current_run: int, 
 	if not jank_combination.is_empty():
 		lines.append("")
 		lines.append("[b]Discovered jank[/b]")
-		lines.append("%s" % String(jank_combination.get("name", "Unknown Combo")))
+		var src_a: String = String(jank_combination.get("card_a", ""))
+		var src_b: String = String(jank_combination.get("card_b", ""))
+		if not src_a.is_empty() and not src_b.is_empty():
+			lines.append("%s + %s" % [src_a, src_b])
+		lines.append("[color=#ff922b]\u2192 %s[/color]" % String(jank_combination.get("name", "Unknown Combo")))
 		lines.append(String(jank_combination.get("description", "")))
 
 	return "\n".join(lines)

@@ -112,6 +112,7 @@ var _current_reviews_payload: ReviewsGeneratedPayload = ReviewsGeneratedPayload.
 var _post_ship_sequence: Array[Callable] = []
 var _backlog_cards: Array[Resource] = []
 var _last_offer_runway_day: int = -1
+var _run_offered_paths: PackedStringArray = PackedStringArray()
 var _template_cards: Array[Resource] = []
 var _templates_loaded: bool = false
 var _jank_time: float = 0.0
@@ -329,6 +330,7 @@ func _wire_events() -> void:
 func _populate_card_list() -> void:
 	_backlog_cards.clear()
 	_last_offer_runway_day = -1
+	_run_offered_paths = PackedStringArray()
 	_ensure_template_cards_loaded()
 	_rebuild_daily_offer(true)
 
@@ -383,10 +385,15 @@ func _rebuild_daily_offer(force: bool = false) -> void:
 		INITIAL_RUNWAY_DAYS,
 		DAILY_VISIBLE_CARDS,
 		_ui_rng,
-		Callable(self, "_is_template_unlocked")
+		Callable(self, "_is_template_unlocked"),
+		_run_offered_paths
 	)
 	_backlog_cards = offer_result.backlog_cards
 	_last_offer_runway_day = offer_result.last_offer_runway_day
+	if offer_result.pool_reset:
+		_run_offered_paths = offer_result.offered_paths.duplicate()
+	elif not offer_result.offered_paths.is_empty():
+		_run_offered_paths.append_array(offer_result.offered_paths)
 	_refresh_backlog_list()
 
 func _is_template_unlocked(template: Resource) -> bool:
@@ -491,7 +498,7 @@ func _on_state_changed(payload: StateSnapshotPayload) -> void:
 	if _runway_gauge != null:
 		_runway_gauge.value = float(clampi(runway_days, 0, 21))
 	if _soul_gauge != null:
-		_soul_gauge.value = float(clampi(soul, 0, 15))
+		_soul_gauge.value = float(soul)
 
 	var runway_empty: bool = runway_days <= 0
 	_update_ship_button_danger(runway_days)
@@ -588,7 +595,7 @@ func _on_draft_offer(payload: DraftOfferPayload) -> void:
 	_draft_dialog.popup_centered(DRAFT_DIALOG_SIZE)
 
 func _on_day_spent(payload: DaySpentPayload) -> void:
-	if payload.reason == "add_feature" or payload.runway_days <= 0:
+	if payload.runway_days > 0:
 		_rebuild_daily_offer()
 
 func _on_runway_depleted(_payload: RunwayDepletedPayload) -> void:

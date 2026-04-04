@@ -71,7 +71,7 @@ static func create_stat_gauges(
 	refs.ambition = _create_stat_gauge(Color(0.2, 0.8, 0.3), 100, ambition_block)
 	_create_instability_gauge_with_markers(instability_block, refs)
 	refs.runway = _create_stat_gauge(Color(0.3, 0.6, 1.0), 21, runway_block)
-	refs.soul = _create_stat_gauge(Color(1.0, 0.6, 0.8), 15, soul_block)
+	refs.soul = _create_stat_gauge(Color(1.0, 0.6, 0.8), 20, soul_block)
 	return refs
 
 static func _create_stat_gauge(color: Color, max_value: int, parent: VBoxContainer) -> ProgressBar:

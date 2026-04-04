@@ -33,7 +33,7 @@ class_name GameConfig
 @export var goldilocks_soul_min: int = 7
 # RPG: widest window — tolerates scope sprawl and system collision.
 @export var goldilocks_instability_min_rpg: int = 12
-@export var goldilocks_instability_max_rpg: int = 55
+@export var goldilocks_instability_max_rpg: int = 54
 # Action-Adventure: balanced default.
 @export var goldilocks_instability_min_action_adventure: int = 15
 @export var goldilocks_instability_max_action_adventure: int = 50

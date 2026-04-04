@@ -97,7 +97,9 @@ before the run begins:
 
 -   Gap visualizer delta from the last completed run.
 
--   Which jank cards were unlocked and from what board combination.
+-   Which jank cards were unlocked, named alongside the two source cards
+    that produced them. (e.g. "Physics Playground + Dialogue System →
+    The Yeetable NPC.")
 
 -   Current run number with tone-appropriate studio voice copy.
 
@@ -204,6 +206,39 @@ routine rotation.*
 
 -   Can be triggered voluntarily or forced when Runway reaches 0.
 
+-   Shipping timing carries a review score consequence. The same stat
+    profile shipped at different points in the runway reads differently
+    to critics.
+
+**Ship Window**
+
+  -----------------------------------------------------------------------
+  **Window**          **Trigger**                    **Review Impact**
+  ------------------- ------------------------------ --------------------
+  Too Early           Ship with ≥ 13 Runway Days     −0.5 score. "You
+                      remaining.                     shipped before the
+                                                     jank had time to
+                                                     become culture."
+
+  Standard Launch     Mid-runway window.             No modifier.
+
+  Sweet Spot          Narrow window of remaining     Score bonus. "You
+                      Runway and matching             shipped at peak
+                      Instability range.             chaos without total
+                                                     collapse."
+
+  Last-Minute Panic   Ship with ≤ 2 Runway Days      −0.4 score. "You
+                      remaining.                     shipped in full
+                                                     panic mode."
+  -----------------------------------------------------------------------
+
+*Design intent: Ship It is not just a stat threshold check. Timing is a
+second dimension. Shipping too early reads as undercooked; shipping in
+blind panic reads as unfinished. The sweet spot rewards players who read
+the board and commit before runway forces their hand. Defining Game
+endings are exempt from timing penalties --- reaching the apex outcome
+should not be penalised by the moment you chose to ship.*
+
 **6. Archetype System**
 
 At run start, the player selects a target archetype: RPG, Shooter, or
@@ -224,7 +259,7 @@ skin. Archetype does three things:
   **Archetype**      **Instability    **Risk Profile**
                      Window**         
   ------------------ ---------------- ---------------------------------------
-  RPG                12 -- 55         Widest window. Tolerates scope sprawl
+  RPG                12 -- 54         Widest window. Tolerates scope sprawl
                                       and system collision. Harder to bust,
                                       lower peak reward.
 
@@ -255,7 +290,37 @@ and feel, not just in stats:
 with their archetype. When placed in a different archetype\'s run (via
 jank card inheritance across runs), they carry higher instability
 modifiers --- a shooter card in an RPG run produces friction.*
+**Archetype Mismatch Penalty**
 
+Placing a card outside its native archetype applies a friction penalty
+derived from how far the card is from the chosen genre. This is the
+mechanical expression of the strategic commitment archetype selection
+demands. Four levels:
+
+  -------------------------------------------------------------------------------
+  **Level**             **Condition**                        **Effect**
+  --------------------- ------------------------------------ --------------------
+  None                  Card is on-archetype, or universal   No modifier.
+                        (covers all three archetypes).
+
+  Genre Stretch (~)     Card covers 2 archetypes; the        +2 Instability.
+                        chosen run is the third.
+
+  Wild Swing (⚠)        Card covers 1 archetype; not the     +4 Instability,
+                        chosen run.                          +2 Ambition, −1
+                                                             Soul.
+
+  Alien (☠)             Card has no archetype affinity.      +8 Instability,
+                        Radically off-genre.                 +4 Ambition, −3
+                                                             Soul. Placement
+                                                             requires Soul ≥ 5.
+  -------------------------------------------------------------------------------
+
+*Design intent: Genre stretch is a considered reach into adjacent territory.
+Wild swing is a team confused but intrigued. Alien cards are a studio identity
+crisis --- high-variance, potentially legend-making, costly enough to demand
+conviction. The Soul gate prevents desperation alien placements: the player
+must have enough sincerity to survive the disruption.*
 **7. Feature Card System**
 
 Cards are the primary decision surface. Every card has a name, an
@@ -287,11 +352,13 @@ the cards hit harder.
 **Daily Offer --- Pick One of Three**
 
 Each day, three cards are presented face-up. The player picks one. The
-other two are gone. No skipping mechanic, no reroll. Pure card selection
-pressure under runway constraint.
+other two are discarded --- they will not reappear in future offers this
+run. No skipping, no reroll.
 
-*Design intent: Blackjack doesn\'t offer a reroll. The tension is in the
-choice between known options, not in waiting for a better hand.*
+*Design intent: Blackjack doesn't offer a reroll. The tension is in the
+choice between three known options today. Passive waiting is not
+available: every card you pass on is gone. The constraint is scarcity
+of decisions, not scarcity of time.*
 
 **8. Emergent Jank System**
 
@@ -388,11 +455,36 @@ system.**
 
 **9. Post-Ship Resolution**
 
+Post-ship screens resolve in a fixed sequence:
+
+1.  **Review Roulette** --- critic reactions first. The emotional
+    gut-punch.
+
+2.  **Gap Visualizer** --- analytical debrief. Where each stat landed
+    relative to the Defining Game.
+
+3.  **Jank Discovery** --- combinatorial reveal. What your specific
+    board accidentally created.
+
+This order is intentional: gut-punch → debrief → discovery. Critic
+reactions carry the emotional weight; the gap visualizer makes the
+analysis legible; jank discovery closes the loop on individual
+decisions.
+
+**Review Roulette**
+
+Shown immediately after shipping. Critic reviews resolve before the
+player sees any stat analysis. The review score is derived from the
+ending type, with ship window timing noted in the indie blog critic
+copy. The first thing the player sees is how the world reacted ---
+before they can see why.
+
 **Gap Visualizer**
 
-Shown after every run. Displays where each stat landed relative to the
-Defining Game as a proportional delta bar. No numbers. No explanation.
-The player reads the gap and brings that knowledge into the next run.
+Shown after Review Roulette. Displays where each stat landed relative to
+the Defining Game as a proportional delta bar. No numbers. No
+explanation. The player reads the gap and brings that knowledge into the
+next run.
 
 > AMBITION ████████████░░ close INSTABILITY ████░░░░░░░░░░ too low SOUL
 > ██████████████ ✓
@@ -504,7 +596,7 @@ is a subsequent design phase.
     approaches the archetype\'s ceiling, wobble amplitude and glitch
     frequency amplify independently of the raw value. A Shooter run
     (ceiling 42) feels noticeably more chaotic at Instability 38 than an
-    RPG run (ceiling 55) does at the same value. The window edges are
+    RPG run (ceiling 54) does at the same value. The window edges are
     meant to be felt, not just read.
 
 -   The Soul stat surfaces a live Defining Game eligibility warning
@@ -518,6 +610,18 @@ is a subsequent design phase.
 
 -   The Fix Bugs soul cost is surfaced explicitly in the UI. No hidden
     mechanics.
+
+-   The Soul gauge reflects actual Soul value with no visual cap. A
+    gauge that reads "full" at 15 when Soul can exceed 15 silently
+    contradicts the no-hidden-mechanics principle.
+
+-   The archetype Instability window is not shown as live markers on the
+    HUD during Run 1. Run 1 is explicitly exploratory --- discovery
+    intent is preserved where it matters. From Run 2 onward, floor and
+    ceiling markers are visible on the Instability gauge. By Run 2 the
+    player has earned the information, and Run 3's tighter pressure
+    (Rare cards swinging ±10 Instability, pressure starting Day 7)
+    makes live markers a playability requirement, not a hand-hold.
 
 -   Main menu always shows current cycle position: RUN 1 OF 3, RUN 2 OF
     3, RUN 3 OF 3, with brief tone-appropriate copy.
@@ -544,15 +648,21 @@ re-introduction without cause.
   / Prestige Collapse /    derive directly from stats. Removed complexity
   Community Darling)       without removing meaning.
 
-  Tag Interaction System   In a rapid-fire card game, cross-referencing
-                           tags slows the snap decision. Archetype
-                           routing replaces the interesting parts of tag
-                           interaction.
+  Tag Interaction System   Stat effects removed. Archetype routing
+                           replaces the interesting parts of tag
+                           interaction in rapid-fire card decisions.
+                           The tag field is retained as a flavor hint
+                           for the critic review system only --- not a
+                           live mechanic.
 
   Soul Cap (15)            The runway day cost already protects against
                            Dev Log spam. The cap added a rule players
                            must track for a problem already solved
-                           mechanically.
+                           mechanically. The Soul gauge has no visual
+                           cap --- it reflects actual Soul value.
+                           Showing "full" at 15 when Soul can exceed
+                           15 silently contradicts the no-hidden-
+                           mechanics principle.
 
   Publisher Trust Mode     Optional toggles are design debt. Publisher
                            pressure is handled through the event layer.

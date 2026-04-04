@@ -10,7 +10,8 @@ static func calculate_final_score(
 	instability: int,
 	soul: int,
 	features_shipped: int,
-	ship_window: Dictionary
+	ship_window: Dictionary,
+	suppress_window_penalty: bool = false
 ) -> float:
 	# Nothing shipped = nothing reviewable; bypass all positive contributions.
 	if features_shipped == 0:
@@ -18,12 +19,15 @@ static func calculate_final_score(
 	var base_score: float = config.score_base
 	var soul_factor: float = float(soul) / float(soul + config.soul_mitigation_factor)
 	var instability_penalty: float = -config.instability_coefficient * float(instability) * (1.0 - soul_factor)
+	var window_bonus: float = float(ship_window.get("score_bonus", 0.0))
+	if suppress_window_penalty and window_bonus < 0.0:
+		window_bonus = 0.0
 	return clampf(
 		base_score
 		+ (ambition * config.ambition_coefficient)
 		+ instability_penalty
 		+ (soul * config.soul_coefficient)
-		+ float(ship_window.get("score_bonus", 0.0)),
+		+ window_bonus,
 		1.0, 10.0
 	)
 
