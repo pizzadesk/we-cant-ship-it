@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Stole one cabbage. Witnessed by no one. Twelve guards arrived immediately. The cabbage was not worth it."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

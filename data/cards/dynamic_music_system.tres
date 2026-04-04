@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Swells when you run. Whispers when you hide. Breaks on pause. Resumes at double speed. The soul is stirred regardless."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

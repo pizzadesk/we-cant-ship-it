@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "[SteelGhost99] eliminated [Patrol_C]. [Patrol_C] eliminated [SteelGhost99]. The kill feed is the only honest record."
 archetype_affinity = PackedStringArray("shooter")

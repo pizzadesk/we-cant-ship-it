@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 0, "soul": 0}
 }
 interaction_flavor = {}
+description = "A white X confirms contact. Dopamine delivered. The enemy has 14,000 health. The Xs will continue."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

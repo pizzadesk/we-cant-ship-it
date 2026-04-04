@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "NPCs experience joy, grief, and professional contempt. They express all three by walking slightly faster near you."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

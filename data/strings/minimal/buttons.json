@@ -1,0 +1,14 @@
+{
+  "help_ok": "Close",
+  "ship_summary_ok": "Ship It",
+  "ship_summary_cancel": "Back",
+  "studio_briefing_ok": "Keep",
+  "studio_briefing_cancel": "Replace",
+  "end_run_continue_default": "Next Run",
+  "end_run_continue_second": "Run 2",
+  "end_run_continue_last": "Run 3",
+  "end_run_continue_cycle": "New Cycle",
+  "end_run_menu": "Main Menu",
+  "draft_pick_c": "C",
+  "publisher_stance_c": "C"
+}

@@ -16,4 +16,5 @@ interactions = {
 "physics": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Every bone modeled. Every fracture animated. Every ragdoll now a load-bearing gameplay moment."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

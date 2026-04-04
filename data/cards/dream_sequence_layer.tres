@@ -16,4 +16,5 @@ interactions = {
 "world": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Reality dissolves. The meaning is unclear. The art director is very proud. The loading is disguised as intention."
 archetype_affinity = PackedStringArray()

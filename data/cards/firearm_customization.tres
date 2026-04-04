@@ -16,4 +16,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Forty-two attachments. Sixteen calibers. One dominant loadout. The rest are screenshots and the illusion of choice."
 archetype_affinity = PackedStringArray("shooter")

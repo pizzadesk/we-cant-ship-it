@@ -15,4 +15,5 @@ interactions = {
 "world": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "The AI waits behind a crate in absolute silence. It has been there since the tutorial. It will always be there."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

@@ -15,4 +15,5 @@ interactions = {
 "weather": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Crickets at 3am. Wind that exists only in Level 2. An unmapped door that breathes. Ship it."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Press R to win slightly faster. Press R during a cutscene to face consequences neither of you anticipated."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

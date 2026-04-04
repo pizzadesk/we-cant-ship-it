@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "You chose Option B. Forty hours later, an NPC says something slightly different. The consequence has been delivered."
 archetype_affinity = PackedStringArray("rpg")

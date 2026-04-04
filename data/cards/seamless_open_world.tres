@@ -16,4 +16,5 @@ interactions = {
 "weather": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+description = "No loading screens. The engine has strong opinions about this. Your framerate is now the loading screen."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Bodies collapse with physical accuracy. Two stack at the doorway. One slides down the hill until you leave the area."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

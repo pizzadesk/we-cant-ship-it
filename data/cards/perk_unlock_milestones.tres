@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Kill two hundred. Unlock a perk. Kill five hundred more. Unlock a slightly better version of the same perk. Repeat."
 archetype_affinity = PackedStringArray("rpg", "shooter", "action_adventure")

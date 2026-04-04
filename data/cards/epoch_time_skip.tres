@@ -17,4 +17,5 @@ interactions = {
 "quest": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Jump thirty years into the future. Everyone you knew is gone. Your sword is still in your inventory. This goes unremarked."
 archetype_affinity = PackedStringArray("rpg")

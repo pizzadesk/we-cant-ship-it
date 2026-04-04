@@ -1,11 +1,11 @@
 extends Node
 
-const INTERACTION_RULES_PATH: String = "res://data/interaction_rules.json"
 const THRESHOLD_EVENTS_PATH: String = "res://data/threshold_events.json"
 const OFFERS_PATH: String = "res://data/offers.json"
 const CARDS_PATH: String = "res://data/cards"
 const CUSTOM_CARDS_PATH: String = "res://data/custom_cards"
 const GAME_CONFIG_PATH: String = "res://data/game_config.tres"
+const JANK_COMBINATIONS_PATH: String = "res://data/jank_combinations.json"
 var GAME_CONFIG_OVERRIDE_PATHS: Array[String] = [
 	"res://data/game_config_override.json",
 	"user://game_config_override.json",
@@ -19,6 +19,8 @@ const CycleStateManager = preload("res://scripts/data/cycle_state_manager.gd")
 const OfferScheduler = preload("res://scripts/data/offer_scheduler.gd")
 @warning_ignore("shadowed_global_identifier")
 const CardUnlockResolver = preload("res://scripts/data/card_unlock_resolver.gd")
+@warning_ignore("shadowed_global_identifier")
+const JankResolver = preload("res://scripts/data/jank_resolver.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
 # --- Run state ---
@@ -34,18 +36,14 @@ var current_run: int = 1
 
 var _game_config: GameConfig
 var _offers: Dictionary = {}
-var _interaction_rules: Dictionary = {}
+var _jank_combinations: Array = []
+var _jank_combo_index: Dictionary = {}
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _event_bus: Node
 var _review_generator: Node
 var _triggered_thresholds: Dictionary = {}
-var _style_points: Dictionary = {"cult_jank": 0, "prestige_collapse": 0, "community_darling": 0}
-var _current_identity: String = "Unformed"
 var _pending_dilemma: Dictionary = {}
 var _pending_draft_offer: Dictionary = {}
-var _pending_publisher_meeting: Dictionary = {}
-var _publisher_trust_run: int = 0
-var _publisher_trust_mode_enabled_run: bool = false
 var _all_card_ids: PackedStringArray = PackedStringArray()
 var _card_metadata_cache: Dictionary = {}
 var _threshold_events: Array[Dictionary] = []
@@ -63,11 +61,12 @@ func _ready() -> void:
 	_load_game_config()
 	_cycle_mgr.load_from_disk()
 	current_run = _cycle_mgr.get_current_run()
+	_jank_combinations = JankResolver.load_combinations()
+	_index_jank_combinations()
 	_rebuild_all_card_ids()
 	_cycle_mgr.ensure_initial_card_unlock_state(
 		_all_card_ids, Callable(self, "_get_card_tier"), _game_config.initial_card_unlock_count
 	)
-	_load_interaction_rules()
 	_load_threshold_events()
 	_load_offers()
 	reset_run()
@@ -79,35 +78,36 @@ func reset_run() -> void:
 	soul = _game_config.soul_start
 	feature_board.clear()
 	_triggered_thresholds.clear()
-	_style_points = {"cult_jank": 0, "prestige_collapse": 0, "community_darling": 0}
-	_current_identity = "Unformed"
 	chosen_archetype = ""
 	current_run = _cycle_mgr.get_current_run()
 	_offer_sched.reset()
-	_publisher_trust_mode_enabled_run = _cycle_mgr.is_publisher_trust_mode_enabled()
-	if _publisher_trust_mode_enabled_run:
-		_publisher_trust_run = _cycle_mgr.get_publisher_trust()
-	else:
-		_publisher_trust_run = 0
 	_emit_state()
 
 func get_game_config() -> GameConfig:
 	return _game_config
 
-func get_dominant_style_bucket() -> String:
-	return _get_dominant_style_bucket()
-
 func get_cycle_state() -> Dictionary:
 	return _cycle_mgr.get_cycle_state()
+
+func get_run_summary(run_number: int) -> Dictionary:
+	return _cycle_mgr.get_run_summary(run_number)
+
+func get_cycle_jank_card_ids() -> PackedStringArray:
+	return _cycle_mgr.get_jank_card_ids()
 
 func get_last_completed_run() -> int:
 	return _last_completed_run
 
-func get_run_identity() -> String:
-	return _current_identity
+func get_dynamic_card_templates() -> Array[Resource]:
+	var templates: Array[Resource] = []
+	for card_id in _jank_combo_index.keys():
+		var card: FeatureCard = _build_virtual_jank_card(String(card_id))
+		if card != null:
+			templates.append(card)
+	return templates
 
-func get_style_points() -> Dictionary:
-	return _style_points.duplicate(true)
+func get_run_identity() -> String:
+	return ""
 
 func is_cycle_complete() -> bool:
 	return _cycle_mgr.is_cycle_complete()
@@ -124,12 +124,6 @@ func start_new_cycle() -> void:
 func save_cycle_state() -> void:
 	_cycle_mgr.save()
 
-func is_publisher_trust_mode_enabled() -> bool:
-	return _cycle_mgr.is_publisher_trust_mode_enabled()
-
-func set_publisher_trust_mode_enabled(enabled: bool) -> void:
-	_cycle_mgr.set_publisher_trust_mode_enabled(enabled)
-
 ## Returns true when a card is placeable. Alien cards (no archetype_affinity) are blocked
 ## below the soul gate when an archetype has been chosen.
 func can_place_card(card: FeatureCard) -> bool:
@@ -144,6 +138,9 @@ func set_archetype(archetype: String) -> void:
 	if _event_bus != null:
 		_event_bus.archetype_chosen.emit(archetype)
 
+func get_chosen_archetype() -> String:
+	return chosen_archetype
+
 ## Tier availability is gated by current run number in the three-run cycle.
 func is_tier_available(tier: String) -> bool:
 	match tier.to_lower():
@@ -153,34 +150,11 @@ func is_tier_available(tier: String) -> bool:
 			return current_run >= 2
 		"rare":
 			return current_run >= 3
+		"jank":
+			return current_run >= 2
 		_:
 			return true
 
-## Returns interaction heat level for pre-placement hint display.
-## 0 = no interaction, 1 = low (delta 1-4), 2 = medium (5-9), 3 = high (10+).
-func get_interaction_heat(card: FeatureCard, board: Array[FeatureCard]) -> int:
-	if card == null:
-		return 0
-	var total_delta: int = 0
-	for existing in board:
-		if existing == null:
-			continue
-		for new_tag in card.tags:
-			for existing_tag in existing.tags:
-				var rule: Dictionary = _get_rule(String(new_tag), String(existing_tag))
-				if _is_rule_blocked_by_soul(rule):
-					continue
-				if String(new_tag) == String(existing_tag):
-					total_delta += 2
-				total_delta += abs(int(rule.get("instability_delta", 0)))
-				total_delta += abs(int(rule.get("soul_delta", 0)))
-	if total_delta == 0:
-		return 0
-	if total_delta < 5:
-		return 1
-	if total_delta < 10:
-		return 2
-	return 3
 
 func add_feature_card(card: Resource) -> void:
 	if card == null or runway_days <= 0:
@@ -193,70 +167,37 @@ func add_feature_card(card: Resource) -> void:
 		push_warning("add_feature_card: placement blocked by soul gate for alien card")
 		return
 
-	var interaction_events: Array[Dictionary] = _build_interaction_events(placed_card)
 	feature_board.append(placed_card)
 	ambition += placed_card.ambition_value
 	instability += placed_card.instability_value
 
-	# Style points: prestige accumulates only when ambition outpaces soul.
-	if placed_card.ambition_value > soul:
-		_style_points["prestige_collapse"] += max(placed_card.ambition_value, 0)
-	else:
-		_style_points["community_darling"] += 1
-
-	_style_points["cult_jank"] += max(placed_card.instability_value, 0)
-
-	# Community darling bonus for narrative/character/world/lore/quest tags.
-	var darling_tags: PackedStringArray = PackedStringArray(["lore", "quest", "narrative", "character", "world"])
-	for tag in darling_tags:
-		if placed_card.tags.has(tag):
-			_style_points["community_darling"] += 3
-			break
-
-	for event_data in interaction_events:
-		instability += int(event_data.get("instability_delta", 0))
-		soul += int(event_data.get("soul_delta", 0))
-		if int(event_data.get("soul_delta", 0)) > 0:
-			_style_points["community_darling"] += int(event_data.get("soul_delta", 0))
-		if int(event_data.get("instability_delta", 0)) > 0:
-			_style_points["cult_jank"] += int(event_data.get("instability_delta", 0))
-		if _event_bus != null:
-			var payload: InteractionEventPayload = InteractionEventPayload.from_dictionary(event_data)
-			_event_bus.interaction_triggered.emit(payload)
-
-	# Archetype mismatch resolved after interaction events.
+	# Archetype mismatch applied after base stats.
 	_apply_archetype_mismatch(placed_card)
 
-	soul = clampi(soul, 0, _game_config.soul_max)
-	_update_run_identity()
+	soul = maxi(soul, 0)
 	spend_day("add_feature")
 	if _event_bus != null:
 		_event_bus.feature_added.emit(placed_card)
-	# Note: spend_day() already calls _emit_state(); a second call here would
-	# double-fire threshold evaluation and send redundant state_changed events.
 
 func fix_bugs() -> void:
 	if runway_days <= 0:
 		return
 	instability = max(instability - _game_config.fix_bugs_instability_reduction, 0)
+	ambition = max(ambition - _game_config.fix_bugs_ambition_penalty, 0)
 	soul = max(soul - _game_config.fix_bugs_soul_cost, 0)
-	_style_points["prestige_collapse"] += 2
 	spend_day("fix_bugs")
 
 func do_dev_log() -> void:
 	if runway_days <= 0:
 		return
-	soul = mini(soul + _game_config.dev_log_soul_gain, _game_config.soul_max)
-	_style_points["community_darling"] += 4
+	soul += _game_config.dev_log_soul_gain
 	spend_day("dev_log")
 
 func spend_day(reason: String) -> void:
 	runway_days = max(runway_days - 1, 0)
 	if _event_bus != null:
 		_event_bus.day_spent.emit(DaySpentPayload.build(reason, runway_days))
-	var popup_offered: bool = _maybe_offer_publisher_meeting()
-	if not popup_offered:
-		popup_offered = _maybe_offer_dilemma()
+	var popup_offered: bool = _maybe_offer_dilemma()
 	if not popup_offered:
 		popup_offered = _maybe_offer_draft()
 	if runway_days == 0:
@@ -265,6 +206,7 @@ func spend_day(reason: String) -> void:
 	_emit_state()
 
 func ship_it() -> Dictionary:
+	var completed_run: int = current_run
 	var features_shipped: int = feature_board.size()
 
 	var ship_window: Dictionary = ScoreCalculator.compute_ship_window(_game_config, runway_days, instability)
@@ -272,42 +214,66 @@ func ship_it() -> Dictionary:
 		_game_config, ambition, instability, soul, features_shipped, ship_window
 	)
 	var jank_status: String = ScoreCalculator.compute_jank_status(_game_config, instability, review_score)
-	var meeting_quality: float = _offer_sched.average_meeting_quality()
-	var ship_window_quality: float = ScoreCalculator.ship_window_quality(String(ship_window.get("label", "")))
 	var reviews: Array[Dictionary] = []
-	var mechanics_highlights: Array[String] = []
 	if _review_generator != null:
 		reviews = _review_generator.generate_reviews(
 			review_score, instability, soul, features_shipped, feature_board,
-			_current_identity, String(ship_window.get("label", ""))
+			"", String(ship_window.get("label", ""))
 		)
-		mechanics_highlights = _review_generator.generate_mechanics_highlights(feature_board)
+
+	# Post-ship jank combination detection.
+	var jank_match: Dictionary = JankResolver.find_combination(feature_board, chosen_archetype, _jank_combinations)
+	var has_jank_combination: bool = not jank_match.is_empty()
 
 	var ending: String = EndingResolver.resolve_ending_description(
-		_game_config, ambition, instability, soul, review_score, _get_dominant_style_bucket()
+		_game_config, ambition, instability, soul, chosen_archetype, has_jank_combination
 	)
 	# Nothing shipped = unrateable. Override all outcomes regardless of stats.
 	if features_shipped == 0:
 		review_score = 0.1
 		jank_status = "broken"
-		ending = _S.get_string("popups", "ending_desc_financial_catastrophe")
+		ending = EndingResolver.description_for_label("Shipped Something")
 
 	# Unlock cards for next run in this cycle.
 	var unlocked: PackedStringArray = _cycle_mgr.get_unlocked_card_ids()
 	var unlock_result: Dictionary = CardUnlockResolver.resolve_unlock(
-		_all_card_ids, unlocked, ending, jank_status,
-		meeting_quality, ship_window_quality,
-		_card_metadata_cache, _rng, Callable(self, "_load_card_by_id")
+		_all_card_ids, unlocked, ending, current_run,
+		_card_metadata_cache, _rng, Callable(self, "_load_card_by_id"),
+		_game_config, ambition, instability, soul, chosen_archetype
 	)
 	# Enrich with display name so UI never renders raw file IDs.
 	var _unlocked_card_id: String = String(unlock_result.get("card_id", ""))
 	if not _unlocked_card_id.is_empty():
 		var _unlocked_card: FeatureCard = _load_card_by_id(_unlocked_card_id)
 		unlock_result["card_name"] = _unlocked_card.feature_name if _unlocked_card != null else _unlocked_card_id.replace("_", " ").capitalize()
+	var _bonus_card_id: String = String(unlock_result.get("bonus_card_id", ""))
+	if not _bonus_card_id.is_empty():
+		var _bonus_card: FeatureCard = _load_card_by_id(_bonus_card_id)
+		unlock_result["bonus_card_name"] = _bonus_card.feature_name if _bonus_card != null else _bonus_card_id.replace("_", " ").capitalize()
 	var new_unlocked: PackedStringArray = PackedStringArray(unlock_result.get("new_unlocked_ids", unlocked))
 
+	# Record jank card from combination discovery into cycle state.
+	var jank_card_id: String = String(jank_match.get("jank_card_id", ""))
+	if not jank_card_id.is_empty():
+		if not new_unlocked.has(jank_card_id):
+			new_unlocked.append(jank_card_id)
+		_cycle_mgr.add_jank_card(jank_card_id)
+
+	var cycle_summary: Dictionary = {
+		"run": completed_run,
+		"ending": ending,
+		"ambition": ambition,
+		"instability": instability,
+		"soul": soul,
+		"archetype": chosen_archetype,
+		"features_shipped": features_shipped,
+		"jank_combination": jank_match.duplicate(true),
+		"ship_window": ship_window.duplicate(true),
+		"card_unlock": unlock_result.duplicate(true),
+	}
+
 	# Advance cycle state — saves immediately to disk.
-	_last_completed_run = _cycle_mgr.complete_run(ending, new_unlocked)
+	_last_completed_run = _cycle_mgr.complete_run(ending, new_unlocked, cycle_summary)
 	current_run = _cycle_mgr.get_current_run()
 
 	var result: ShipResult = ShipResult.new()
@@ -315,14 +281,12 @@ func ship_it() -> Dictionary:
 	result.ending = ending
 	result.jank_status = jank_status
 	result.ship_window = ship_window
-	result.publisher_meeting_quality = meeting_quality
-	result.publisher_trust = _publisher_trust_run
 	result.card_unlock = unlock_result
 	result.features_shipped = features_shipped
 	result.reviews = reviews
-	result.mechanics_highlights = mechanics_highlights
-	result.run_identity = _current_identity
+	result.jank_combination = jank_match
 	result.unlock_defining_game = EndingResolver.normalize_ending_name(ending) == "defining game"
+	result.completed_run = completed_run
 
 	if _event_bus != null:
 		_event_bus.reviews_generated.emit(ReviewsGeneratedPayload.from_dictionary(result.to_dictionary()))
@@ -360,29 +324,6 @@ func apply_draft_pick(pick_index: int) -> void:
 		selected.get("effects", {})
 	)
 	_pending_draft_offer.clear()
-	_emit_state()
-
-func apply_publisher_meeting_choice(choice_index: int) -> void:
-	if _pending_publisher_meeting.is_empty():
-		return
-	var options: Array = _pending_publisher_meeting.get("options", [])
-	if options.is_empty():
-		_pending_publisher_meeting.clear()
-		return
-	var selected: Dictionary = options[clampi(choice_index, 0, options.size() - 1)]
-	_apply_threshold_effects(selected.get("effects", {}))
-	_publisher_trust_run += int(_pending_publisher_meeting.get("grade_trust_delta", 0))
-	_publisher_trust_run += int(selected.get("trust_delta", 0))
-	_publisher_trust_run = clampi(_publisher_trust_run, -100, 100)
-	if _publisher_trust_mode_enabled_run:
-		_cycle_mgr.set_publisher_trust(_publisher_trust_run)
-	_offer_sched.record_meeting_quality(float(_pending_publisher_meeting.get("grade_quality", 0.5)))
-	_emit_threshold_event(
-		"publisher_meeting_choice",
-		"Publisher meeting stance chosen: %s" % String(selected.get("label", "Unknown")),
-		selected.get("effects", {})
-	)
-	_pending_publisher_meeting.clear()
 	_emit_state()
 
 func calculate_predicted_score() -> float:
@@ -439,7 +380,6 @@ func _apply_archetype_mismatch(card: FeatureCard) -> void:
 		instability += _game_config.alien_card_instability_bonus
 		ambition += _game_config.alien_card_ambition_bonus
 		soul = max(soul - _game_config.alien_card_soul_penalty, 0)
-		_style_points["cult_jank"] += _game_config.alien_card_instability_bonus
 		_emit_threshold_event(
 			"archetype_alien",
 			"%s in a %s — this card belongs to another universe entirely. +%d Instability, +%d Ambition, -%d Soul" % [
@@ -457,7 +397,6 @@ func _apply_archetype_mismatch(card: FeatureCard) -> void:
 	if count == 2:
 		# Genre stretch — adjacent genre, small dissonance.
 		instability += _game_config.genre_stretch_instability_bonus
-		_style_points["cult_jank"] += _game_config.genre_stretch_instability_bonus
 		_emit_threshold_event(
 			"archetype_genre_stretch",
 			"%s in a %s — familiar territory, slightly off-brief. +%d Instability" % [
@@ -472,7 +411,6 @@ func _apply_archetype_mismatch(card: FeatureCard) -> void:
 	instability += _game_config.archetype_mismatch_instability_bonus
 	ambition += _game_config.archetype_mismatch_ambition_bonus
 	soul = max(soul - _game_config.archetype_mismatch_soul_penalty, 0)
-	_style_points["cult_jank"] += _game_config.archetype_mismatch_instability_bonus
 	_emit_threshold_event(
 		"archetype_mismatch",
 		"%s in a %s — the team is confused but intrigued. +%d Instability, +%d Ambition, -%d Soul" % [
@@ -487,91 +425,8 @@ func _apply_archetype_mismatch(card: FeatureCard) -> void:
 		"warning"
 	)
 
-func _build_interaction_events(new_card: FeatureCard) -> Array[Dictionary]:
-	var events: Array[Dictionary] = []
-	for existing_card in feature_board:
-		if existing_card == null:
-			continue
-		for new_tag in new_card.tags:
-			for existing_tag in existing_card.tags:
-				var maybe_event: Dictionary = _create_event_for_tag_pair(
-					new_card, existing_card, String(new_tag), String(existing_tag)
-				)
-				if not maybe_event.is_empty():
-					events.append(maybe_event)
-	return events
-
-func _create_event_for_tag_pair(
-	new_card: FeatureCard,
-	existing_card: FeatureCard,
-	new_tag: String,
-	existing_tag: String,
-) -> Dictionary:
-	var has_overlap: bool = new_tag == existing_tag
-	var rule: Dictionary = _get_rule(new_tag, existing_tag)
-	if _is_rule_blocked_by_soul(rule):
-		return {}
-	if not has_overlap and rule.is_empty():
-		return {}
-
-	var instability_delta: int = 0
-	var soul_delta: int = 0
-	if has_overlap:
-		instability_delta += 2
-		instability_delta += new_card.get_interaction_delta(new_tag, "instability")
-		instability_delta += existing_card.get_interaction_delta(existing_tag, "instability")
-		soul_delta += new_card.get_interaction_delta(new_tag, "soul")
-		soul_delta += existing_card.get_interaction_delta(existing_tag, "soul")
-	if not rule.is_empty():
-		instability_delta += int(rule.get("instability_delta", 0))
-		soul_delta += int(rule.get("soul_delta", 0))
-
-	var flavor: String = _pick_interaction_flavor(rule, new_card, existing_card, new_tag, existing_tag)
-	return {
-		"new_feature": new_card.feature_name,
-		"existing_feature": existing_card.feature_name,
-		"instability_delta": instability_delta,
-		"soul_delta": soul_delta,
-		"flavor": flavor,
-	}
-
-func _pick_interaction_flavor(
-	rule: Dictionary,
-	new_card: FeatureCard,
-	existing_card: FeatureCard,
-	new_tag: String,
-	existing_tag: String,
-) -> String:
-	if new_tag == existing_tag:
-		var new_flavor: String = new_card.get_interaction_flavor_for_tag(new_tag)
-		if not new_flavor.is_empty():
-			return new_flavor
-		var existing_flavor: String = existing_card.get_interaction_flavor_for_tag(existing_tag)
-		if not existing_flavor.is_empty():
-			return existing_flavor
-	var flavors: Array = rule.get("flavors", [])
-	if flavors.is_empty():
-		return "%s + %s = Build monitor now shows six warning colors." % [new_card.feature_name, existing_card.feature_name]
-	var picked: String = String(flavors[_rng.randi_range(0, flavors.size() - 1)])
-	picked = picked.replace("{new_feature}", new_card.feature_name)
-	picked = picked.replace("{existing_feature}", existing_card.feature_name)
-	picked = picked.replace("{tag_a}", new_tag)
-	picked = picked.replace("{tag_b}", existing_tag)
-	return picked
-
-func _get_rule(tag_a: String, tag_b: String) -> Dictionary:
-	var key_a: String = "%s|%s" % [tag_a, tag_b]
-	var key_b: String = "%s|%s" % [tag_b, tag_a]
-	if _interaction_rules.has(key_a):
-		return _interaction_rules[key_a]
-	if _interaction_rules.has(key_b):
-		return _interaction_rules[key_b]
-	return {}
-
-func _is_rule_blocked_by_soul(rule: Dictionary) -> bool:
-	if rule.is_empty():
-		return false
-	return soul < int(rule.get("soul_required", 0))
+func _build_interaction_events(_new_card: FeatureCard) -> Array[Dictionary]:
+	return []  # Interaction system removed; kept as stub to avoid build breaks.
 
 func _load_game_config() -> void:
 	_game_config = load(GAME_CONFIG_PATH) as GameConfig
@@ -648,18 +503,6 @@ func _apply_game_config_override(data: Dictionary, source_path: String) -> void:
 func _load_offers() -> void:
 	_offers = JsonDataLoader.load_dictionary(OFFERS_PATH, "Offers")
 
-func _load_interaction_rules() -> void:
-	var interaction_data: Dictionary = JsonDataLoader.load_dictionary(INTERACTION_RULES_PATH, "Interaction rules")
-	var rules: Variant = interaction_data.get("rules", [])
-	if rules is not Array:
-		return
-	for rule_entry in rules:
-		if rule_entry is Dictionary:
-			var tags: Variant = rule_entry.get("tags", [])
-			if tags is Array and (tags as Array).size() == 2:
-				var key: String = "%s|%s" % [String((tags as Array)[0]), String((tags as Array)[1])]
-				_interaction_rules[key] = rule_entry
-
 func _load_threshold_events() -> void:
 	var parse_result: Array = JsonDataLoader.load_array(THRESHOLD_EVENTS_PATH, "Threshold events")
 	var loaded_events: Array[Dictionary] = []
@@ -670,7 +513,6 @@ func _load_threshold_events() -> void:
 
 func _emit_state() -> void:
 	_evaluate_threshold_events()
-	_update_run_identity()
 	if _event_bus != null:
 		var snapshot: StateSnapshotPayload = StateSnapshotPayload.new()
 		snapshot.ambition = ambition
@@ -678,54 +520,16 @@ func _emit_state() -> void:
 		snapshot.runway_days = runway_days
 		snapshot.soul = soul
 		snapshot.features_shipped = feature_board.size()
-		snapshot.run_identity = _current_identity
 		snapshot.current_run = current_run
-		snapshot.style_points = _style_points.duplicate(true)
 		_event_bus.state_changed.emit(snapshot)
 
 func _update_run_identity() -> void:
-	var new_identity: String = "Unformed"
-	if _style_points["cult_jank"] > _style_points["prestige_collapse"] and _style_points["cult_jank"] > _style_points["community_darling"]:
-		new_identity = "Cult Jank"
-	elif _style_points["prestige_collapse"] > _style_points["community_darling"]:
-		new_identity = "Prestige Collapse"
-	elif _style_points["community_darling"] > 0:
-		new_identity = "Community Darling"
-
-	if new_identity != _current_identity:
-		_current_identity = new_identity
-		if _event_bus != null:
-			var payload: RunIdentityPayload = RunIdentityPayload.new()
-			payload.identity = _current_identity
-			payload.style_points = _style_points.duplicate(true)
-			_event_bus.run_identity_changed.emit(payload)
-
-func _get_dominant_style_bucket() -> String:
-	var cult: int = int(_style_points.get("cult_jank", 0))
-	var prestige: int = int(_style_points.get("prestige_collapse", 0))
-	var community: int = int(_style_points.get("community_darling", 0))
-	var top_score: int = maxi(cult, maxi(prestige, community))
-	if top_score <= 0:
-		return ""
-	var top_count: int = 0
-	if cult == top_score:
-		top_count += 1
-	if prestige == top_score:
-		top_count += 1
-	if community == top_score:
-		top_count += 1
-	if top_count > 1:
-		return ""
-	if cult == top_score:
-		return "cult_jank"
-	if prestige == top_score:
-		return "prestige_collapse"
-	return "community_darling"
+	pass  # Style buckets removed; identity is derived from endings only.
 
 func _maybe_offer_dilemma() -> bool:
 	var result: Dictionary = _offer_sched.maybe_offer_dilemma(
 		_game_config, _offers, runway_days, soul,
-		_publisher_trust_mode_enabled_run, _publisher_trust_run,
+		current_run,
 		_cycle_mgr.get_pressure_modifier()
 	)
 	if result.is_empty():
@@ -738,6 +542,7 @@ func _maybe_offer_dilemma() -> bool:
 func _maybe_offer_draft() -> bool:
 	var result: Dictionary = _offer_sched.maybe_offer_draft(
 		_game_config, _offers, runway_days, soul, feature_board.is_empty(),
+		current_run,
 		_cycle_mgr.get_pressure_modifier()
 	)
 	if result.is_empty():
@@ -745,21 +550,6 @@ func _maybe_offer_draft() -> bool:
 	_pending_draft_offer = result
 	if _event_bus != null:
 		_event_bus.draft_offer.emit(DraftOfferPayload.from_dictionary(_pending_draft_offer))
-	return true
-
-func _maybe_offer_publisher_meeting() -> bool:
-	var result: Dictionary = _offer_sched.maybe_offer_publisher_meeting(
-		_game_config, runway_days, instability, soul, feature_board.size(),
-		_publisher_trust_mode_enabled_run, _publisher_trust_run,
-		_cycle_mgr.get_pressure_modifier()
-	)
-	if result.is_empty():
-		return false
-	_pending_publisher_meeting = result
-	if _event_bus != null:
-		_event_bus.publisher_meeting_offered.emit(
-			PublisherMeetingOfferPayload.from_dictionary(_pending_publisher_meeting)
-		)
 	return true
 
 func _evaluate_threshold_events() -> void:
@@ -827,35 +617,31 @@ func _get_metric_value(metric_name: String) -> int:
 func _apply_threshold_effects(effects: Variant) -> void:
 	if effects is not Dictionary:
 		return
-	var ambition_delta: int = int(effects.get("ambition", 0))
-	var instability_delta: int = int(effects.get("instability", 0))
-	var soul_delta: int = int(effects.get("soul", 0))
-	ambition += ambition_delta
-	instability += instability_delta
+	ambition += int(effects.get("ambition", 0))
+	instability += int(effects.get("instability", 0))
 	runway_days += int(effects.get("runway_days", 0))
-	soul += soul_delta
-	# Mirror the card-placement rule: ambition that outpaces current soul → prestige pressure.
-	if ambition_delta > 0:
-		if ambition_delta > soul:
-			_style_points["prestige_collapse"] += ambition_delta
-		else:
-			_style_points["community_darling"] += 1
-	if instability_delta > 0:
-		_style_points["cult_jank"] += instability_delta
-	if soul_delta > 0:
-		_style_points["community_darling"] += soul_delta
+	soul += int(effects.get("soul", 0))
 	ambition = max(ambition, 0)
 	instability = max(instability, 0)
 	runway_days = max(runway_days, 0)
-	soul = clampi(soul, 0, _game_config.soul_max)
+	soul = max(soul, 0)
 
 func _rebuild_all_card_ids() -> void:
 	_all_card_ids.clear()
 	_card_metadata_cache.clear()
 	_append_card_ids_from_directory(CARDS_PATH)
 	_append_card_ids_from_directory(CUSTOM_CARDS_PATH)
+	_append_jank_card_ids()
 	_all_card_ids.sort()
 	_populate_card_metadata_cache()
+
+func _append_jank_card_ids() -> void:
+	for combo in _jank_combinations:
+		if combo is not Dictionary:
+			continue
+		var card_id: String = String((combo as Dictionary).get("jank_card_id", ""))
+		if not card_id.is_empty() and not _all_card_ids.has(card_id):
+			_all_card_ids.append(card_id)
 
 func _append_card_ids_from_directory(directory_path: String) -> void:
 	var directory: DirAccess = DirAccess.open(directory_path)
@@ -909,8 +695,52 @@ func _get_card_tier(card_id: String) -> String:
 
 func _load_card_by_id(card_id: String) -> FeatureCard:
 	var card_path: String = "%s/%s.tres" % [CARDS_PATH, card_id]
-	var card: FeatureCard = load(card_path) as FeatureCard
-	if card == null:
-		card_path = "%s/%s.tres" % [CUSTOM_CARDS_PATH, card_id]
-		card = load(card_path) as FeatureCard
+	if ResourceLoader.exists(card_path):
+		var card: FeatureCard = load(card_path) as FeatureCard
+		if card != null:
+			return card
+	card_path = "%s/%s.tres" % [CUSTOM_CARDS_PATH, card_id]
+	if ResourceLoader.exists(card_path):
+		var card: FeatureCard = load(card_path) as FeatureCard
+		if card != null:
+			return card
+	return _build_virtual_jank_card(card_id)
+
+func _index_jank_combinations() -> void:
+	_jank_combo_index.clear()
+	for combo in _jank_combinations:
+		if combo is not Dictionary:
+			continue
+		var combo_dict: Dictionary = combo as Dictionary
+		var card_id: String = String(combo_dict.get("jank_card_id", ""))
+		if not card_id.is_empty():
+			_jank_combo_index[card_id] = combo_dict.duplicate(true)
+
+func _build_virtual_jank_card(card_id: String) -> FeatureCard:
+	if not _jank_combo_index.has(card_id):
+		return null
+	var combo: Dictionary = _jank_combo_index.get(card_id, {})
+	var archetype: String = String(combo.get("archetype", "")).to_lower()
+	var card: FeatureCard = FeatureCard.new()
+	card.resource_name = card_id
+	card.feature_name = String(combo.get("name", card_id.replace("_", " ").capitalize()))
+	card.tier = "jank"
+	card.unlock_weight = 2.5
+	match archetype:
+		"rpg":
+			card.ambition_value = 5
+			card.instability_value = 4
+		"shooter":
+			card.ambition_value = 4
+			card.instability_value = 6
+		_:
+			card.ambition_value = 5
+			card.instability_value = 5
+	var tags: PackedStringArray = PackedStringArray(["jank", "legacy"])
+	if not archetype.is_empty():
+		tags.append(archetype)
+		card.archetype_affinity = PackedStringArray([archetype])
+	card.tags = tags
+	card.interactions = {}
+	card.interaction_flavor = {}
 	return card

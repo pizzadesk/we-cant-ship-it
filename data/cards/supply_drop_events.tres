@@ -15,4 +15,5 @@ interactions = {
 "inventory": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "A crate falls from the sky. Twenty players converge. One gets the contents. The others got an anecdote."
 archetype_affinity = PackedStringArray("shooter")

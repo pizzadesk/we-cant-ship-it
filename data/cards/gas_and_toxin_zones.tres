@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Green is bad. Purple is worse. The yellow cloud was a coincidence. The coughing animation is doing its best."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

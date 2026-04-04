@@ -16,6 +16,16 @@ const _PATHS: Dictionary = {
 }
 
 static var _cache: Dictionary = {}
+static var _minimal_mode: bool = false
+
+static func is_minimal_mode() -> bool:
+	return _minimal_mode
+
+static func set_minimal_mode(enabled: bool) -> void:
+	if _minimal_mode == enabled:
+		return
+	_minimal_mode = enabled
+	_cache.clear()
 
 # Returns the string for a key. If the key is missing, logs a warning and returns
 # `fallback` (or the key name itself when no fallback is given).
@@ -55,7 +65,11 @@ static func has_key(category: String, key: String) -> bool:
 static func _ensure_loaded(category: String) -> void:
 	if _cache.has(category):
 		return
-	var path: String = String(_PATHS.get(category, ""))
+	var path: String
+	if _minimal_mode:
+		path = "res://data/strings/minimal/%s.json" % category
+	else:
+		path = String(_PATHS.get(category, ""))
 	if path.is_empty():
 		push_warning("UiStrings: unknown category '%s'" % category)
 		_cache[category] = {}

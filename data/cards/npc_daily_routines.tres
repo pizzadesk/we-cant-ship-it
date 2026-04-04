@@ -16,4 +16,5 @@ interactions = {
 "character": {"instability": 1, "soul": 1}
 }
 interaction_flavor = {}
+description = "The blacksmith wakes at six, eats at noon, closes at dusk. Stands in a doorway indefinitely if unpatched after year three."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

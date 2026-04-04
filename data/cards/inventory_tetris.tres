@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "The sword won't fit beside the torch. Rotate the cheese. The amulet goes where the potion was. Breathe."
 archetype_affinity = PackedStringArray("rpg")

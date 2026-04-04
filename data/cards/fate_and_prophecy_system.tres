@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 2, "soul": 1}
 }
 interaction_flavor = {}
+description = "The oracle foretold your arrival. She was wrong about your horse's color. Remarkably confident about everything else."
 archetype_affinity = PackedStringArray("rpg")

@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 2, "soul": 1}
 }
 interaction_flavor = {}
+description = "Every line read. Every reaction delivered. The actor will not stop saying things. The understudy was not hired."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

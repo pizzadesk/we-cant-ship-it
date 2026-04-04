@@ -43,12 +43,17 @@ static func rebuild_daily_offer(
 		return result
 
 	var available_templates: Array[Resource] = []
+	var chosen_archetype: String = ""
+	if game_state != null and game_state.has_method("get_chosen_archetype"):
+		chosen_archetype = String(game_state.get_chosen_archetype())
 	for template in template_cards:
 		if not is_template_unlocked_cb.call(template):
 			continue
 		if template is FeatureCard and game_state != null and game_state.has_method("is_tier_available"):
 			var feature: FeatureCard = template as FeatureCard
 			if not bool(game_state.is_tier_available(feature.tier)):
+				continue
+			if not _is_card_available_for_archetype(feature, chosen_archetype):
 				continue
 			available_templates.append(template)
 
@@ -87,7 +92,7 @@ static func card_id_from_resource(card: Resource) -> String:
 	if card == null:
 		return ""
 	if card.resource_path.is_empty():
-		return ""
+		return card.resource_name
 	var file_name: String = card.resource_path.get_file()
 	if file_name.ends_with(".tres"):
 		return file_name.trim_suffix(".tres")
@@ -98,6 +103,17 @@ static func card_id_from_resource(card: Resource) -> String:
 	if file_name.ends_with(".res.remap"):
 		return file_name.trim_suffix(".res.remap")
 	return ""
+
+static func _is_card_available_for_archetype(card: FeatureCard, chosen_archetype: String) -> bool:
+	if card == null or chosen_archetype.is_empty():
+		return true
+	if String(card.tier).to_lower() == "jank":
+		return true
+	if card.archetype_affinity.is_empty():
+		return true
+	if card.archetype_affinity.size() >= 3:
+		return true
+	return card.archetype_affinity.has(chosen_archetype)
 
 static func refresh_backlog_list(card_list: VBoxContainer, backlog_cards: Array[Resource], card_widget_scene: PackedScene, origin: String = "backlog") -> void:
 	for child in card_list.get_children():

@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "A fully playable chess variant buried in Act Two. Nobody finishes it. It won a BAFTA."
 archetype_affinity = PackedStringArray()

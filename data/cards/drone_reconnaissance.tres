@@ -16,4 +16,5 @@ interactions = {
 "world": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Mark the targets. Plan the approach. Drop the drone in a lake. Consult the map you already had."
 archetype_affinity = PackedStringArray("shooter")

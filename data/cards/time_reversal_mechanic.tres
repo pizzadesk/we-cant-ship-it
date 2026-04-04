@@ -16,4 +16,5 @@ interactions = {
 "ui": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Undo the last five seconds. Not the last five minutes. The mistake you're thinking of has already been saved."
 archetype_affinity = PackedStringArray()

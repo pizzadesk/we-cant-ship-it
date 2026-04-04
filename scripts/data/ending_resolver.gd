@@ -3,52 +3,67 @@ class_name EndingResolver
 
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
-## Returns the full description string for a known ending label (e.g. "Financial Catastrophe").
-## Looks up via the same JSON key used by resolve_ending_description.
+## Returns the full description string for a known ending label (e.g. "Prestige Collapse").
 static func description_for_label(label: String) -> String:
 	var key: String = "ending_desc_" + label.to_lower().replace(" ", "_")
 	var desc: String = _S.get_string("popups", key)
 	if desc.is_empty():
-		return _S.get_string("popups", "ending_desc_rough_diamond")
+		return _S.get_string("popups", "ending_desc_shipped_something")
 	return desc
 
-static func resolve_ending_description(config: GameConfig, ambition: int, instability: int, soul: int, review_score: float, dominant_bucket: String) -> String:
-	var label: String = resolve_ending_label(config, ambition, instability, soul, review_score, dominant_bucket)
+static func resolve_ending_description(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, has_jank_combination: bool) -> String:
+	var label: String = resolve_ending_label(config, ambition, instability, soul, archetype, has_jank_combination)
 	return description_for_label(label)
 
-static func resolve_ending_label(config: GameConfig, ambition: int, instability: int, soul: int, review_score: float, dominant_bucket: String) -> String:
+## Five endings in priority order:
+## 1. Defining Game  — conditions met (ambition, per-archetype instability window, soul)
+## 2. Legendary Jank — instability ≥ 55 AND a jank combination was found on the board
+## 3. Surprise Hit   — soul ≥ 8, ambition in 15–24 (Goldilocks not met)
+## 4. Prestige Collapse — ambition ≥ 25, soul ≤ 4
+## 5. Shipped... something — everything else
+static func resolve_ending_label(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, has_jank_combination: bool) -> String:
 	if config == null:
-		return "Rough Diamond"
+		return "Shipped... something"
 
-	# Priority 1: stat-gated endings are bucket-independent.
-	if ambition >= config.goldilocks_ambition_min and instability >= config.goldilocks_instability_min and instability <= config.goldilocks_instability_max and soul >= config.goldilocks_soul_min:
-		return "Defining Game"
-	if instability >= config.cult_disaster_instability_min and soul <= config.cult_disaster_soul_max:
-		return "Cult Disaster"
-	if ambition <= config.rough_diamond_ambition_max and instability <= config.rough_diamond_instability_max and soul >= config.rough_diamond_soul_min:
-		return "Rough Diamond"
+	var window: Array[int] = _get_goldilocks_window(config, archetype)
+	var active_run: int = 1
+	if AppState != null:
+		active_run = int(AppState.current_run)
 
-	# Priority 2/3: dominant bucket then stat-conditioned branch inside that bucket.
-	match dominant_bucket:
-		"cult_jank":
-			if instability >= config.cult_jank_legendary_instability_min:
-				return "Legendary Jank"
-			return "Cult Classic"
-		"community_darling":
-			if soul >= config.community_darling_surprise_hit_soul_min and review_score >= config.community_darling_surprise_hit_score_min:
-				return "Surprise Hit"
-			return "Cult Classic"
-		"prestige_collapse":
-			# Financial Catastrophe is bucket-conditioned only — no ambition floor.
-			# A studio that grinds Fix Bugs into oblivion (soul ≤ 3) hits this regardless of scope.
-			if soul <= config.financial_catastrophe_soul_max:
-				return "Financial Catastrophe"
-			if ambition >= config.prestige_collapse_ambition_min and soul <= config.prestige_collapse_soul_max:
-				return "Prestige Collapse"
-			return "Prestige Collapse"
+	# Priority 1: Defining Game conditions
+	if active_run >= 2 and ambition >= config.goldilocks_ambition_min and instability >= window[0] and instability <= window[1] and soul >= config.goldilocks_soul_min:
+		return "Defining Game. Congratulations!"  # (full description is in the popup, this is just the label)
+
+	# Priority 2: Legendary Jank
+	if instability >= config.legendary_jank_instability_min and has_jank_combination:
+		return "Legendary Jank"
+
+	# Priority 3: Surprise Hit
+	if soul >= config.surprise_hit_soul_min and ambition >= config.surprise_hit_ambition_min and ambition <= config.surprise_hit_ambition_max:
+		return "Surprise Hit"
+
+	# Priority 4: Prestige Collapse
+	if ambition >= config.prestige_collapse_ambition_min and soul <= config.prestige_collapse_soul_max:
+		return "Prestige Collapse"
+
+	# Priority 5: fallback
+	return "Shipped... something"
+
+## Returns [instability_min, instability_max] for the Goldilocks window of the given archetype.
+## Falls back to Action-Adventure window for unknown archetypes.
+static func _get_goldilocks_window(config: GameConfig, archetype: String) -> Array[int]:
+	match archetype.to_lower().replace(" ", "_").replace("-", "_"):
+		"rpg":
+			return [config.goldilocks_instability_min_rpg, config.goldilocks_instability_max_rpg]
+		"shooter":
+			return [config.goldilocks_instability_min_shooter, config.goldilocks_instability_max_shooter]
 		_:
-			# Priority 4 fallback when no bucket dominates.
-			return "Rough Diamond"
+			return [config.goldilocks_instability_min_action_adventure, config.goldilocks_instability_max_action_adventure]
+
+## Returns [min, max] instability window for an archetype key.
+## Used by the gap visualizer to show the target range.
+static func get_goldilocks_window_for_archetype(config: GameConfig, archetype: String) -> Array[int]:
+	return _get_goldilocks_window(config, archetype)
 
 static func normalize_ending_name(ending: String) -> String:
 	if ending.contains(":"):

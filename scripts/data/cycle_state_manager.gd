@@ -12,11 +12,13 @@ var _cycle: Dictionary = {
 	"run_1_ending": "",
 	"run_2_ending": "",
 	"run_3_ending": "",
+	"run_1_summary": {},
+	"run_2_summary": {},
+	"run_3_summary": {},
 	"pressure_modifier": 1.0,
 	"unlocked_card_ids": [],
+	"jank_card_ids": [],
 	"cycle_complete": false,
-	"publisher_trust_mode_enabled": false,
-	"publisher_profile_trust": 0,
 }
 
 # --- Read accessors ---
@@ -26,6 +28,12 @@ func get_current_run() -> int:
 
 func get_run_ending(run_number: int) -> String:
 	return String(_cycle.get("run_%d_ending" % run_number, ""))
+
+func get_run_summary(run_number: int) -> Dictionary:
+	var raw: Variant = _cycle.get("run_%d_summary" % run_number, {})
+	if raw is Dictionary:
+		return (raw as Dictionary).duplicate(true)
+	return {}
 
 ## Returns the pressure factor for the current run.
 ## Run 1 → 1.0, Run 2 → 1.3, Run 3 → 1.6.
@@ -38,30 +46,30 @@ func is_cycle_complete() -> bool:
 func get_unlocked_card_ids() -> PackedStringArray:
 	return PackedStringArray(_cycle.get("unlocked_card_ids", []))
 
+func get_jank_card_ids() -> PackedStringArray:
+	return PackedStringArray(_cycle.get("jank_card_ids", []))
+
+func add_jank_card(jank_card_id: String) -> void:
+	if jank_card_id.is_empty():
+		return
+	var existing: PackedStringArray = get_jank_card_ids()
+	if not existing.has(jank_card_id):
+		existing.append(jank_card_id)
+		_cycle["jank_card_ids"] = Array(existing)
+		save()
+
 func get_cycle_state() -> Dictionary:
 	return _cycle.duplicate(true)
 
-func is_publisher_trust_mode_enabled() -> bool:
-	return bool(_cycle.get("publisher_trust_mode_enabled", false))
-
-func set_publisher_trust_mode_enabled(enabled: bool) -> void:
-	_cycle["publisher_trust_mode_enabled"] = enabled
-	save()
-
-func get_publisher_trust() -> int:
-	return int(_cycle.get("publisher_profile_trust", 0))
-
-func set_publisher_trust(trust: int) -> void:
-	_cycle["publisher_profile_trust"] = trust
-
 # --- Run completion ---
 
-## Records the ending and unlocked cards for the completed run, then advances current_run.
+## Records the ending, summary, and unlocked cards for the completed run, then advances current_run.
 ## Returns the run number that was just completed (1, 2, or 3).
 ## Saves immediately — cycle state is always consistent regardless of when the player quits.
-func complete_run(ending: String, unlocked_ids: PackedStringArray) -> int:
+func complete_run(ending: String, unlocked_ids: PackedStringArray, summary: Dictionary = {}) -> int:
 	var completed_run: int = get_current_run()
 	_cycle["run_%d_ending" % completed_run] = ending
+	_cycle["run_%d_summary" % completed_run] = summary.duplicate(true)
 	_cycle["unlocked_card_ids"] = Array(unlocked_ids)
 	if completed_run >= 3:
 		_cycle["cycle_complete"] = true
@@ -78,11 +86,13 @@ func reset_cycle() -> void:
 		"run_1_ending": "",
 		"run_2_ending": "",
 		"run_3_ending": "",
+		"run_1_summary": {},
+		"run_2_summary": {},
+		"run_3_summary": {},
 		"pressure_modifier": 1.0,
 		"unlocked_card_ids": [],
+		"jank_card_ids": [],
 		"cycle_complete": false,
-		"publisher_trust_mode_enabled": _cycle.get("publisher_trust_mode_enabled", false),
-		"publisher_profile_trust": 0,
 	}
 	save()
 

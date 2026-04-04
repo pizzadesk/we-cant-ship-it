@@ -15,4 +15,5 @@ interactions = {
 "physics": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Press against the wall. Lean out. Get shot. The cover had a one-pixel gap. The gap was load-bearing."
 archetype_affinity = PackedStringArray("shooter")

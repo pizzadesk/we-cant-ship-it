@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "The journal auto-updates. The quest marker disagrees. One of them reflects what the designer actually intended."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -15,4 +15,5 @@ interactions = {
 "animation": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Launch from platform. Arrive at destination. Midway through, reconsider every prior decision about game design."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

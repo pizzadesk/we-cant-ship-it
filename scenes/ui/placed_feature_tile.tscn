@@ -1,29 +1,49 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c2uc2owpkrd03"]
 
-[ext_resource type="Script" path="res://scripts/ui/placed_feature_tile.gd" id="1_11lwg"]
+[ext_resource type="Script" uid="uid://d2fvxqdmfn0r8" path="res://scripts/ui/placed_feature_tile.gd" id="1_11lwg"]
 
-[node name="PlacedFeatureTile" type="PanelContainer"]
+[node name="PlacedFeatureTile" type="PanelContainer" unique_id=610956474]
 custom_minimum_size = Vector2(180, 86)
 script = ExtResource("1_11lwg")
 
-[node name="Padding" type="MarginContainer" parent="."]
+[node name="Padding" type="MarginContainer" parent="." unique_id=575880009]
+layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBox" type="VBoxContainer" parent="Padding"]
+[node name="VBox" type="VBoxContainer" parent="Padding" unique_id=1864860256]
+layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="NameLabel" type="Label" parent="Padding/VBox"]
-text = "Placed Feature"
+[node name="NameLabel" type="Label" parent="Padding/VBox" unique_id=1870608092]
 custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "Placed Feature"
+horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="StatsLabel" type="Label" parent="Padding/VBox"]
+[node name="StatsLabel" type="Label" parent="Padding/VBox" unique_id=991841967]
+layout_mode = 2
 text = "AMB +0 | INST +0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="TagsLabel" type="Label" parent="Padding/VBox"]
-text = "tags"
+[node name="DescriptionLabel" type="Label" parent="Padding/VBox" unique_id=173413347]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.74, 0.74, 0.74, 1)
+
+[node name="TagsLabel" type="Label" parent="Padding/VBox" unique_id=173413348]
 custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "tags"
+horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 3

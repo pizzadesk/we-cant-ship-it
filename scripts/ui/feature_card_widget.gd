@@ -6,12 +6,18 @@ signal card_clicked(card: Resource)
 var drag_origin: String = "backlog"
 var _base_rotation: float = 0.0
 var _hover_tween: Tween
-# Drag hint icons — stored on the preview duplicate so they survive _ready() → _update_view().
-var _drag_heat_icon: String = ""
+# Drag hint icon — stored on the preview duplicate so it survives _ready() → _update_view().
 var _drag_mismatch_icon: String = ""
 
 func _ready() -> void:
 	super()
+	# SIZE_SHRINK_BEGIN (0) prevents this card from expanding beyond its content
+	# height when the parent VBoxContainer receives extra space from the
+	# ScrollContainer above it. The drag preview (@see _get_drag_data) already
+	# does this on the duplicate; the live widget needs the same safeguard.
+	# Change to Control.SIZE_FILL (1) or Control.SIZE_EXPAND_FILL (3) here if
+	# you deliberately want cards to stretch to fill the available height.
+	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
@@ -19,24 +25,9 @@ func _ready() -> void:
 
 func _update_view() -> void:
 	super._update_view()
-	# Drag previews use pre-computed icons set before _ready() fires.
-	# Resting backlog cards compute heat live from AppState so the indicator
-	# is always current without a separate refresh signal.
-	var heat_suffix: String = ""
-	if not _drag_heat_icon.is_empty():
-		# This is a drag preview duplicate — use the pre-calculated icon.
-		heat_suffix = _drag_heat_icon
-	elif feature_card is FeatureCard and drag_origin == "backlog" and AppState != null:
-		var heat: int = int(AppState.get_interaction_heat(feature_card as FeatureCard, AppState.feature_board))
-		var heat_icons: PackedStringArray = PackedStringArray(["", "*", "**", "***"])
-		heat_suffix = heat_icons[clampi(heat, 0, 3)]
-	var suffix: String = ""
-	if not heat_suffix.is_empty():
-		suffix += " " + heat_suffix
+	# Drag previews use pre-computed icon set before _ready() fires.
 	if not _drag_mismatch_icon.is_empty():
-		suffix += " " + _drag_mismatch_icon
-	if not suffix.is_empty():
-		_name_label.text += suffix
+		_name_label.text += " " + _drag_mismatch_icon
 
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin
@@ -45,11 +36,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	if feature_card == null:
 		return null
 
-	# Determine interaction heat level for the hint icon on the drag preview.
-	var heat: int = 0
 	var mismatch_level: int = 0
 	if drag_origin == "backlog" and feature_card is FeatureCard and AppState != null:
-		heat = int(AppState.get_interaction_heat(feature_card as FeatureCard, AppState.feature_board))
 		mismatch_level = int(AppState.get_archetype_mismatch_level(feature_card as FeatureCard))
 
 	var preview: FeatureCardWidget = duplicate() as FeatureCardWidget
@@ -64,10 +52,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.rotation_degrees = 0.0
 	preview.modulate = Color(1.0, 1.0, 1.0, 0.75)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Set icons on the preview widget; _update_view() override appends them after _ready().
-	if heat > 0:
-		var heat_icons: PackedStringArray = PackedStringArray(["", "*", "**", "***"])
-		preview._drag_heat_icon = heat_icons[clampi(heat, 0, 3)]
 	if mismatch_level > 0:
 		# 1=genre stretch (~), 2=wild swing (⚠), 3=alien (☠)
 		var mismatch_icons: PackedStringArray = PackedStringArray(["", "~", "⚠", "☠"])

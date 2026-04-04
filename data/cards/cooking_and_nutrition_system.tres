@@ -15,4 +15,5 @@ interactions = {
 "character": {"instability": 1, "soul": 1}
 }
 interaction_flavor = {}
+description = "Raw wolf meat heals more than cooked berries. The consultant's nutritional recommendations remain on file, ignored."
 archetype_affinity = PackedStringArray()

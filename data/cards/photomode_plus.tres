@@ -16,4 +16,5 @@ interactions = {
 "weather": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Pause. Pose. Remove the UI. Find the clipping. Adjust the fog. Post it. The game is now winning awards."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

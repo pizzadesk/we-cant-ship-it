@@ -15,4 +15,5 @@ interactions = {
 "combat": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Forty unique death animations. Seven ragdoll into the floor. One launches the enemy skyward. Players will find all seven."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "physics": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Wolves hunt deer. Deer eat grass. Grass regrows. By hour two the wolves are gone. The grass has quietly won."
 archetype_affinity = PackedStringArray()

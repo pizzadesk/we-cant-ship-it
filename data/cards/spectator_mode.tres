@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Watch others play without playing. The developers are primarily also doing this now. Welcome to the team."
 archetype_affinity = PackedStringArray("shooter")

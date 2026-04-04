@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Every fence, barrel, and wall destroyable. None of it matters to the plot. It matters to the framerate."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

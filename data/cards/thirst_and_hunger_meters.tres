@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Forgot to eat. Forgot to drink. The screen reddens. The hero complains loudly. Both of you made the same mistake."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

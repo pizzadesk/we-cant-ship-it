@@ -15,4 +15,5 @@ interactions = {
 "world": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "The dot is you. The other dots are threats. The blinking dot is a quest marker from a different continent."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

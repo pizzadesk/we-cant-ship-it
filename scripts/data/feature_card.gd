@@ -17,6 +17,8 @@ class_name FeatureCard
 @export var interactions: Dictionary = {}
 # Per-tag feed flavor strings. Example: {"ui": "UI + systems wobble into charm."}
 @export var interaction_flavor: Dictionary = {}
+# Short flavour description shown in the card tooltip. Optional — empty = no blurb.
+@export var description: String = ""
 # Which archetypes this card naturally belongs to.
 # Empty = alien card (penalised by all archetype choices, soul-gated).
 @export var archetype_affinity: PackedStringArray = PackedStringArray()

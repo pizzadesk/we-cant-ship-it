@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Two players. One objective. Infinite interpretations of what that objective actually requires. The friendship will be tested."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "world": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Pay gold, gain muscle. The mercenary and your companion collide in a doorway immediately. You pay again."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

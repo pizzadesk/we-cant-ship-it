@@ -16,4 +16,5 @@ interactions = {
 "ui": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Kill the guild master: +5 thieves, -3 merchants, +1 cult. Everyone is tracking. Nobody explains the formula."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

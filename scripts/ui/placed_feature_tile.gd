@@ -2,11 +2,30 @@ extends CardDisplayBase
 class_name PlacedFeatureTile
 
 var _spawn_tween: Tween
+var _stack_count: int = 1
 
 func _ready() -> void:
+	_placed_mode = true
 	super()
+	# SIZE_SHRINK_BEGIN (0) prevents tiles from stretching to fill extra row
+	# height when the GridContainer is inflated by its parent ScrollContainer.
+	# Change to Control.SIZE_FILL (1) or Control.SIZE_EXPAND_FILL (3) if you
+	# want tiles to grow with the available grid cell height.
+	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	_play_spawn_pop()
 
+func increment_stack() -> void:
+	_stack_count += 1
+	_refresh_name_label()
+	_play_spawn_pop()
+
+func _refresh_name_label() -> void:
+	if feature_card == null:
+		return
+	_name_label.text = feature_card.feature_name if _stack_count <= 1 else "%s  ×%d" % [feature_card.feature_name, _stack_count]
+func _update_view() -> void:
+	super._update_view()
+	_refresh_name_label()
 func _apply_janky_look() -> void:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = Color(0.09 + _rng.randf_range(-0.02, 0.03), 0.14 + _rng.randf_range(-0.03, 0.04), 0.12 + _rng.randf_range(-0.03, 0.04))

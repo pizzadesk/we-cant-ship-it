@@ -15,4 +15,5 @@ interactions = {
 "lore": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Players spend 40 hours gathering 3 planks and 2 rocks. The designer calls this engagement."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Fire plus water equals steam. Ice plus lightning equals chaos. Both plus a deadline equals a journal entry titled 'known issue'."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

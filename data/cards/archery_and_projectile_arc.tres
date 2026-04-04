@@ -16,4 +16,5 @@ interactions = {
 "horses": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Gravity-affected, wind-adjusted, arc-calculated. Missed by six inches. The physics are working correctly."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

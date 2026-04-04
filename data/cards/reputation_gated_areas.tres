@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Earn standing with the faction. Unlock the door. The best door has the worst grind. The loot behind it is merely fine."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

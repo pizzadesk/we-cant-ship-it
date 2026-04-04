@@ -57,7 +57,10 @@ func _update_content() -> void:
 
 	var content: String = ""
 	content += "[b]%s[/b]\n" % fc.feature_name
-	content += "[color=#%s]%s[/color]\n\n" % [tier_color, fc.tier.capitalize()]
+	content += "[color=#%s]%s[/color]\n" % [tier_color, fc.tier.capitalize()]
+	if not fc.description.is_empty():
+		content += "[color=#bbbbbb][i]%s[/i][/color]\n" % fc.description
+	content += "\n"
 
 	content += "[u]Stats[/u]\n"
 	content += _S.get_string("card_ui", "ambition_stat_format") % fc.ambition_value + "\n"

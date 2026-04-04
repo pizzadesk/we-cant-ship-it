@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "You trusted them. The game told you not to in the environmental narrative. You did not read the environment."
 archetype_affinity = PackedStringArray("rpg")

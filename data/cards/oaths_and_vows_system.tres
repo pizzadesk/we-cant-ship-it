@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Swear the oath. Break the oath. The engine remembers everything. The guilt system has no mercy toggle."
 archetype_affinity = PackedStringArray("rpg")

@@ -15,4 +15,5 @@ interactions = {
 "physics": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Breathe in. Breathe out. Compensate for wind. The shot lands six inches left. The physics are working correctly."
 archetype_affinity = PackedStringArray("shooter")

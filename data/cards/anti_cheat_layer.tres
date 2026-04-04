@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Bans three legitimate players, misses the aimbotters, introduces two new exploits. Shipped with confidence."
 archetype_affinity = PackedStringArray("shooter")

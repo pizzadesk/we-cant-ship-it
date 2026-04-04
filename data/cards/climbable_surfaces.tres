@@ -15,4 +15,5 @@ interactions = {
 "animation": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Most things that look climbable are climbable. The ones that aren't look identical. Discovery is the mechanic."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

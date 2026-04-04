@@ -1,0 +1,48 @@
+{
+  "memorandum_header": "PUBLISHER MEMO",
+  "ultimatum_header": "PUBLISHER ULTIMATUM",
+  "case_reference_label": "Reference:",
+  "assessment_label": "Assessment:",
+  "ultimatum_display_title": "Ultimatum",
+  "meeting_title_fallback": "Publisher Meeting",
+  "no_effect": "No effect",
+  "budget_impact_note": "(BUDGET HIT)",
+  "runway_warning": "\n\nWARNING: Some options cut runway days (%d).",
+
+  "topics": {
+    "Scope": "Scope",
+    "Tech Debt": "Tech Debt",
+    "Community": "Community",
+    "Production": "Production"
+  },
+
+  "grades": {
+    "Excellent": "Good",
+    "Promising": "Viable",
+    "Concerning": "At Risk",
+    "Disaster": "Unacceptable"
+  },
+
+  "summaries": {
+    "Deck looked expensive; build looked mostly survivable.": "Build is holding. Barely.",
+    "Demo crashed during the meeting. Publisher asks if this is a prank build.": "Demo crashed. Publisher not amused.",
+    "Milestone risks are visible. Publisher requests a credible rescue plan.": "Risks visible. Bring a plan.",
+    "Bold but coherent. Publisher sees a marketable, fixable mess.": "Ambitious and salvageable.",
+    "Take marketing money now or stay independent and scrappy.": "Take their money or stay independent."
+  },
+
+  "labels": {
+    "Polish Promise": "Commit to Quality",
+    "Vision First": "Protect the Vision",
+    "Community Theater": "Show Community Traction",
+    "Take money": "Take the Money",
+    "Stay indie": "Stay Independent"
+  },
+
+  "effect_names": {
+    "runway_days": "Days",
+    "instability": "Inst",
+    "ambition": "Amb",
+    "soul": "Soul"
+  }
+}

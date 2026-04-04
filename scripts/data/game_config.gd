@@ -18,36 +18,36 @@ class_name GameConfig
 @export var soul_mitigation_factor: float = 40.0
 
 # --- ACTION ECONOMY ---
-# Fix Bugs is intentionally punishing: 3 soul per use, 3 dev logs to recover.
-# There is no winning line that uses Fix Bugs — players discover this themselves.
+# Fix Bugs costs 2 soul and 1 runway day; also drains 2 ambition (team loses momentum).
+# Recovering from one Fix Bugs action requires two Dev Log days.
 @export var soul_start: int = 12
-@export var soul_max: int = 15
-@export var fix_bugs_instability_reduction: int = 12
-@export var fix_bugs_soul_cost: int = 3
+@export var fix_bugs_instability_reduction: int = 10
+@export var fix_bugs_soul_cost: int = 2
+@export var fix_bugs_ambition_penalty: int = 2
 @export var dev_log_soul_gain: int = 1
 
-# --- GOLDILOCKS GATE (DEFINING GAME ENDING) ---
-# Apex achievement; requires ALL thresholds simultaneously for meaningful jank with soul.
-# Instability floor set high enough that passive common-card play cannot accidentally qualify.
+# --- DEFINING GAME ENDING ---
+# Apex achievement; requires ALL thresholds simultaneously.
+# Instability window is per-archetype; universal floors below.
 @export var goldilocks_ambition_min: int = 25
-@export var goldilocks_instability_min: int = 18
-@export var goldilocks_instability_max: int = 42
 @export var goldilocks_soul_min: int = 7
+# RPG: widest window — tolerates scope sprawl and system collision.
+@export var goldilocks_instability_min_rpg: int = 12
+@export var goldilocks_instability_max_rpg: int = 55
+# Action-Adventure: balanced default.
+@export var goldilocks_instability_min_action_adventure: int = 15
+@export var goldilocks_instability_max_action_adventure: int = 50
+# Shooter: tightest window — high risk, highest reward.
+@export var goldilocks_instability_min_shooter: int = 18
+@export var goldilocks_instability_max_shooter: int = 42
 
-# --- STAT-GATED ENDINGS (BUCKET-INDEPENDENT) ---
-@export var cult_disaster_instability_min: int = 41
-@export var cult_disaster_soul_max: int = 4
-@export var rough_diamond_ambition_max: int = 14
-@export var rough_diamond_instability_max: int = 14
-@export var rough_diamond_soul_min: int = 8
-
-# --- BUCKET-WEIGHTED ENDING THRESHOLDS ---
-@export var cult_jank_legendary_instability_min: int = 52
-@export var community_darling_surprise_hit_soul_min: int = 8
-@export var community_darling_surprise_hit_score_min: float = 6.5
+# --- ENDING THRESHOLDS ---
+@export var legendary_jank_instability_min: int = 55
+@export var surprise_hit_soul_min: int = 8
+@export var surprise_hit_ambition_min: int = 15
+@export var surprise_hit_ambition_max: int = 24
 @export var prestige_collapse_ambition_min: int = 25
-@export var prestige_collapse_soul_max: int = 6
-@export var financial_catastrophe_soul_max: int = 3
+@export var prestige_collapse_soul_max: int = 4
 
 # --- SHIP WINDOW & TIMING BONUSES ---
 @export var sweet_spot_runway_min: int = 4
@@ -90,4 +90,3 @@ class_name GameConfig
 # Base intervals; scaled per run by OfferScheduler using cycle pressure_modifier.
 @export var dilemma_offer_interval: int = 6
 @export var draft_offer_interval: int = 5
-@export var publisher_meeting_interval: int = 7

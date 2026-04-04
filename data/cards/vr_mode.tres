@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Fully supported. Requires hardware eighty percent of players don't own. Reviewed by one journalist. Cannot be replicated."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

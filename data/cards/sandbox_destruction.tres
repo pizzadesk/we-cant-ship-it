@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Everything is destroyable. The game was not tested under conditions where everything was destroyed. Proceed freely."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

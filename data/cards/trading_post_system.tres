@@ -16,4 +16,5 @@ interactions = {
 "character": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Buy low. Sell high. The economy is static and the margin is predetermined. The fantasy of commerce remains intact."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

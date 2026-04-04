@@ -1,6 +1,6 @@
 {
   "ship_empty": "Place at least one feature card before shipping — nothing to rate.",
-  "fix_bugs_active": "Spend 1 day: reduce instability, but lose 3 Soul from crunch fatigue.",
+  "fix_bugs_active": "Spend 1 day: −10 Instability, −2 Ambition, −2 Soul. The team loses momentum while debugging.",
   "fix_bugs_exhausted": "Running on fumes. Debugging costs what little conviction remains.",
   "fix_bugs_depleted": "No runway days left. Emergency actions are closed; only shipping is possible.",
   "dev_log_active": "Spend 1 day: gain 1 Soul and feed community hype.",

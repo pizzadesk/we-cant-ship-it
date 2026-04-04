@@ -16,4 +16,5 @@ interactions = {
 "combat": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Draw the circle. Place the components. Speak the words. Works eighty-five percent of the time. The rest is documented somewhere."
 archetype_affinity = PackedStringArray("rpg")

@@ -16,4 +16,5 @@ interactions = {
 "character": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Two gods disagreed and made a world. There are eleven minutes of documentation about this. Please do not skip it."
 archetype_affinity = PackedStringArray("rpg")

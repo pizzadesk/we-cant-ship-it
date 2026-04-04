@@ -15,4 +15,5 @@ interactions = {
 "character": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Eight classes. Two are viable. One is secretly broken in a good way. Nobody tells you which until hour thirty."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

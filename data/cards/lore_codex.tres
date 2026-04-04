@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Forty-seven in-world texts. One player has read all of them. They have opinions you did not ask for and cannot escape."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

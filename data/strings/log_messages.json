@@ -1,5 +1,5 @@
 {
-  "fix_bugs": "Bugs fixed. Instability \u2193  Soul \u22123.",
+  "fix_bugs": "Bugs fixed. Instability \u2193  Soul \u22122.",
   "dev_log": "Dev log posted. Soul +1. Fans are now mythologizing your roadmap.",
   "runway_depleted": "Runway depleted. Ship button is all that remains.",
   "feature_added": "Feature added: %s",
@@ -21,8 +21,8 @@
   "auto_draft": "Draft timer expired. Most unstable option auto-selected.",
   "auto_dilemma": "Dilemma timer expired. Least-favored option auto-selected.",
   "auto_publisher": "Publisher timer expired. Safest stance auto-selected.",
-  "onboarding_0": "Welcome to Dev Hell. You have 21 days. Don't disappoint investors.",
-  "onboarding_1": "Drag a feature card to the board. Each feature adds ambition & possibly instability.",
-  "onboarding_2": "When cards interact (matching tags), synergies trigger. Some good. Most chaotic.",
-  "onboarding_3": "Fix bugs, post dev logs, or ship when ready. No perfect choice exists."
+  "onboarding_0": "Run 1 is a prospecting sprint. The studio is finding its voice.",
+  "onboarding_1": "Placed features raise Ambition and Instability. Every action except shipping spends a day.",
+  "onboarding_2": "Fix Bugs trades Soul and Ambition for stability. Dev Log buys Soul back slowly.",
+  "onboarding_3": "Ship something ambitious, a little broken, made with love."
 }

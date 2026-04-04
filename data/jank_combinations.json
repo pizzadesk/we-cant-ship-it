@@ -1,0 +1,149 @@
+{
+  "__info": "Post-ship combinatorial jank matrix. Card A + Card B + Archetype = Jank Card. card_a and card_b must match feature_name values (case-insensitive, spaces become underscores). archetype is optional — omit to match any archetype.",
+  "combinations": [
+    {
+      "card_a": "Ragdoll Physics",
+      "card_b": "Deep Branching Dialogue",
+      "archetype": "rpg",
+      "jank_card_id": "yeetable_npc",
+      "name": "The Yeetable NPC",
+      "description": "Quest NPCs can be launched off geometry mid-conversation. Speedrunners found a clip through the final boss. Beloved."
+    },
+    {
+      "card_a": "Ragdoll Physics",
+      "card_b": "Deep Branching Dialogue",
+      "archetype": "shooter",
+      "jank_card_id": "ragdoll_monologue",
+      "name": "Ragdoll Monologue",
+      "description": "Enemies deliver scripted death speeches mid-ragdoll. Somehow emotional. A streamer clipped one that hit a million views."
+    },
+    {
+      "card_a": "Horse Physics Overhaul",
+      "card_b": "Companion AI",
+      "archetype": "rpg",
+      "jank_card_id": "the_devoted_horse",
+      "name": "The Devoted Horse",
+      "description": "Companion pathfinding latched onto horse physics. Your companion now rides everywhere. On the horse. Even indoors."
+    },
+    {
+      "card_a": "Faction Reputation",
+      "card_b": "Dynamic Faction Wars",
+      "archetype": "rpg",
+      "jank_card_id": "infinite_betrayal",
+      "name": "The Infinite Betrayal",
+      "description": "Faction logic re-evaluates loyalty every tick against faction war state. Every merchant is secretly hostile. Players wrote lore about it."
+    },
+    {
+      "card_a": "Firearm Customization",
+      "card_b": "Day Night Cycle",
+      "archetype": "shooter",
+      "jank_card_id": "midnight_recoil",
+      "name": "Midnight Recoil",
+      "description": "Recoil multipliers read the wrong time variable. Guns are perfect at 3am game-time. Competitive tournaments adjusted their schedules."
+    },
+    {
+      "card_a": "Side Quest Generator",
+      "card_b": "Seamless Open World",
+      "archetype": "action_adventure",
+      "jank_card_id": "haunted_waypoint",
+      "name": "The Haunted Waypoint",
+      "description": "Quest markers persist after completion in dense world areas. Players reported following a ghost. Fan fiction resulted."
+    },
+    {
+      "card_a": "Ambush AI Encounters",
+      "card_b": "Fortress Siege Mode",
+      "archetype": "shooter",
+      "jank_card_id": "honourable_duel",
+      "name": "The Honourable Duel",
+      "description": "AI pathfinds to the centre of siege arenas before engaging. Players started treating it as a ritual. One community made a tournament bracket."
+    },
+    {
+      "card_a": "Dream Sequence Layer",
+      "card_b": "Lore Codex",
+      "archetype": "rpg",
+      "jank_card_id": "unreliable_narrator",
+      "name": "The Unreliable Narrator",
+      "description": "Dream state flag bled into codex text. All historical lore became dream-tainted. Players decided this was intentional and brilliant."
+    },
+    {
+      "card_a": "In World Economy",
+      "card_b": "Survival Crafting",
+      "archetype": "rpg",
+      "jank_card_id": "rubber_economy",
+      "name": "The Rubber Economy",
+      "description": "Crafting ingredient prices feed back into the economy loop. One item became infinitely valuable overnight. Its name is now a meme."
+    },
+    {
+      "card_a": "Procedural Animation",
+      "card_b": "Water Physics",
+      "archetype": "action_adventure",
+      "jank_card_id": "liquid_skeleton",
+      "name": "Liquid Skeleton",
+      "description": "Procedural animation IK solved against the water surface rather than ground. Characters swim upright on dry land near rivers. Physics speedrunners called it 'load bearing jank'."
+    },
+    {
+      "card_a": "NPC Emotion Engine",
+      "card_b": "Crime & Bounty",
+      "archetype": "rpg",
+      "jank_card_id": "emotionally_correct_witness",
+      "name": "The Emotionally Correct Witness",
+      "description": "Emotion state modified witness crime reporting thresholds. Sad NPCs refuse to report murders. Happy NPCs report jaywalking. Players wrote a legal drama."
+    },
+    {
+      "card_a": "Time Reversal Mechanic",
+      "card_b": "Companion AI",
+      "archetype": "action_adventure",
+      "jank_card_id": "prophetic_companion",
+      "name": "The Prophetic Companion",
+      "description": "Companion pathing never rewound with time. They remember the future. Players called it emotional foreshadowing. One reviewer gave it a GOTY nomination specifically for this."
+    },
+    {
+      "card_a": "Neural AI Director",
+      "card_b": "Horde Mode",
+      "archetype": "shooter",
+      "jank_card_id": "the_director_has_opinions",
+      "name": "The Director Has Opinions",
+      "description": "AI director applied narrative tension weighting to horde spawns. Dramatic pauses became too dramatic. The five-second silence before wave thirty is now a community ritual."
+    },
+    {
+      "card_a": "In World Cult Subplot",
+      "card_b": "Generative Narrative Engine",
+      "archetype": "rpg",
+      "jank_card_id": "the_recursive_cult",
+      "name": "The Recursive Cult",
+      "description": "Generative narrative seeded NPCs with cult subplot goals. The cult converted itself. Players found a fully self-sufficient narrative loop running in the background. They joined."
+    },
+    {
+      "card_a": "Inventory Tetris",
+      "card_b": "Loot Tables",
+      "archetype": "rpg",
+      "jank_card_id": "the_impossible_item",
+      "name": "The Impossible Item",
+      "description": "Loot table generated an item whose dimensions do not fit any inventory grid configuration. It exists. You cannot pick it up. The wiki has a twelve-page article about it."
+    },
+    {
+      "card_a": "Stealth System",
+      "card_b": "Ambient Soundscape",
+      "archetype": "action_adventure",
+      "jank_card_id": "deaf_detection",
+      "name": "Deaf Detection Zones",
+      "description": "AI sound detection borrowed ambient soundscape volume as a threshold parameter. Near waterfalls, guards are functionally deaf. Players call it 'the gift of nature'."
+    },
+    {
+      "card_a": "Skill Tree",
+      "card_b": "Companion Romance",
+      "archetype": "rpg",
+      "jank_card_id": "parasocial_perks",
+      "name": "Parasocial Perks",
+      "description": "Skill tree unlocks read romance flags for bonus effects. Fully romanced companions give you better combat stats. Players called it the most realistic RPG ever made."
+    },
+    {
+      "card_a": "Epoch Time Skip",
+      "card_b": "Living World Simulation",
+      "archetype": "rpg",
+      "jank_card_id": "the_long_memory",
+      "name": "The Long Memory",
+      "description": "Living world simulation kept running during time skips. Towns rebuilt themselves wrong. A city that burned down came back as a different culture. Players wrote history books."
+    }
+  ]
+}

@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "The red one is faster. The armored one is slower. The one with the hat is a lore decision from a 2021 standup."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

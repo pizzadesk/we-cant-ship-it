@@ -17,4 +17,5 @@ interactions = {
 "world": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Two factions have been at war for centuries, accomplishing nothing, waiting for a stranger with fetch quests to tip the balance."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

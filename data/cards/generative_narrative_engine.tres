@@ -17,4 +17,5 @@ interactions = {
 "world": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "The engine wrote a forty-step quest. Step twelve is syntactically correct. Its meaning belongs to the engine alone."
 archetype_affinity = PackedStringArray("rpg")

@@ -15,4 +15,5 @@ interactions = {
 "physics": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Use the walls. Exploit the angles. One corner is inexplicably lethal regardless of geometry. Find it before it finds you."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 1, "soul": 1}
 }
 interaction_flavor = {}
+description = "Follows you everywhere. Stands in every doorway. Delivers tactical advice during stealth. Cannot be dismissed."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

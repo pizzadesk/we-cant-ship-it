@@ -15,4 +15,5 @@ interactions = {
 "combat": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Painted red for clarity. Placed near every enemy camp since 1998. The enemies see them too. They stand there anyway."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

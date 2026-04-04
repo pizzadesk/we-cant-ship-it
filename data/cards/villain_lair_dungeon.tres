@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 1, "soul": 2}
 }
 interaction_flavor = {}
+description = "The villain built a dungeon beneath their fortress and moved into the final room. This was a deliberate lifestyle choice."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

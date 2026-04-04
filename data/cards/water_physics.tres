@@ -16,4 +16,5 @@ interactions = {
 "weather": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Swimming works. Drowning works. The surface looks extraordinary. The frame budget has accepted its supporting role."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

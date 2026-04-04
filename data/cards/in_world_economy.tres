@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Supply and demand, fully simulated. A player bought all the wheat. Prices will not recover. This is your fault."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

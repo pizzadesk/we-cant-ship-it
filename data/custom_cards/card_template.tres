@@ -14,4 +14,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "One sentence. No heroics. Let the feature speak for itself."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -15,4 +15,5 @@ interactions = {
 "multiplayer": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+description = "Wave after wave until failure. The endpoint is arbitrary and undisclosed. The designers know when it ends."
 archetype_affinity = PackedStringArray("shooter")

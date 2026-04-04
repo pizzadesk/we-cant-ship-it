@@ -16,4 +16,5 @@ interactions = {
 "character": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Fifteen NPCs worship something unnamed. Their scripture is procedurally generated. Their faith is eerily coherent."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

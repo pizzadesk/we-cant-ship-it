@@ -15,4 +15,5 @@ interactions = {
 "animation": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Crouch. Move slowly. Hold breath near guards. The guard walks into a wall and stays. Both of you have succeeded."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

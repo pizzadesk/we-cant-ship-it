@@ -17,4 +17,5 @@ interactions = {
 "world": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Catapults, oil vats, battering rams. The framerate begins expressing concerns around the third wave."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

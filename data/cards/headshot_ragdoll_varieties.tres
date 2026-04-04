@@ -15,4 +15,5 @@ interactions = {
 "physics": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Seventeen ways to fall. Two trajectories will launch the enemy skyward. Both will be clipped and posted within the hour."
 archetype_affinity = PackedStringArray("shooter")

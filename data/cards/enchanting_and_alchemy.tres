@@ -16,4 +16,5 @@ interactions = {
 "character": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Combine any two ingredients. One combination heals. One kills. The recipe book covers neither of these specifically."
 archetype_affinity = PackedStringArray("rpg")

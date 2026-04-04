@@ -16,4 +16,5 @@ interactions = {
 "multiplayer": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+description = "Ship it unfinished. The community will patch it in two weeks and claim creative co-authorship. This is the correct outcome."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

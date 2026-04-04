@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Saved right before the unskippable cutscene. Right before the pit. Right before the crash. Every time."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

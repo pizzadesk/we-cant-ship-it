@@ -16,4 +16,5 @@ interactions = {
 "multiplayer": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Players spend six hours perfecting the base. The raid arrives. They rebuild. They love this more than the main quest."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

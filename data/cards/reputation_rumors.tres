@@ -15,4 +15,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Kill one bandit and twelve strangers mention it by name. Complete the main quest and the town says nothing."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

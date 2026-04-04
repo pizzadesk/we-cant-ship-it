@@ -16,4 +16,5 @@ interactions = {
 "ui": {"instability": 2, "soul": 0}
 }
 interaction_flavor = {}
+description = "Give gifts. Pass the dialogue checks. Trigger the scene. Both characters stand very still and almost make eye contact."
 archetype_affinity = PackedStringArray("rpg")

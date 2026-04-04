@@ -15,4 +15,5 @@ interactions = {
 "physics": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Navigates staircases with dignity. Clips a fence post. Summits a sheer cliff face at a confident walk. All of this is fine."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

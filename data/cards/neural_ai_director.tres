@@ -17,4 +17,5 @@ interactions = {
 "lore": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Watches you struggle and sends help. Watches you succeed and escalates accordingly. It does not sleep or show mercy."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

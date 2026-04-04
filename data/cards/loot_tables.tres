@@ -15,4 +15,5 @@ interactions = {
 "combat": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Boss defeated. Three leather scraps and a boot. The drop rate is not in the patch notes. It never is."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

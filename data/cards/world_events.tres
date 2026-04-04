@@ -16,4 +16,5 @@ interactions = {
 "quest": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Somewhere right now, a dragon is attacking a village. You are not there. The village has contingency protocols."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

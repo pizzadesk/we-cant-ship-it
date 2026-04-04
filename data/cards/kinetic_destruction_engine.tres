@@ -16,4 +16,5 @@ interactions = {
 "world": {"instability": 4, "soul": 0}
 }
 interaction_flavor = {}
+description = "Walls crumble. Beams splinter. The physics object count climbs. The framerate makes a choice and commits to it."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

@@ -15,4 +15,5 @@ interactions = {
 "animation": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Grass on grass. Stone on stone. The carpet tile resonates like a hollow moon. Known issue. Low priority."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

@@ -27,18 +27,26 @@ static func update_ship_button_danger(ship_button: Button, runway_days: int, ini
 	ship_button.add_theme_stylebox_override("pressed", pressed_style)
 	ship_button.add_theme_color_override("font_color", Color(1.0, 0.95, 0.92))
 
-static func next_glitch_offset(current_offset: Vector2, instability_visual: float, delta: float, ui_rng: RandomNumberGenerator) -> Vector2:
+static func next_glitch_offset(current_offset: Vector2, instability_visual: float, delta: float, ui_rng: RandomNumberGenerator, ceiling_pressure: float = 0.0) -> Vector2:
 	var glitch_offset: Vector2 = current_offset
-	if instability_visual > 0.28:
+	if instability_visual > 0.28 or ceiling_pressure > 0.15:
 		var t: float = (instability_visual - 0.28) / 0.72
-		var chance_range: int = int(lerp(140.0, 22.0, t))
+		# ceiling_pressure tightens the glitch interval near the archetype ceiling, making
+		# near-bust Shooter runs visually more frantic than equally-chaotic RPG runs.
+		# Increase the 0.6 multiplier to widen the ceiling pressure effect on glitch rate.
+		var chance_range: int = int(lerp(140.0, 22.0, clampf(t + ceiling_pressure * 0.6, 0.0, 1.0)))
 		if ui_rng.randi_range(0, chance_range) == 0:
-			var mag: float = lerp(1.8, 7.5, t)
+			var mag: float = lerp(1.8, 7.5, clampf(t + ceiling_pressure * 0.4, 0.0, 1.0))
 			glitch_offset = Vector2(ui_rng.randf_range(-mag, mag), ui_rng.randf_range(-mag * 0.6, mag * 0.6))
 	return glitch_offset.lerp(Vector2.ZERO, min(1.0, delta * 11.0))
 
-static func compute_wobble_position(jank_time: float, instability_visual: float, glitch_offset: Vector2, wobble_clamp: float) -> Vector2:
-	var amp: float = instability_visual * instability_visual * 7.0
+static func compute_wobble_position(jank_time: float, instability_visual: float, glitch_offset: Vector2, wobble_clamp: float, ceiling_pressure: float = 0.0) -> Vector2:
+	# Base amplitude scales with instability² for a sharp ramp-up in chaos feel.
+	# ceiling_pressure adds archetype-specific urgency: the same raw Instability feels
+	# more severe on a Shooter run (ceiling 42) than an RPG run (ceiling 55) because
+	# the player is proportionally closer to busting the Defining Game window.
+	# Increase the 1.5 multiplier to make the near-ceiling amplification more aggressive.
+	var amp: float = instability_visual * instability_visual * 7.0 * (1.0 + ceiling_pressure * 1.5)
 	var wobble: Vector2 = Vector2(
 		sin(jank_time * 2.5) * amp,
 		cos(jank_time * 1.7) * amp * 0.62
@@ -65,7 +73,7 @@ static func compute_jank_tint_color(instability_visual: float) -> Color:
 	)
 
 static func should_show_scanline(instability_visual: float) -> bool:
-	return instability_visual > 0.08
+	return instability_visual > 0.45
 
 static func compute_scanline_opacity(instability_visual: float) -> float:
 	return 0.02 + (instability_visual * 0.22)
@@ -77,11 +85,11 @@ static func compute_scanline_density(instability_visual: float) -> float:
 	return 380.0 - (instability_visual * instability_visual * 270.0)
 
 static func step_text_corruption_timer(current_timer: float, delta: float, instability_visual: float) -> Dictionary:
-	if instability_visual >= 0.38:
-		var t: float = (instability_visual - 0.38) / 0.62
+	if instability_visual >= 0.65:
+		var t: float = (instability_visual - 0.65) / 0.35
 		var next_timer: float = current_timer - delta
 		if next_timer <= 0.0:
-			var interval: float = lerp(3.2, 0.35, t)
+			var interval: float = lerp(2.8, 0.25, t)
 			return {
 				"timer": interval,
 				"apply_corruption": true,

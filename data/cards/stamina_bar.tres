@@ -15,4 +15,5 @@ interactions = {
 "animation": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Running depletes it. Fighting depletes it. Existing near it depletes it. The bar would like you to sit down."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

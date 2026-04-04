@@ -10,31 +10,28 @@
 
 	"__section_action_economy": "=== ACTION ECONOMY ===",
 	"soul_start": 12,
-	"soul_max": 15,
-	"fix_bugs_instability_reduction": 12,
-	"fix_bugs_soul_cost": 3,
+	"fix_bugs_instability_reduction": 10,
+	"fix_bugs_soul_cost": 2,
+	"fix_bugs_ambition_penalty": 2,
 	"dev_log_soul_gain": 1,
 
-	"__section_goldilocks": "=== DEFINING GAME (GOLDILOCKS GATE) === Requires ALL four conditions simultaneously.",
+	"__section_goldilocks": "=== DEFINING GAME === Per-archetype instability windows. Requires ALL conditions simultaneously.",
 	"goldilocks_ambition_min": 25,
-	"goldilocks_instability_min": 18,
-	"goldilocks_instability_max": 42,
 	"goldilocks_soul_min": 7,
+	"goldilocks_instability_min_rpg": 12,
+	"goldilocks_instability_max_rpg": 55,
+	"goldilocks_instability_min_action_adventure": 15,
+	"goldilocks_instability_max_action_adventure": 50,
+	"goldilocks_instability_min_shooter": 18,
+	"goldilocks_instability_max_shooter": 42,
 
-	"__section_stat_gated_endings": "=== STAT-GATED ENDINGS (checked before bucket) ===",
-	"cult_disaster_instability_min": 41,
-	"cult_disaster_soul_max": 4,
-	"rough_diamond_ambition_max": 14,
-	"rough_diamond_instability_max": 14,
-	"rough_diamond_soul_min": 8,
-
-	"__section_bucket_endings": "=== BUCKET-WEIGHTED ENDING THRESHOLDS ===",
-	"cult_jank_legendary_instability_min": 52,
-	"community_darling_surprise_hit_soul_min": 8,
-	"community_darling_surprise_hit_score_min": 6.5,
+	"__section_endings": "=== ENDING THRESHOLDS ===",
+	"legendary_jank_instability_min": 55,
+	"surprise_hit_soul_min": 8,
+	"surprise_hit_ambition_min": 15,
+	"surprise_hit_ambition_max": 24,
 	"prestige_collapse_ambition_min": 25,
-	"prestige_collapse_soul_max": 6,
-	"financial_catastrophe_soul_max": 3,
+	"prestige_collapse_soul_max": 4,
 
 	"__section_ship_window": "=== SHIP WINDOW TIMING ===",
 	"sweet_spot_runway_min": 4,
@@ -70,8 +67,7 @@
 	"alien_card_soul_penalty": 3,
 	"alien_card_soul_gate": 5,
 
-	"__section_offer_scheduling": "=== OFFER SCHEDULING === Intervals in runway days between dilemma/draft/publisher offers.",
+	"__section_offer_scheduling": "=== OFFER SCHEDULING === Intervals in runway days between dilemma/draft offers.",
 	"dilemma_offer_interval": 6,
-	"draft_offer_interval": 5,
-	"publisher_meeting_interval": 7
+	"draft_offer_interval": 5
 }

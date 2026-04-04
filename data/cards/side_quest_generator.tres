@@ -15,4 +15,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "A stranger needs an item from a location. The location is distant. The item is generic. The reward is narrative closure."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

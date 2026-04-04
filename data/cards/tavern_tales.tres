@@ -15,4 +15,5 @@ interactions = {
 "quest": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Sit at the bar. A stranger begins a story about the old days. You can skip this. You should not skip this."
 archetype_affinity = PackedStringArray("rpg")

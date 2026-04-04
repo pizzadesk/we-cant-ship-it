@@ -14,4 +14,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Press X to interact. You pressed X. The tooltip replays. It will always replay. Make peace with this."
 archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")

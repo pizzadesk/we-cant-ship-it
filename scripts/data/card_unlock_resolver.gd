@@ -2,20 +2,27 @@ extends RefCounted
 class_name CardUnlockResolver
 
 ## Pure card-unlock logic extracted from AppState.
-## Determines which card(s) to unlock after a run based on ending,
-## jank status, meeting quality, and ship window quality.
+## GDD rule: Run 1 completion unlocks 1–2 uncommon cards.
+##            Run 2 completion unlocks 1–2 rare cards.
+##            Near-miss unlock logic: gap delta direction weights which specific card unlocks.
+## Jank cards are handled separately in AppState.ship_it via JankResolver.
 
 static func resolve_unlock(
 	all_card_ids: PackedStringArray,
 	current_unlocked: PackedStringArray,
 	ending: String,
-	jank_status: String,
-	meeting_quality: float,
-	ship_window_quality: float,
+	current_run: int,
 	card_metadata_cache: Dictionary,
 	rng: RandomNumberGenerator,
 	load_card_func: Callable,
+	config: GameConfig,
+	ambition: int,
+	instability: int,
+	soul: int,
+	archetype: String,
 ) -> Dictionary:
+	if current_run >= 3:
+		return {}
 	var locked_ids: PackedStringArray = PackedStringArray()
 	for card_id in all_card_ids:
 		if not current_unlocked.has(card_id):
@@ -23,60 +30,53 @@ static func resolve_unlock(
 	if locked_ids.is_empty():
 		return {}
 
-	var jank_quality: float = _jank_quality_for_status(jank_status)
-	var unlock_quality: float = clampf(
-		(0.55 * jank_quality) + (0.30 * meeting_quality) + (0.15 * ship_window_quality),
-		0.0, 1.0
-	)
-	var target_weight: float = lerpf(1.0, 5.0, unlock_quality)
-
-	var picked_id: String = locked_ids[0]
-	var best_distance: float = INF
-	for card_id in locked_ids:
-		var weight: float = _get_unlock_weight(card_id, card_metadata_cache)
-		var distance: float = absf(weight - target_weight) + rng.randf_range(0.0, 0.18)
-		if distance < best_distance:
-			best_distance = distance
-			picked_id = card_id
+	# Tier preference by run number.
+	var preferred_tier: String = "common"
+	match current_run:
+		1: preferred_tier = "uncommon"
+		2: preferred_tier = "rare"
+		_: preferred_tier = "rare"
 
 	var unlocked: PackedStringArray = current_unlocked.duplicate()
-	unlocked.append(picked_id)
+	var picked_ids: PackedStringArray = PackedStringArray()
+	var unlock_count: int = 2 if _should_grant_bonus_unlock(config, ambition, instability, soul, archetype, ending) else 1
+	for _slot in range(unlock_count):
+		var remaining_locked: PackedStringArray = PackedStringArray()
+		for card_id in all_card_ids:
+			if not unlocked.has(card_id):
+				remaining_locked.append(card_id)
+		if remaining_locked.is_empty():
+			break
+		var picked_id: String = _pick_weighted_unlock(
+			remaining_locked,
+			card_metadata_cache,
+			rng,
+			preferred_tier,
+			load_card_func,
+			config,
+			ambition,
+			instability,
+			soul,
+			archetype,
+		)
+		if picked_id.is_empty():
+			break
+		unlocked.append(picked_id)
+		picked_ids.append(picked_id)
 
-	var normalized_ending: String = EndingResolver.normalize_ending_name(ending)
-	var bonus_card_id: String = ""
-	if normalized_ending == "defining game":
-		bonus_card_id = _pick_locked_legendary_jank_card(all_card_ids, unlocked, card_metadata_cache, rng, load_card_func)
-	elif normalized_ending == "cult disaster" or normalized_ending == "financial catastrophe":
-		bonus_card_id = _pick_locked_card_by_tier(all_card_ids, unlocked, "common", card_metadata_cache, rng)
-	if not bonus_card_id.is_empty() and not unlocked.has(bonus_card_id):
-		unlocked.append(bonus_card_id)
+	if picked_ids.is_empty():
+		return {}
+
+	var primary_id: String = String(picked_ids[0])
+	var bonus_card_id: String = String(picked_ids[1]) if picked_ids.size() > 1 else ""
 
 	return {
-		"card_id": picked_id,
+		"card_id": primary_id,
 		"bonus_card_id": bonus_card_id,
-		"unlock_quality": unlock_quality,
-		"unlock_weight": _get_unlock_weight(picked_id, card_metadata_cache),
-		"tier": _get_tier(picked_id, card_metadata_cache),
-		"status": jank_status,
+		"tier": _get_tier(primary_id, card_metadata_cache),
 		"remaining_locked": maxi(0, all_card_ids.size() - unlocked.size()),
 		"new_unlocked_ids": unlocked,
 	}
-
-static func _jank_quality_for_status(jank_status: String) -> float:
-	match jank_status:
-		"polished", "broken":
-			return 0.20
-		"sweet_spot":
-			return 0.95
-		"volatile":
-			return 0.55
-		_:
-			return 0.55
-
-static func _get_unlock_weight(card_id: String, cache: Dictionary) -> float:
-	if cache.has(card_id):
-		return float(cache[card_id].get("unlock_weight", 1.0))
-	return 1.0
 
 static func _get_tier(card_id: String, cache: Dictionary) -> String:
 	if cache.has(card_id):
@@ -84,46 +84,97 @@ static func _get_tier(card_id: String, cache: Dictionary) -> String:
 	return "common"
 
 static func _pick_locked_card_by_tier(
-	all_card_ids: PackedStringArray,
-	current_unlocked: PackedStringArray,
-	tier: String,
+	locked_ids: PackedStringArray,
 	cache: Dictionary,
 	rng: RandomNumberGenerator,
+	tier: String,
 ) -> String:
 	var candidates: PackedStringArray = PackedStringArray()
-	for card_id in all_card_ids:
-		if current_unlocked.has(card_id):
-			continue
+	for card_id in locked_ids:
 		if _get_tier(card_id, cache) == tier:
 			candidates.append(card_id)
 	if candidates.is_empty():
 		return ""
 	return String(candidates[rng.randi_range(0, candidates.size() - 1)])
 
-static func _pick_locked_legendary_jank_card(
-	all_card_ids: PackedStringArray,
-	current_unlocked: PackedStringArray,
+static func _pick_weighted_unlock(
+	locked_ids: PackedStringArray,
 	cache: Dictionary,
 	rng: RandomNumberGenerator,
+	tier: String,
 	load_card_func: Callable,
+	config: GameConfig,
+	ambition: int,
+	instability: int,
+	soul: int,
+	archetype: String,
 ) -> String:
-	var candidates: PackedStringArray = PackedStringArray()
-	var highest_instability: int = -1
-	for card_id in all_card_ids:
-		if current_unlocked.has(card_id):
-			continue
-		if _get_tier(card_id, cache) != "rare":
-			continue
-		var card: FeatureCard = load_card_func.call(card_id) as FeatureCard
-		if card == null:
-			continue
-		if card.instability_value > highest_instability:
-			highest_instability = card.instability_value
-			candidates.clear()
-			candidates.append(card_id)
-		elif card.instability_value == highest_instability:
-			candidates.append(card_id)
+	var preferred_candidates: PackedStringArray = PackedStringArray()
+	for card_id in locked_ids:
+		if _get_tier(card_id, cache) == tier:
+			preferred_candidates.append(card_id)
+	var pool: PackedStringArray = preferred_candidates if not preferred_candidates.is_empty() else locked_ids
+	var best_score: float = -INF
+	var best_ids: PackedStringArray = PackedStringArray()
+	for card_id in pool:
+		var score: float = _score_unlock_candidate(card_id, cache, load_card_func, config, ambition, instability, soul, archetype)
+		if score > best_score:
+			best_score = score
+			best_ids.clear()
+			best_ids.append(card_id)
+		elif is_equal_approx(score, best_score):
+			best_ids.append(card_id)
+	if best_ids.is_empty():
+		return ""
+	return String(best_ids[rng.randi_range(0, best_ids.size() - 1)])
 
-	if candidates.is_empty():
-		return _pick_locked_card_by_tier(all_card_ids, current_unlocked, "rare", cache, rng)
-	return String(candidates[rng.randi_range(0, candidates.size() - 1)])
+static func _score_unlock_candidate(
+	card_id: String,
+	cache: Dictionary,
+	load_card_func: Callable,
+	config: GameConfig,
+	ambition: int,
+	instability: int,
+	_soul: int,
+	archetype: String,
+) -> float:
+	var score: float = float(cache.get(card_id, {}).get("unlock_weight", 1.0))
+	var card: FeatureCard = load_card_func.call(card_id) as FeatureCard
+	if card == null or config == null:
+		return score
+
+	if card.tier == "jank":
+		score += 1.5
+
+	if ambition < config.goldilocks_ambition_min:
+		score += float(maxi(card.ambition_value, 0)) * 2.0
+	else:
+		score += float(maxi(0, 6 - abs(card.ambition_value - 4))) * 0.25
+
+	var window: Array[int] = EndingResolver.get_goldilocks_window_for_archetype(config, archetype)
+	if instability < window[0]:
+		score += float(maxi(card.instability_value, 0)) * 2.0
+	elif instability > window[1]:
+		score += float(maxi(0, 8 - card.instability_value)) * 1.8
+	else:
+		score += float(maxi(0, 6 - abs(card.instability_value - 4))) * 0.35
+
+	if not archetype.is_empty() and not card.archetype_affinity.is_empty() and card.archetype_affinity.has(archetype):
+		score += 1.0
+	return score
+
+static func _should_grant_bonus_unlock(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, ending: String) -> bool:
+	var normalized_ending: String = EndingResolver.normalize_ending_name(ending)
+	if normalized_ending == "defining game":
+		return true
+	if config == null:
+		return false
+	var ambition_delta: int = maxi(0, config.goldilocks_ambition_min - ambition)
+	var soul_delta: int = maxi(0, config.goldilocks_soul_min - soul)
+	var window: Array[int] = EndingResolver.get_goldilocks_window_for_archetype(config, archetype)
+	var instability_delta: int = 0
+	if instability < window[0]:
+		instability_delta = window[0] - instability
+	elif instability > window[1]:
+		instability_delta = instability - window[1]
+	return ambition_delta <= 6 or soul_delta <= 2 or instability_delta <= 6

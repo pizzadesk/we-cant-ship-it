@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 2, "soul": 2}
 }
 interaction_flavor = {}
+description = "Your hero arrives from the previous game in starting gear. Their legend is your problem now."
 archetype_affinity = PackedStringArray("rpg")

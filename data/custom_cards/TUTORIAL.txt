@@ -1,674 +1,274 @@
-TUTORIAL: How to Make a Custom Card
-=====================================
+﻿WE CANT SHIP IT -- Custom Card Tutorial
+=======================================
 
-Open this in Notepad (Windows) or TextEdit (Mac).
-Work through the steps in order. Takes about 10 minutes the first time.
+This walkthrough takes you from a blank copy of the template
+to a fully filled-in card ready to submit.
 
-Mac users: before you start, open TextEdit, go to Format -> Make Plain Text.
-           You must do this every time before editing a .tres file.
 
-DO NOT use Microsoft Word, Google Docs, or LibreOffice.
-They add invisible formatting that will silently break your card.
+BEFORE YOU START
+----------------
+Open data/custom_cards/card_template.tres in a plain-text editor.
+Save a copy with a new name. Use only lowercase letters, numbers,
+and underscores. End the filename with .tres
 
+Good filename:   my_card.tres
+Good filename:   telekinesis_system.tres
+Bad filename:    My Card.tres          (spaces break the loader)
+Bad filename:    template_v2.tres      (no "template" in the name)
 
-------------------------------------------------------------------------
-STEP 1 -- Copy the template
-------------------------------------------------------------------------
 
-  1. Find the file called  card_template.tres  in this folder.
+STEP 1 -- The header lines
+--------------------------
+The first six lines of the file tell Godot what kind of file this is.
+Do not change or delete them. They look like this:
 
-  2. Right-click it, then click Copy.
+  [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+  [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_xxxxxx"]
+  [resource]
+  script = ExtResource("1_xxxxxx")
 
-  3. Right-click on an empty area in this same folder, then click Paste.
-     A new file appears. It is probably named "card_template - Copy.tres".
+Leave every character exactly as it appears.
 
-  4. Right-click that new file, then click Rename.
-     Type a name that describes your card idea.
 
-     GOOD filenames:
-       underwater_marketplace.tres
-       laser_chicken_companion.tres
-       fake_achievements_system.tres
-       combat_trombone.tres
+STEP 2 -- feature_name
+-----------------------
+  feature_name = "Your Feature Name"
 
-     The filename rules are:
-       - Letters, numbers, hyphens ( - ), and underscores ( _ ) only
-       - No spaces
-       - Must end with .tres
-       - Must NOT include the word "template"
-         (the game automatically ignores any file with "template" in it)
+Replace the placeholder text with the name of your feature.
+This is the title shown on the card in-game.
 
+Examples:
+  feature_name = "Real-Time Weather Simulation"
+  feature_name = "Photo Mode"
+  feature_name = "Crafting System"
 
-------------------------------------------------------------------------
-STEP 2 -- Open it for editing
-------------------------------------------------------------------------
+Rules:
+  - Use title case (capitalise the main words)
+  - Keep it under about 30 characters or it will overflow the card
+  - This is the only required field besides tags
 
-  1. Right-click your newly named file.
-  2. Click  Open with  ->  Notepad.
-       (If Notepad is not listed: click "Choose another app", then find it.)
-       (Mac: Open With -> TextEdit, then Format -> Make Plain Text.)
 
-  You should see this exact text:
+STEP 3 -- description
+----------------------
+  description = "One sentence. No heroics. Let the feature speak for itself."
 
-    [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+Replace the placeholder with a single sentence of flavour text.
+This appears on the card and in the tooltip when you hover over it.
 
-    [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
+Tone guide -- Our cards favour one of these six voices:
 
-    [resource]
-    script = ExtResource("1_featurecard")
-    feature_name = "Your Card Name Here"
-    ambition_value = 3
-    instability_value = 3
-    tier = "common"
-    unlock_weight = 1.0
-    tags = PackedStringArray("ui")
-    interactions = {
-    "ui": {"instability": 1, "soul": 0}
-    }
-    interaction_flavor = {}
-    archetype_affinity = PackedStringArray("rpg", "action_adventure")
+  Observer trap       Name the gap between what players expect and what happens.
+                      "Players will spend more time in photo mode than the game."
 
-  If the text has colours, different fonts, or bullet points, you opened
-  it with the wrong program. Close WITHOUT saving and try again with Notepad.
+  Spec vs reality     Describe with false confidence what this obviously cannot do.
+                      "Fully dynamic. Fully deterministic. Fully untested."
 
+  Player indictment   Address the player like they requested this personally.
+                      "You will use this exactly once to see what it does."
 
-------------------------------------------------------------------------
-STEP 3 -- Lines you must NOT change
-------------------------------------------------------------------------
+  Designer alibi      Frame it as defensible from someone who was not in the room.
+                      "Adds perceived systemic depth without introducing systems."
 
-  The first six lines of the file must stay exactly as they are.
-  Do not change them. Do not delete them. Do not add a space to them.
-  If any of these lines are different, the game cannot load your card.
+  Contained universe  Give it a scope that sounds like its own game pitch.
+                      "Manages fishing rod physics, fish AI, and dock licensing."
 
-    Line 1:  [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
-    Line 3:  [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
-    Line 5:  [resource]
-    Line 6:  script = ExtResource("1_featurecard")
+  Known issue as feature
+                      State the bug as if it were intentional.
+                      "Works best when the player does not look directly at it."
 
-  Also leave these two lines exactly as they are:
-    tier = "common"
-    unlock_weight = 1.0
+Leave description as an empty string if you do not want flavour text:
+  description = ""
 
-  Everything else is yours to change (Steps 4 and 5 below).
 
+STEP 4 -- ambition_value and instability_value
+-----------------------------------------------
+  ambition_value = 5
+  instability_value = 5
 
-------------------------------------------------------------------------
-STEP 4 -- Fill in your card (the fun part)
-------------------------------------------------------------------------
+Both are integers from 1 to 10.
 
-  You will change six things. Each one is explained below with examples.
+ambition_value
+  How impressive, bold, or scope-expanding this feature is.
+  When a player places this card on the board, it adds this many
+  Ambition points to their run total.
 
+  Low (1-3)   Small quality-of-life additions.
+              Examples: button remapping, mini-map, skip cutscene
 
-  ════════════════════════════════════════════
-  feature_name   -- The name shown on the card
-  ════════════════════════════════════════════
+  Mid (4-6)   Named systems with real design scope.
+              Examples: crafting, faction reputation, dynamic weather
 
-    What it is:
-      The title of the feature your studio is adding to the game.
-      This is exactly what the player reads on the card in-game.
+  High (7-9)  Pillar features that define a genre.
+              Examples: procedural generation, fully voiced protagonist
 
-    How to set it:
-      Replace the text between the quote marks.
-      Keep the quote marks. Do not delete them.
+  Max (10)    The game-changing promise that will definitely slip.
 
-    The line looks like this:
-      feature_name = "Your Card Name Here"
+instability_value
+  How technically risky, buggy-prone, or chaotic this feature is.
+  When placed, it adds this many Instability points to the run.
+  High instability can trigger negative events and jank combinations.
 
-    Change it to something like:
-      feature_name = "Procedural Prophecy System"
-      feature_name = "Day-Night Goat Companion"
-      feature_name = "Aggressive Matchmaking Redesign"
-      feature_name = "Rival Studio Sabotage Mode"
-      feature_name = "Horse That Reviews Your Stats"
+  Low (1-3)   Boring but safe. Static menus, cosmetic items, credits screen.
 
-    Rules:
-      - Keep the quote marks on both sides
-      - Can be any length but shorter names look better on the card
-      - Do not leave it blank
+  Mid (4-6)   Can explode under pressure. Physics, AI, streaming content.
 
+  High (7-9)  Will cause a regression eventually. Guaranteed.
+              Examples: destructible environments, horse physics, live service.
 
-  ════════════════════════════════════════════
-  ambition_value   -- How bold or impressive is this feature?
-  ════════════════════════════════════════════
+  Max (10)    Day-one patch bait. The studio will be fine.
 
-    What it is:
-      A number that represents how ambitious, impressive, or scope-expanding
-      this feature is. Higher = bigger promise to the world.
+General rule: a feature that is hard to promise should have high ambition.
+A feature that is hard to implement should have high instability.
+A feature that is both is a candidate for your project's final boss.
 
-      When a player places this card on the board, their Ambition stat
-      goes up by this amount. More ambition helps reach better endings,
-      but the game also requires you to keep a lid on chaos at the same time.
 
-    How to set it:
-      Replace the number after the equals sign.
-      Use a whole number between 1 and 10.
+STEP 5 -- tier
+---------------
+  tier = "common"
 
-    The line looks like this:
-      ambition_value = 3
+Leave this as "common" unless the developer assigns a different tier.
 
-    Scale guide -- ask yourself: how impressed would a game journalist be?
+What the tiers mean in-game:
 
-      1    A tiny detail nobody will notice
-             e.g. "Added a second font size option"
+  "common"    Standard cards. Grey border. Makes up most of the card pool.
 
-      2    A small quality-of-life improvement
-             e.g. "Photo Mode", "Colourblind Mode"
+  "uncommon"  Slightly rarer. Steel-blue border. Offered less often as rewards.
 
-      3    A real, standalone feature players will notice
-             e.g. "New Enemy Type", "Day/Night Cycle"
+  "rare"      Very rare. Gold border with a thicker frame. High-impact cards.
 
-      4    A notable new system
-             e.g. "Crafting System", "Faction Reputation Tracking"
+  "jank"      Purple border. Reserved for virtual jank cards generated during
+              jank combination events. Do not use for custom cards.
 
-      5    A flagship feature that goes in the trailer
-             e.g. "Branching Dialogue", "Dynamic Weather"
+Tier affects how often the card is included in offer pools after a run.
+It also changes the visual border colour on the card widget.
 
-      6    A major scope increase
-             e.g. "Crime and Bounty System", "Procedural Animation"
 
-      7    Something that is basically a whole extra game mode
-             e.g. "Online Co-op", "Full Mod Support SDK"
+STEP 6 -- unlock_weight
+------------------------
+  unlock_weight = 1.0
 
-      8    Technically irresponsible
-             e.g. "Fully Simulated Horse Physics"
+Leave this as 1.0 unless you want to bias how often the card appears
+as a post-run unlock reward.
 
-      9    The kind of scope that ends studios
-             e.g. "Fully Destructible Open World Towns"
+The weight is a multiplier relative to other cards in the same offer pool.
 
-      10   Pure hubris
-             e.g. "Seamless Open World", "Mounted Combat System"
+  1.0   Normal. Same chance as any other card of the same tier.
+  2.0   Twice as likely to be offered.
+  0.5   Half as likely. Makes the card feel rarer even within its tier.
+  3.0   Floods the pool. Use sparingly.
 
-    Example:
-      ambition_value = 6
+If you are not sure, leave it at 1.0. The developer can tune it later.
 
 
-  ════════════════════════════════════════════
-  instability_value   -- How much chaos does this feature cause?
-  ════════════════════════════════════════════
+STEP 7 -- tags
+---------------
+  tags = PackedStringArray("tag_one", "tag_two")
 
-    What it is:
-      A number that represents how technically risky, buggy, or
-      unpredictable this feature is. Higher = more chaos in the codebase.
+Tags describe what kind of feature this is.
+The game uses tags to detect when two cards on the board share a trait
+and then fires interactions between them.
 
-      When a player places this card, their Instability stat goes up by
-      this amount. Some Instability is good (the game rewards janky
-      studios), but too much will tank the score and risk bad endings.
+Use as many tags as genuinely apply. Do not add tags just to trigger bonuses.
 
-    How to set it:
-      Replace the number after the equals sign.
-      Use a whole number between 1 and 10.
+Available tags:
 
-    The line looks like this:
-      instability_value = 3
+  ai              AI characters or enemy behaviour systems
+  animation       Character or object animation rigs and blends
+  audio           Sound effects, music systems, voice acting
+  building        Base building, construction, or placement systems
+  combat          Any system primarily about fighting
+  crafting        Item creation, recipes, or material systems
+  dialogue        Conversation systems, voiced or text
+  economy         Currencies, shops, taxes, trade
+  environmental   World systems: weather, day/night, terrain
+  faction         Reputation, allegiance, political systems
+  inventory       Item management, UI grids, loot screens
+  movement        Locomotion: running, climbing, swimming, flying
+  narrative       Story, lore, cutscenes, world-building
+  online          Multiplayer, co-op, live service, leaderboards
+  physics         Ragdolls, destruction, cloth, fluid, vehicles
+  platforming     Precision movement on surfaces
+  progression     XP, levels, skill trees, unlocks
+  pvp             Player-versus-player mechanics
+  rendering       Visual effects, shaders, lighting, shadows
+  rpg             Character stats, classes, equipment
+  shooter         Guns, projectiles, aiming, recoil
+  simulation      Emergent systems: ecology, economics, governance
+  social          NPC relationships, companions, guilds
+  stealth         Hiding, distraction, and detection
+  survival        Hunger, thirst, temperature, resource pressure
+  traversal       Map exploration: fast travel, mounts, vehicles
+  ui              Menus, HUD elements, accessibility options
 
-    Scale guide -- ask yourself: how badly could this break the build?
 
-      1    Basically safe, everyone knows how to do this
-             e.g. "Added a loading screen tip"
+STEP 8 -- interactions
+-----------------------
+  interactions = {}
 
-      2    Straightforward with minor edge cases
-             e.g. "Photo Mode" (well-understood tech)
+Interactions define stat changes that fire when this card is on the board
+and at least one other card on the board shares one of its tags.
 
-      3    Some risk -- it touches multiple systems
-             e.g. "Day/Night Cycle", "Crafting System"
+Leave as {} to have no interactions for this card.
 
-      4    Moderate risk -- known to cause weird bugs
-             e.g. "Branching Dialogue", "Faction Reputation"
+To add interactions, use this format:
 
-      5    Volatile -- QA will suffer
-             e.g. "Dynamic Weather", "Procedural Animation"
+  interactions = {
+      "tag_name": {"instability": 2, "soul": -1},
+      "other_tag": {"instability": -1, "soul": 0}
+  }
 
-      6    Actively dangerous -- interacts badly with everything else
-             e.g. "Crime and Bounty", "Mod Support SDK"
+  instability   Positive = adds instability when the tag pair appears.
+                Negative = reduces instability (a stabilising combination).
 
-      7    Notorious for cascading failures
-             e.g. "Online Co-op", "Inventory Grid System"
+  soul          Positive = grants soul (morale boost when features fit together).
+                Negative = costs soul (tonal mismatch, design debt, etc.)
 
-      8    Your lead programmer has gone quiet
-             e.g. "Fully Simulated Horse Physics"
+Example: a card that gets worse around other physics systems:
 
-      9    The whole team knows this is a bad idea
-             e.g. "Fully Destructible Open World Towns"
+  interactions = {
+      "physics": {"instability": 3, "soul": -1}
+  }
 
-      10   The build has not compiled in three days
-             e.g. "Seamless Open World", "Mounted Combat Physics"
+Example: a card that rewards narrative coherence:
 
-    Example:
-      instability_value = 5
+  interactions = {
+      "dialogue": {"instability": 0, "soul": 2},
+      "narrative": {"instability": -1, "soul": 1}
+  }
 
+You do not need to cover all your tags. Only write interactions for
+the combinations you specifically want to design.
 
-  ════════════════════════════════════════════
-  tags   -- What category of feature is this?
-  ════════════════════════════════════════════
 
-    What it is:
-      Tags describe what kind of feature your card is.
-      The game uses them to decide when two cards "react" to each other.
+STEP 9 -- interaction_flavor
+-----------------------------
+  interaction_flavor = {}
 
-      For example: if you have two cards both tagged "combat", they might
-      combine to create extra instability (double combat systems = chaos).
-      If you have a "horses" card and a "physics" card together, the game
-      can recognise that combination and fire a specific interaction event.
+Leave this as {}. It is reserved for the developer.
 
-    How to set it:
-      Replace the tag name(s) inside the brackets.
-      The quotes and the word PackedStringArray must stay.
 
-    The line looks like this:
-      tags = PackedStringArray("ui")
-
-    One tag:
-      tags = PackedStringArray("combat")
-
-    Two tags (separate them with a comma and a space):
-      tags = PackedStringArray("combat", "horses")
-
-    Three tags:
-      tags = PackedStringArray("combat", "horses", "physics")
-
-    IMPORTANT: You must have at least one tag.
-    A card with no tags will be skipped by the game automatically.
-
-    IMPORTANT: Tag names must be typed in lowercase exactly as shown.
-    "Combat" or "COMBAT" will not work. It must be "combat".
-
-    Full list of available tags:
-
-      animation    Character movement, procedural rigs, cutscenes, skeletal
-                   animation systems. Use this for cards about how things move.
-
-      audio        Music, sound effects, dynamic audio, adaptive soundtrack.
-                   Use this for any card about what the game sounds like.
-
-      camera       Photo mode, cinematic camera tools, camera behaviour.
-                   Use this for cards about how the player views the world.
-
-      combat       Fighting, weapons, damage systems, enemy AI, hit detection.
-                   Use this for any card about hurting things.
-
-      crafting     Item creation, resource management, economy, recipes.
-                   Use this for cards about making or upgrading things.
-
-      dialogue     Conversation systems, branching dialogue trees, writing
-                   tools, subtitle systems, voice direction.
-
-      horses       Equestrian content, mounted mechanics, horse AI, saddles.
-                   This is its own tag because horses deserve special treatment.
-
-      inventory    Item management, storage systems, grid-based UI, loadouts.
-                   Use this for cards about carrying or organising things.
-
-      lore         World-building, in-game codex, backstory, lore documents.
-                   Use this for cards about the history and fiction of the world.
-
-      modding      Mod support, SDK, workshop integration, community tools.
-                   Use this for cards that let players change the game.
-
-      multiplayer  Online co-op, PvP, matchmaking, server infrastructure.
-                   Use this for any card that requires another human.
-
-      physics      Simulation, ragdolls, destructibles, cloth, fluid.
-                   Use this for cards where things fall, break, or wobble.
-
-      progression  Level systems, experience points, unlocks, skill trees,
-                   meta progression. Use this for cards about getting stronger.
-
-      quest        Mission design, objectives, markers, narrative structure.
-                   Use this for cards about things for the player to do.
-
-      romance      Relationship mechanics, companion systems, dating sim
-                   elements. Use this for cards about feelings.
-
-      ui           Menus, HUD, interface design, accessibility features.
-                   Use this for cards the player sees but does not play.
-
-      weather      Environmental systems, climate, seasons, day/night.
-                   Use this for cards about what it looks like outside.
-
-      world        Open world, exploration, map design, fast travel,
-                   points of interest. Use this for cards about the space itself.
-
-    Can I invent my own tag?
-      Yes. Your card will still load fine.
-      It just will not trigger any of the existing built-in interaction rules.
-      Invented tags are useful when you want the card to exist without
-      interacting with anything.
-
-
-  ════════════════════════════════════════════
-  interactions   -- What happens when this card is on the board
-                    at the same time as another card with the same tag?
-  ════════════════════════════════════════════
-
-    What it is:
-      When the player has two cards on the board that share a tag,
-      the game fires an "interaction" event. You can use this field to
-      define what extra effect YOUR card adds to those moments.
-
-      This is OPTIONAL. You can leave it empty and the card will still
-      work fine. The default interactions from interaction_rules.json
-      still apply whether you fill this in or not.
-
-    How it works:
-      Each entry says: "when I am on the board next to a card with this
-      tag, add this much instability and this much soul."
-
-      instability: a positive number adds more chaos
-                   a negative number calms things down
-      soul:        a positive number adds soul (energy, identity, heart)
-                   a negative number drains soul
-
-    The line looks like this (one interaction):
-      interactions = {
-      "ui": {"instability": 1, "soul": 0}
-      }
-
-    What that means:
-      "When I am on the board at the same time as any card tagged 'ui',
-       add 1 instability and change soul by 0."
-
-    To have NO interactions at all (perfectly valid):
-      interactions = {
-      }
-
-    One interaction -- adds chaos near combat cards:
-      interactions = {
-      "combat": {"instability": 2, "soul": 0}
-      }
-
-    One interaction -- calms down near ui cards:
-      interactions = {
-      "ui": {"instability": -1, "soul": 0}
-      }
-
-    One interaction -- drains soul near multiplayer cards:
-      interactions = {
-      "multiplayer": {"instability": 1, "soul": -1}
-      }
-
-    Two interactions -- chaos near horses, soul recovery near lore:
-      interactions = {
-      "horses": {"instability": 3, "soul": 0},
-      "lore": {"instability": 0, "soul": 1}
-      }
-
-    Three interactions -- full chaos agent:
-      interactions = {
-      "combat": {"instability": 2, "soul": 0},
-      "physics": {"instability": 2, "soul": -1},
-      "multiplayer": {"instability": 3, "soul": -2}
-      }
-
-    FORMATTING RULES (follow these exactly or the file will break):
-
-      - The opening { goes on the same line as  interactions =
-      - Each entry is on its own line
-      - Each entry follows this exact pattern:
-          "tagname": {"instability": NUMBER, "soul": NUMBER}
-      - If you have more than one entry, put a comma at the end of every
-        line EXCEPT the last one
-      - The closing } goes on its own line with nothing after it
-      - Tag names must be lowercase inside double quotes
-      - instability and soul values must be whole numbers (no decimals)
-        They can be negative: -1, -2, -3 etc.
-
-
-  ════════════════════════════════════════════
-  interaction_flavor   -- Leave this as {}
-  ════════════════════════════════════════════
-
-    What it is:
-      An optional field for custom flavour text that appears during
-      interaction events. Advanced use only.
-
-    What to do:
-      Leave this line exactly as it is in the template:
-        interaction_flavor = {}
-
-      Do not delete this line. Do not change it.
-
-
-------------------------------------------------------------------------
-STEP 5 -- Choose which genre this card fits
-------------------------------------------------------------------------
-
+STEP 10 -- archetype_affinity
+------------------------------
   archetype_affinity = PackedStringArray("rpg", "action_adventure")
 
-  What it is:
-    At the start of each run, the player picks a target genre:
-    RPG, Shooter, or Action-Adventure.
-
-    This field tells the game which genre(s) your card naturally belongs to.
-
-    If the player chose RPG and your card supports RPG -- smooth placement,
-    no penalty.
-
-    If the player chose Shooter and your card is RPG-only -- friction.
-    The card adds extra instability and costs soul to place. That friction
-    is intentional and can make for interesting plays, but it should feel
-    thematically right: a "Romance System" card is weird in a Shooter.
-
-  The three genres:
-    "rpg"              -- deep systems, factions, narrative, relationships
-    "shooter"          -- kinetic action, guns, destruction, co-op chaos
-    "action_adventure" -- open world, exploration, physics, platforming
-
-  How to set it:
-    The line looks like this:
-      archetype_affinity = PackedStringArray("rpg", "action_adventure")
-
-    Your card fits only RPG:
-      archetype_affinity = PackedStringArray("rpg")
-
-    Your card fits only Shooter:
-      archetype_affinity = PackedStringArray("shooter")
-
-    Your card fits only Action-Adventure:
-      archetype_affinity = PackedStringArray("action_adventure")
-
-    Your card fits RPG and Action-Adventure:
-      archetype_affinity = PackedStringArray("rpg", "action_adventure")
-
-    Your card fits Shooter and Action-Adventure:
-      archetype_affinity = PackedStringArray("shooter", "action_adventure")
-
-    Your card fits ALL genres (universal, no friction ever):
-      archetype_affinity = PackedStringArray("rpg", "action_adventure", "shooter")
-
-  Tips for choosing:
-    - "Romance System" -> rpg only. It is very genre-specific.
-    - "Photo Mode" -> all three. Every genre needs photo mode.
-    - "Multiplayer Co-op" -> shooter and action_adventure.
-    - "Seamless Open World" -> rpg and action_adventure.
-    - "Horse Physics" -> rpg and action_adventure (no Shooter horses).
-    - "Grenade Launcher Attachment" -> shooter only.
-
-  IMPORTANT: Use the exact spellings shown above.
-    rpg   action_adventure   shooter
-    All lowercase. action_adventure has an underscore, not a space or hyphen.
-
-  IMPORTANT: Do not delete this line. Even if the affinity is empty,
-    the line must exist. Use all three genres for a universal card.
-
-
-------------------------------------------------------------------------
-STEP 6 -- Save the file
-------------------------------------------------------------------------
-
-  Press Ctrl+S   (or on Mac: Cmd+S)
-  Or go to File -> Save.
-
-  CHECK: Make sure the file still ends in .tres
-  If Notepad added .txt to the end:
-    1. Close Notepad.
-    2. In File Explorer, right-click the file -> Rename.
-    3. Delete the .txt from the end: yourfilename.tres.txt -> yourfilename.tres
-    4. Press Enter. Click Yes if Windows asks you to confirm.
-
-
-------------------------------------------------------------------------
-STEP 7 -- Check your file looks right
-------------------------------------------------------------------------
-
-  This is what a correctly finished card file looks like.
-  Compare it to your file. The structure should be identical.
-  Only your values (the names, numbers, and tags) will be different.
-
-    [gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
-
-    [ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_featurecard"]
-
-    [resource]
-    script = ExtResource("1_featurecard")
-    feature_name = "Underwater Blacksmith NPC"
-    ambition_value = 6
-    instability_value = 4
-    tier = "common"
-    unlock_weight = 1.0
-    tags = PackedStringArray("quest", "world")
-    interactions = {
-    "quest": {"instability": 1, "soul": 0},
-    "combat": {"instability": -1, "soul": 0}
-    }
-    interaction_flavor = {}
-    archetype_affinity = PackedStringArray("rpg", "action_adventure")
-
-  Reading this example:
-    feature_name       "Underwater Blacksmith NPC"
-    ambition_value     6  (a major, memorable feature)
-    instability_value  4  (moderate risk -- weird technology involved)
-    tier               "common"  (always leave this as common)
-    unlock_weight      1.0  (always leave this as 1.0)
-    tags               quest and world  (it is a character in the world tied to quests)
-    interactions:
-      next to "quest" cards: adds 1 instability, 0 soul change
-      next to "combat" cards: removes 1 instability (the blacksmith calms combat chaos)
-    interaction_flavor  {}  (left empty, which is fine)
-    archetype_affinity  rpg and action_adventure  (not a Shooter card)
-
-
-------------------------------------------------------------------------
-STEP 8 -- Run the game and test your card
-------------------------------------------------------------------------
-
-  1. Run the game from the Godot editor (press F5 or the Play button).
-  2. Start a new run.
-  3. Your card will appear in the daily offer panel on the left side.
-     It is mixed in randomly with the other cards, so it might not show
-     up on the very first day -- wait a day or two and it will appear.
-
-  If your card does not appear at all, see Troubleshooting below.
-
-
-------------------------------------------------------------------------
-STEP 9 -- Submit
-------------------------------------------------------------------------
-
-  Send your .tres file to the developer.
-  Do not rename it before sending.
-  To make more than one card: repeat from Step 1 for each new card.
-
-
-------------------------------------------------------------------------
-CARD IDEAS TO GET YOU STARTED
-------------------------------------------------------------------------
-
-  Not sure what to make? Here are some starting points:
-
-  LOW RISK, LOW AMBITION (safe, boring, very relatable)
-    "Tutorial Tooltip Rework"    ambition 1, instability 1, tags: ui
-    "Pause Menu Redesign"        ambition 2, instability 2, tags: ui
-    "Credits Typo Fix"           ambition 1, instability 0, tags: ui
-
-  MEDIUM RISK, MEDIUM AMBITION (the bread and butter)
-    "Hunting System"             ambition 5, instability 5, tags: combat, world
-    "Player Housing"             ambition 5, instability 4, tags: world, crafting
-    "Companion AI Overhaul"      ambition 6, instability 5, tags: quest, dialogue
-
-  HIGH RISK, HIGH AMBITION (the stuff legends are made of)
-    "Fully Simulated Economy"    ambition 9, instability 9, tags: crafting, progression
-    "Real-Time Facial Capture"   ambition 8, instability 7, tags: dialogue, animation
-    "Drivable Submarines"        ambition 10, instability 9, tags: physics, world
-
-  WEIRD ONES (the game rewards character)
-    "NFT Integration (Rejected)" ambition 3, instability 8, tags: modding
-    "Celebrity Horse Cameo"      ambition 7, instability 6, tags: horses, lore
-    "Goat Companion That Reviews Your Stats"  ambition 4, instability 3, tags: romance, ui
-
-
-------------------------------------------------------------------------
-TROUBLESHOOTING
-------------------------------------------------------------------------
-
-  MY CARD DOES NOT APPEAR IN THE GAME
-
-    Check each of these one at a time:
-
-    1. Does the filename include the word "template"?
-       The game automatically ignores any file with "template" in the name.
-       Rename your file to remove that word.
-
-    2. Is feature_name empty?
-       feature_name = ""  <-- this will cause the card to be skipped.
-       Add a name between the quotes.
-
-    3. Is tags empty?
-       tags = PackedStringArray()  <-- no tags = card is skipped.
-       Add at least one tag.
-
-    4. Did you accidentally edit one of the locked lines (Step 3)?
-       Open card_template.tres and compare the first six lines of your file
-       to the first six lines of the template. They must be identical.
-
-    5. Does your file end in .tres?
-       If Notepad added .txt, see Step 6 for how to fix the name.
-
-
-  THE GAME CRASHED OR SHOWS A PARSE ERROR
-
-    Your file has a formatting mistake. Most common causes:
-
-    - A missing comma between two interaction entries
-    - An extra comma after the last interaction entry
-    - A tag name with a capital letter ("Combat" instead of "combat")
-    - A number inside quotes ("6" instead of 6)
-    - A missing } at the end of the interactions block
-
-    Fix: compare your interactions block to the examples in Step 4.
-    Every character must match the pattern exactly.
-
-
-  MY FILE LOOKS STRANGE (colours, fonts, bullet points)
-
-    You opened it with a rich text editor (Word, Google Docs, etc.).
-    Close the file WITHOUT saving.
-    Start over from the template. Only use Notepad or plain TextEdit.
-
-
-  I ACCIDENTALLY EDITED CARD_TEMPLATE.TRES
-
-    The game never loads card_template.tres, so nothing is broken.
-    To restore it: copy the file content shown in Step 2 of this guide,
-    paste it into card_template.tres, and save.
-
-
-  NOTEPAD SAVED MY FILE AS .TXT
-
-    See Step 6 for how to rename it back to .tres in File Explorer.
-
-
-  STRANGE SYMBOLS OR THE FILE LOOKS CORRUPTED
-
-    Notepad saved in the wrong encoding.
-    Go to File -> Save As.
-    At the bottom of the Save window, find the Encoding dropdown.
-    Change it to UTF-8.
-    Click Save.
-
-
-  I WANT TO MAKE MORE THAN ONE CARD
-
-    Repeat the whole tutorial from Step 1 for each new card.
-    Each card needs its own file.
-    - Each card needs its own .tres file with a unique filename.
-    - Each card needs a unique feature_name.
+This tells the game which genres this feature naturally belongs to.
+When the player runs an archetype (genre) that matches, the card has
+reduced soul cost or other minor benefits. Wrong-genre placement costs soul.
+
+Available values: "rpg"   "shooter"   "action_adventure"
+
+You can include one, two, or all three. List only the ones where this
+feature genuinely makes sense for the genre.
+
+
+FINISHED -- what to check before submitting
+-------------------------------------------
+  [ ] filename is lowercase, underscores only, ends in .tres
+  [ ] "template" does not appear in the filename
+  [ ] feature_name is not the placeholder text
+  [ ] tags is not empty
+  [ ] ambition_value and instability_value are integers, not floats
+  [ ] tier is "common" (unless told otherwise)
+  [ ] unlock_weight is 1.0 (unless you have a reason to change it)
+  [ ] The first six header lines are untouched
+  [ ] Saved as plain text, not Word or rich-text format

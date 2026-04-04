@@ -15,4 +15,5 @@ interactions = {
 "ui": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Three conversation paths. Two lead to the same cutscene. One leads to a shop. The illusion costs more than the reality."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

@@ -16,4 +16,5 @@ interactions = {
 "world": {"instability": 3, "soul": 0}
 }
 interaction_flavor = {}
+description = "Everything permitted. Nothing enforced. A level-capped player is at your spawn right now. Best of luck."
 archetype_affinity = PackedStringArray("shooter", "action_adventure")

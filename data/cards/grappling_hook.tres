@@ -15,4 +15,5 @@ interactions = {
 "world": {"instability": 1, "soul": 0}
 }
 interaction_flavor = {}
+description = "Attaches to any surface except the intended one. Treats this as a design position and does not apologise."
 archetype_affinity = PackedStringArray("action_adventure", "shooter")

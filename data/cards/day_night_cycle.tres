@@ -16,4 +16,5 @@ interactions = {
 "lore": {"instability": 0, "soul": 1}
 }
 interaction_flavor = {}
+description = "Time passes. Guards nap. Prices shift. The sun completes a full orbit every six real minutes. Nobody questions it."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")

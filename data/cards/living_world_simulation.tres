@@ -17,4 +17,5 @@ interactions = {
 "character": {"instability": 2, "soul": 1}
 }
 interaction_flavor = {}
+description = "NPCs have schedules, ambitions, and routines. They will stand in a doorway for eight hours if not specifically patched."
 archetype_affinity = PackedStringArray("rpg", "action_adventure")
