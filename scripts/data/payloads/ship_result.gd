@@ -6,6 +6,7 @@ class_name ShipResult
 # compile-time field names instead of string key lookups.
 
 var review_score: float = 0.0
+var ending_id: String = ""
 var ending: String = ""
 var jank_status: String = ""
 var ship_window: Dictionary = {}
@@ -19,6 +20,7 @@ var completed_run: int = 0
 func to_dictionary() -> Dictionary:
 	return {
 		"review_score": review_score,
+		"ending_id": ending_id,
 		"ending": ending,
 		"jank_status": jank_status,
 		"ship_window": ship_window,

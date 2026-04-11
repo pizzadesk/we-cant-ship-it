@@ -21,6 +21,8 @@ class_name GameConfig
 # Fix Bugs costs 2 soul and 1 runway day; also drains 2 ambition (team loses momentum).
 # Recovering from one Fix Bugs action requires two Dev Log days.
 @export var soul_start: int = 12
+@export var tutorial_runway_days: int = 5
+@export var standard_runway_days: int = 21
 @export var fix_bugs_instability_reduction: int = 10
 @export var fix_bugs_soul_cost: int = 2
 @export var fix_bugs_ambition_penalty: int = 2

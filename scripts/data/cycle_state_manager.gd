@@ -1,8 +1,8 @@
 extends RefCounted
 class_name CycleStateManager
 
-## Owns the three-run cycle state, save/load, and card unlock tracking within a cycle.
-## Replaces MetaProgressManager — scoped to a fixed three-run arc, not infinite runs.
+## Owns the four-run cycle state, save/load, and card unlock tracking within a cycle.
+## Replaces MetaProgressManager — scoped to a fixed four-run arc, not infinite runs.
 ## Instantiated by AppState as an internal collaborator — NOT an autoload.
 
 const CYCLE_SAVE_PATH: String = "user://cycle_state.json"
@@ -12,9 +12,11 @@ var _cycle: Dictionary = {
 	"run_1_ending": "",
 	"run_2_ending": "",
 	"run_3_ending": "",
+	"run_4_ending": "",
 	"run_1_summary": {},
 	"run_2_summary": {},
 	"run_3_summary": {},
+	"run_4_summary": {},
 	"pressure_modifier": 1.0,
 	"unlocked_card_ids": [],
 	"jank_card_ids": [],
@@ -36,7 +38,7 @@ func get_run_summary(run_number: int) -> Dictionary:
 	return {}
 
 ## Returns the pressure factor for the current run.
-## Run 1 → 1.0, Run 2 → 1.3, Run 3 → 1.6.
+## Run 1 → 1.0, Run 2 → 1.3, Run 3 → 1.6, Run 4 → 1.9.
 func get_pressure_modifier() -> float:
 	return 1.0 + (0.3 * float(get_current_run() - 1))
 
@@ -64,14 +66,14 @@ func get_cycle_state() -> Dictionary:
 # --- Run completion ---
 
 ## Records the ending, summary, and unlocked cards for the completed run, then advances current_run.
-## Returns the run number that was just completed (1, 2, or 3).
+## Returns the run number that was just completed (1, 2, 3, or 4).
 ## Saves immediately — cycle state is always consistent regardless of when the player quits.
 func complete_run(ending: String, unlocked_ids: PackedStringArray, summary: Dictionary = {}) -> int:
 	var completed_run: int = get_current_run()
 	_cycle["run_%d_ending" % completed_run] = ending
 	_cycle["run_%d_summary" % completed_run] = summary.duplicate(true)
 	_cycle["unlocked_card_ids"] = Array(unlocked_ids)
-	if completed_run >= 3:
+	if completed_run >= 4:
 		_cycle["cycle_complete"] = true
 	else:
 		_cycle["current_run"] = completed_run + 1
@@ -86,9 +88,11 @@ func reset_cycle() -> void:
 		"run_1_ending": "",
 		"run_2_ending": "",
 		"run_3_ending": "",
+		"run_4_ending": "",
 		"run_1_summary": {},
 		"run_2_summary": {},
 		"run_3_summary": {},
+		"run_4_summary": {},
 		"pressure_modifier": 1.0,
 		"unlocked_card_ids": [],
 		"jank_card_ids": [],

@@ -126,8 +126,10 @@ func maybe_offer_draft(
 func _pressure_start_day_for_run(current_run: int) -> int:
 	match current_run:
 		1:
-			return 14
+			return 5
 		2:
+			return 14
+		3:
 			return 10
 		_:
 			return 7

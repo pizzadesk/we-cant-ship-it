@@ -4,20 +4,20 @@ Game Design Document
 
 *Revised Edition*
 
-*Three sprints. Ship something ambitious, a little broken, made with
-love.*
+*Four runs. One to find the voice. Three to prove it.*
 
 **1. Game Premise**
 
-You run a small indie studio across a three-run cycle, each run a 21-day
-sprint trying to ship an over-ambitious game. The game rewards balancing
-chaos with heart. Instability is not automatically bad --- it becomes
-dangerous only at extremes. The ultimate aspiration is the Defining
-Game: a title like STALKER, Gothic, or The Witcher 1 --- janky,
-ambitious, unmistakably crafted with love.
+You run a small indie studio across a four-run cycle. Run 1 is a short
+5-day voice-finding sprint. Runs 2-4 are full 21-day attempts to ship
+an over-ambitious game. The game rewards balancing chaos with heart.
+Instability is not automatically bad --- it becomes dangerous only at
+extremes. The ultimate aspiration is the Defining Game: a title like
+STALKER, Gothic, or The Witcher 1 --- janky, ambitious, unmistakably
+crafted with love.
 
-**You have three attempts. Deliver the right jank. Fail and the cycle
-resets.**
+**You get one short run to find the voice, then three real attempts.
+Deliver the right jank. Fail and the cycle resets.**
 
 **Core Player Fantasy**
 
@@ -31,33 +31,39 @@ resets.**
 -   Discover what your specific broken game accidentally created --- and
     weaponize it next run.
 
--   Build a recognizable studio identity across a three-run arc.
+-   Build a recognizable studio identity across a four-run arc.
 
-**2. The Three-Run Arc**
+**2. The Four-Run Arc**
 
-The game is exactly three runs, communicated upfront on the main menu:
+The game is exactly four runs, communicated upfront on the main menu:
 
-> *\"Three sprints. Ship something ambitious, a little broken, made with
-> love. That\'s the goal.\"*
+> *\"Four runs. One to find the voice. Three to prove it. That's the
+> goal.\"*
 
 Each run is approximately 10 minutes. The arc escalates in pressure and
 available card power:
 
   -----------------------------------------------------------------------------
-  **Run**   **Tone**         **Player State**      **Pressure    **Card Pool**
-                                                   Start**       
-  --------- ---------------- --------------------- ------------- --------------
-  1         Exploratory      Learning --- wrong    Day 14        Common only
-                             ending expected,                    
-                             Defining Game 
-                             unattainable                   
+    **Run**   **Tone**         **Player State**      **Pressure    **Card Pool**
+                                                                                                     Start**       
+    --------- ---------------- --------------------- ------------- --------------
+    1         Exploratory      Voice-finding         Day 5         Common only
+                                                         tutorial. Wrong                     
+                                                         ending expected.                    
+                                                         Defining Game 
+                                                         unattainable                   
 
-  2         Pressure         Knows enough to make  Day 10        Common +
-                             meaningful mistakes                 Uncommon
+    2         Pressure         First real attempt.   Day 14        Common +
+                                                         Knows enough to make                Uncommon
+                                                         meaningful mistakes                 
 
-  3         Convergence      Racing a known target Day 7         Common +
-                             with better cards                   Uncommon +
-                                                                 Rare
+    3         Convergence      Second real attempt.  Day 10        Common +
+                                                         Sharper mistakes,                   Uncommon +
+                                                         stronger cards                      Rare
+
+    4         Final Shot       Last attempt to ship  Day 7         Common +
+                                                         the Defining Game                   Uncommon +
+                                                                                                                                 Rare
   -----------------------------------------------------------------------------
 
 Pressure start shifts mechanically each run --- event popups arrive
@@ -65,10 +71,10 @@ earlier, dilemmas are harder. Same content structure, escalating pace.
 
 **Run 1: Pedagogical Contract**
 
-Run 1 is explicitly a jank prospecting run. The Defining Game is shown
-as locked on the post-ship gap visualizer --- players learn the rhythm
-without chasing an unreachable target. The wrong ending is framed as
-expected, not as failure:
+Run 1 is explicitly a 5-day jank prospecting tutorial sprint. The
+Defining Game is shown as locked on the post-ship gap visualizer ---
+players learn the rhythm without chasing an unreachable target. The
+wrong ending is framed as expected, not as failure:
 
 > *\"The studio is finding its voice.\"*
 
@@ -79,16 +85,16 @@ Run 1 knowing what jank their specific board produced. That knowledge
 **Cycle Persistence Rules**
 
 -   Cycle state persists after each completed run. A player who ships
-    Run 1 and closes the game returns to Run 2.
+    Run 1 and closes the game returns to Run 2, the first real attempt.
 
 -   Quitting mid-run resets that run to its beginning. Jank cards and
     unlocks from prior completed runs are preserved.
 
 -   Quitting before Run 1 is shipped resets the entire cycle.
 
--   On cycle completion (Run 3 shipped): all three endings are evaluated
-    together, the studio\'s three-game legacy is shown, Defining Game
-    reached or cycle resets.
+-   On cycle completion (Run 4 shipped): all four endings are evaluated
+    together, the studio's studio arc is shown, Defining Game reached
+    or cycle resets.
 
 **Returning Player Recap**
 
@@ -128,8 +134,9 @@ your 21.
                 dev logs.                                  
   -------------------------------------------------------------------------
 
-Runway Days: 21. Decreases only from player-facing actions and selected
-event effects. This is the dealer\'s upcard --- it forces your hand.
+Runway Days: 5 in Run 1, 21 in Runs 2-4. Decreases only from
+player-facing actions and selected event effects. This is the dealer\'s
+upcard --- it forces your hand.
 
 **4. The Defining Game**
 
@@ -150,9 +157,9 @@ thresholds simultaneously at ship:
                                    discipline.
   -------------------------------------------------------------------------
 
-The Defining Game is locked in Run 1. It is unlocked in Run 2 and
-shown on the gap visualizer. Players discover the thresholds by reading
-the gap --- no numbers, no explanation.
+The Defining Game is locked in Run 1. It is unlocked in Run 2, the
+first real attempt, and shown on the gap visualizer. Players discover
+the thresholds by reading the gap --- no numbers, no explanation.
 
 **5. Main Player Actions**
 
@@ -516,6 +523,9 @@ Nothing legendary broke.\' This is not framed as failure.
 -   Run 2 completion: 1--2 rare cards unlocked. Near-Defining Game run
     unlocks weirder, jankier cards.
 
+-   Run 3 completion: 1--2 rare cards unlocked again, skewing toward
+    riskier final-attempt fuel.
+
 -   Defining Game ending: 1 legendary jank card unlocked, visible on the
     cycle legacy screen.
 
@@ -554,9 +564,11 @@ presentation.
 
 **Schema**
 
-> cycle_state: current_run: int \# 1, 2, or 3 run_1_ending: String \#
+> cycle_state: current_run: int \# 1, 2, 3, or 4 run_1_ending: String \#
 > \"\" if not yet completed run_2_ending: String \# \"\" if not yet
-> completed pressure_modifier: float \# derived from current_run
+> completed run_3_ending: String \# \"\" if not yet completed
+> run_4_ending: String \# \"\" if not yet completed pressure_modifier:
+> float \# derived from current_run
 > unlocked_card_ids: \[\] \# carries forward within cycle only
 > jank_card_ids: \[\] \# archetype-stamped jank cards from board
 > combinations cycle_complete: bool
@@ -565,11 +577,11 @@ Serialized to user://cycle_state.json.
 
 **Cycle Resolution**
 
-On Run 3 ship: all three endings evaluated together. A legacy screen
-shows the studio\'s three-game arc and the jank cards discovered across
-all runs --- a record of what accidentally became iconic. If Defining Game
-reached: cycle complete, legacy recorded. If not: cycle resets fully,
-new cycle begins from Run 1 with base common card pool.
+On Run 4 ship: all four endings evaluated together. A legacy screen
+shows the studio's four-run arc and the jank cards discovered across
+all runs --- a record of what accidentally became iconic. If Defining
+Game reached: cycle complete, legacy recorded. If not: cycle resets
+fully, new cycle begins from Run 1 with base common card pool.
 
 **Event Pressure Scaling**
 
@@ -578,8 +590,8 @@ Event offer intervals scale by current run number via a pressure factor:
 > pressure_factor = 1.0 + (0.3 × (current_run - 1)) effective_interval =
 > base_interval / pressure_factor
 
-Run 1 intervals unchanged. Run 2 approximately 30% faster. Run 3
-approximately 60% faster.
+Run 1 is tutorial-tuned. Run 2 approximately 30% faster. Run 3
+approximately 60% faster. Run 4 is the most compressed sprint.
 
 **12. Tone and Presentation**
 
@@ -623,8 +635,8 @@ is a subsequent design phase.
     (Rare cards swinging ±10 Instability, pressure starting Day 7)
     makes live markers a playability requirement, not a hand-hold.
 
--   Main menu always shows current cycle position: RUN 1 OF 3, RUN 2 OF
-    3, RUN 3 OF 3, with brief tone-appropriate copy.
+-   Main menu always shows current cycle position: RUN 1 OF 4 through
+    RUN 4 OF 4, with brief tone-appropriate copy.
 
 -   Wrong ending on Run 1 is framed as expected, not as failure: \'The
     studio is finding its voice.\'

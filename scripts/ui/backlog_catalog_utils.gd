@@ -1,3 +1,9 @@
+const ON_ARCHETYPE_OFFER_WEIGHT: float = 12.0
+const UNIVERSAL_OFFER_WEIGHT: float = 10.0
+const GENRE_STRETCH_OFFER_WEIGHT: float = 3.0
+const WILD_SWING_OFFER_WEIGHT: float = 1.0
+const ALIEN_OFFER_WEIGHT: float = 0.35
+
 static func ensure_template_cards_loaded(
 	template_cards: Array[Resource],
 	templates_loaded: bool,
@@ -48,7 +54,9 @@ static func rebuild_daily_offer(
 	if game_state != null and game_state.has_method("get_chosen_archetype"):
 		chosen_archetype = String(game_state.get_chosen_archetype())
 
-	# Build the eligible pool, respecting tier, archetype, and unlock rules.
+	# Build the eligible pool, respecting unlock and run-tier rules.
+	# Archetype commitment is enforced by weighted offers rather than hard filtering,
+	# so off-genre cards still appear occasionally and trigger mismatch friction.
 	var eligible_templates: Array[Resource] = []
 	for template in template_cards:
 		if not is_template_unlocked_cb.call(template):
@@ -56,8 +64,6 @@ static func rebuild_daily_offer(
 		if template is FeatureCard and game_state != null and game_state.has_method("is_tier_available"):
 			var feature: FeatureCard = template as FeatureCard
 			if not bool(game_state.is_tier_available(feature.tier)):
-				continue
-			if not _is_card_available_for_archetype(feature, chosen_archetype):
 				continue
 			eligible_templates.append(template)
 
@@ -82,7 +88,9 @@ static func rebuild_daily_offer(
 
 	var visible_count: int = mini(daily_visible_cards, available_templates.size())
 	for _pick in range(visible_count):
-		var pick_index: int = ui_rng.randi_range(0, available_templates.size() - 1)
+		var pick_index: int = _pick_weighted_template_index(available_templates, chosen_archetype, ui_rng)
+		if pick_index < 0:
+			break
 		var template: Resource = available_templates[pick_index]
 		available_templates.remove_at(pick_index)
 
@@ -123,16 +131,44 @@ static func card_id_from_resource(card: Resource) -> String:
 		return file_name.trim_suffix(".res.remap")
 	return ""
 
-static func _is_card_available_for_archetype(card: FeatureCard, chosen_archetype: String) -> bool:
+static func _pick_weighted_template_index(templates: Array[Resource], chosen_archetype: String, ui_rng: RandomNumberGenerator) -> int:
+	if templates.is_empty():
+		return -1
+	var total_weight: float = 0.0
+	var weights: Array[float] = []
+	for template in templates:
+		var weight: float = 1.0
+		if template is FeatureCard:
+			weight = _offer_weight_for_archetype(template as FeatureCard, chosen_archetype)
+		weights.append(weight)
+		total_weight += weight
+	if total_weight <= 0.0:
+		return ui_rng.randi_range(0, templates.size() - 1)
+	var roll: float = ui_rng.randf() * total_weight
+	var running: float = 0.0
+	for idx in range(weights.size()):
+		running += weights[idx]
+		if roll <= running:
+			return idx
+	return templates.size() - 1
+
+static func _offer_weight_for_archetype(card: FeatureCard, chosen_archetype: String) -> float:
 	if card == null or chosen_archetype.is_empty():
-		return true
-	if String(card.tier).to_lower() == "jank":
-		return true
-	if card.archetype_affinity.is_empty():
-		return true
-	if card.archetype_affinity.size() >= 3:
-		return true
-	return card.archetype_affinity.has(chosen_archetype)
+		return 1.0
+	var affinity_count: int = card.archetype_affinity.size()
+	if affinity_count >= 3:
+		return UNIVERSAL_OFFER_WEIGHT
+	if affinity_count > 0 and card.archetype_affinity.has(chosen_archetype):
+		return ON_ARCHETYPE_OFFER_WEIGHT
+	match affinity_count:
+		0:
+			return ALIEN_OFFER_WEIGHT
+		1:
+			return WILD_SWING_OFFER_WEIGHT
+		2:
+			return GENRE_STRETCH_OFFER_WEIGHT
+		_:
+			return UNIVERSAL_OFFER_WEIGHT
 
 static func refresh_backlog_list(card_list: VBoxContainer, backlog_cards: Array[Resource], card_widget_scene: PackedScene, origin: String = "backlog") -> void:
 	for child in card_list.get_children():

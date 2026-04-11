@@ -1,5 +1,5 @@
 {
-	"__info": "Drop this file in data/ or user:// to override game_config.tres. ALL keys are required — any key not present is treated as 0. Delete this file entirely to revert to game_config.tres. Keys starting with __ are ignored.",
+	"__info": "Drop this file in data/ or user:// to override game_config.tres. Keys present here override the base .tres; keys omitted keep their default value. Delete this file entirely to revert to game_config.tres. Keys starting with __ are ignored.",
 
 	"__section_scoring": "=== SCORING FORMULA ===",
 	"score_base": 5.0,
@@ -10,6 +10,8 @@
 
 	"__section_action_economy": "=== ACTION ECONOMY ===",
 	"soul_start": 12,
+	"tutorial_runway_days": 5,
+	"standard_runway_days": 21,
 	"fix_bugs_instability_reduction": 10,
 	"fix_bugs_soul_cost": 2,
 	"fix_bugs_ambition_penalty": 2,

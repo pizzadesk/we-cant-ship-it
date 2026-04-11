@@ -1,10 +1,11 @@
 const ReviewMarkupUtils = preload("res://scripts/ui/review_markup_utils.gd")
+const ArchetypeRules = preload("res://scripts/data/services/archetype_rules.gd")
+const EndingResolver = preload("res://scripts/data/ending_resolver.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
-const _EndingResolver = preload("res://scripts/data/ending_resolver.gd")
 
-## Builds the cycle legacy screen text shown after run 3 ships.
+## Builds the cycle legacy screen text shown after run 4 ships.
 ## cycle_state must be the full dictionary from AppState.get_cycle_state()
-## after complete_run() has already recorded run_3_ending.
+## after complete_run() has already recorded run_4_ending.
 static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	var rule: String = "[color=#444444]" + "\u2500".repeat(42) + "[/color]"
@@ -21,7 +22,7 @@ static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 
 	var any_defining: bool = false
 	var first_run: bool = true
-	for run_num in [1, 2, 3]:
+	for run_num in [1, 2, 3, 4]:
 		if not first_run:
 			lines.append(rule)
 		first_run = false
@@ -29,7 +30,7 @@ static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 		var raw_summary: Variant = cycle_state.get("run_%d_summary" % run_num, {})
 		var summary: Dictionary = raw_summary if raw_summary is Dictionary else {}
 		var label: String = _S.get_string("popups", "cycle_legacy_run_header") % run_num
-		var normalized: String = _EndingResolver.normalize_ending_name(ending)
+		var normalized: String = String(summary.get("ending_id", EndingResolver.normalize_ending_id(ending)))
 		var color: String = String(ending_colors.get(normalized, "ffffff"))
 		var ending_display: String = _extract_ending_label(ending)
 		lines.append("%s  [color=#%s]%s[/color]" % [label, color, ending_display if not ending_display.is_empty() else "—"])
@@ -38,7 +39,7 @@ static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 		if not jank_combination.is_empty():
 			lines.append("  Jank discovered: [color=#ff922b]%s[/color]" % String(jank_combination.get("name", "Unknown Jank")))
 			lines.append("  %s" % String(jank_combination.get("description", "")))
-		if normalized == "defining game":
+		if normalized == EndingResolver.DEFINING_GAME_ID:
 			any_defining = true
 		lines.append("")
 
@@ -55,12 +56,12 @@ static func _extract_ending_label(ending: String) -> String:
 		return ending.split(":", false, 1)[0].strip_edges()
 	return ending.strip_edges()
 
-static func build_review_roulette_text(results: Dictionary) -> String:
+static func build_review_fallout_text(results: Dictionary) -> String:
 	var review_lines: PackedStringArray = []
 	review_lines.append(_S.get_string("popups", "review_roulette_header") + "\n")
 	var ending: String = String(results.get("ending", "Shipped Something"))
 	var review_score: float = float(results.get("review_score", 0.0))
-	review_lines.append(_build_review_roulette_intro(ending, review_score))
+	review_lines.append(_build_review_intro(ending, review_score))
 	review_lines.append("")
 
 	var reviews: Array = results.get("reviews", [])
@@ -74,17 +75,20 @@ static func build_review_roulette_text(results: Dictionary) -> String:
 			review_lines.append("")
 	return "\n".join(review_lines)
 
+static func build_review_roulette_text(results: Dictionary) -> String:
+	return build_review_fallout_text(results)
+
 static func build_ship_summary_text(game_state: Node, predicted_score: float) -> String:
 	if game_state == null:
 		return ""
 
 	var rule: String = "\n[color=#444444]" + "\u2500".repeat(42) + "[/color]\n\n"
 	var ending_colors: Dictionary = {
-		"defining game":     "ff00ff",
-		"legendary jank":    "ff8c42",
-		"surprise hit":      "74c0fc",
-		"prestige collapse": "cc5de8",
-		"shipped something": "cccccc",
+		EndingResolver.DEFINING_GAME_ID: "ff00ff",
+		EndingResolver.LEGENDARY_JANK_ID: "ff8c42",
+		EndingResolver.SURPRISE_HIT_ID: "74c0fc",
+		EndingResolver.PRESTIGE_COLLAPSE_ID: "cc5de8",
+		EndingResolver.SHIPPED_SOMETHING_ID: "cccccc",
 	}
 
 	var content: String = ""
@@ -92,7 +96,7 @@ static func build_ship_summary_text(game_state: Node, predicted_score: float) ->
 
 	# Prediction first — the key decision the player is about to confirm.
 	var ending_label: String = _predict_ending_label(game_state, predicted_score)
-	var normalized: String = _EndingResolver.normalize_ending_name(ending_label)
+	var normalized: String = EndingResolver.normalize_ending_id(ending_label)
 	var ending_hex: String = "#" + String(ending_colors.get(normalized, "cccccc"))
 	content += _S.get_string("popups", "ship_summary_prediction_header") + "\n"
 	content += _S.get_string("popups", "ship_summary_score_format") % predicted_score + "\n"
@@ -126,6 +130,7 @@ static func build_jank_discovery_text(results: Dictionary) -> String:
 	var lines: PackedStringArray = PackedStringArray()
 	var rule: String = "[color=#444444]" + "\u2500".repeat(42) + "[/color]"
 	var ending: String = String(results.get("ending", "Shipped Something"))
+	var ending_id: String = String(results.get("ending_id", EndingResolver.normalize_ending_id(ending)))
 	lines.append("[b]%s[/b]" % _extract_ending_label(ending))
 	lines.append("[i]%s[/i]" % _build_ending_epilogue(ending))
 	lines.append(rule)
@@ -149,7 +154,7 @@ static func build_jank_discovery_text(results: Dictionary) -> String:
 			lines.append("Bonus unlock: [b]%s[/b]" % bonus_card_name)
 		lines.append("[i]%s[/i]" % _S.get_string("popups", "jank_card_unlock_note"))
 
-	if bool(results.get("unlock_defining_game", false)):
+	if bool(results.get("unlock_defining_game", false)) or ending_id == EndingResolver.DEFINING_GAME_ID:
 		lines.append(rule)
 		lines.append(_S.get_string("popups", "jank_defining_game_label"))
 		lines.append(_S.get_string("popups", "jank_defining_game_note"))
@@ -158,16 +163,21 @@ static func build_jank_discovery_text(results: Dictionary) -> String:
 
 static func build_previously_on_text(run_summary: Dictionary, current_run: int, config: GameConfig) -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append("[b]RUN %d OF 3[/b]" % current_run)
-	lines.append("[color=#888888]A new sprint begins.[/color]")
+	lines.append("[b]RUN %d OF 4[/b]" % current_run)
+	if current_run == 2:
+		lines.append("[color=#888888]The five-day tutorial sprint is over. The studio found its voice. Now it has to ship on purpose.[/color]")
+	else:
+		lines.append("[color=#888888]A new sprint begins.[/color]")
 	lines.append("")
 	if run_summary.is_empty():
 		lines.append("[i]The studio remembers the bruises, not the details.[/i]")
 		return "\n".join(lines)
 
 	var ending: String = String(run_summary.get("ending", ""))
+	var ending_id: String = String(run_summary.get("ending_id", EndingResolver.normalize_ending_id(ending)))
 	if not ending.is_empty():
-		lines.append("Last time: [color=#74c0fc]%s[/color]" % _extract_ending_label(ending))
+		var last_time_color: String = "74c0fc" if ending_id != EndingResolver.PRESTIGE_COLLAPSE_ID else "cc5de8"
+		lines.append("Last time: [color=#%s]%s[/color]" % [last_time_color, _extract_ending_label(ending)])
 		lines.append("")
 
 	if config != null:
@@ -194,7 +204,7 @@ static func build_previously_on_text(run_summary: Dictionary, current_run: int, 
 
 	return "\n".join(lines)
 
-static func _build_review_roulette_intro(ending: String, review_score: float) -> String:
+static func _build_review_intro(ending: String, review_score: float) -> String:
 	var intro_key: String = "roulette_intro_" + _ending_key(ending)
 	if _S.has_key("popups", intro_key):
 		return _S.get_string("popups", intro_key)
@@ -204,6 +214,9 @@ static func _build_review_roulette_intro(ending: String, review_score: float) ->
 	if review_score <= 3.0:
 		return _S.get_string("popups", "roulette_intro_low_score")
 	return _S.get_string("popups", "roulette_intro_default")
+
+static func _build_review_roulette_intro(ending: String, review_score: float) -> String:
+	return _build_review_intro(ending, review_score)
 
 static func _build_ending_epilogue(ending: String) -> String:
 	var epilogue_key: String = "epilogue_" + _ending_key(ending)
@@ -231,9 +244,10 @@ static func _predict_ending_label(game_state: Node, _predicted_score: float) -> 
 	var instability: int = int(game_state.instability)
 	var soul: int = int(game_state.soul)
 	var archetype: String = ""
+	var current_run: int = int(game_state.current_run)
 	if game_state.has_method("get_chosen_archetype"):
 		archetype = String(game_state.get_chosen_archetype())
-	return _EndingResolver.resolve_ending_label(config, ambition, instability, soul, archetype, false)
+	return EndingResolver.resolve_ending_label(config, ambition, instability, soul, archetype, false, current_run)
 
 ## Renders the Gap Visualizer — proportional bars vs per-archetype Goldilocks window.
 ## Shown after every run so the player learns the gap intuitively.
@@ -247,7 +261,7 @@ static func _build_goldilocks_gap_section(ambition: int, instability: int, soul:
 	if current_run <= 1:
 		gate_line = "[color=#888888]DEFINING GAME: LOCKED \u2014 this run was about learning the shape of the chaos.[/color]"
 	else:
-		var gw: Array[int] = _EndingResolver.get_goldilocks_window_for_archetype(cfg, archetype)
+		var gw: Array[int] = ArchetypeRules.get_goldilocks_window_for_archetype(cfg, archetype)
 		var ambition_ok: bool = ambition >= cfg.goldilocks_ambition_min
 		var inst_ok: bool = instability >= gw[0] and instability <= gw[1]
 		var soul_ok: bool = soul >= cfg.goldilocks_soul_min
@@ -272,7 +286,7 @@ static func _build_goldilocks_gap_section(ambition: int, instability: int, soul:
 		amb_label = "[color=#ff922b]needs more[/color]"
 	lines.append("AMBITION    %s  %s" % [_gap_bar_colored(amb_ratio, BAR_LEN, amb_bar_color), amb_label])
 
-	var window: Array[int] = _EndingResolver.get_goldilocks_window_for_archetype(cfg, archetype)
+	var window: Array[int] = ArchetypeRules.get_goldilocks_window_for_archetype(cfg, archetype)
 	var inst_ratio: float
 	var inst_bar_color: String
 	var inst_label: String

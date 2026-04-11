@@ -1,14 +1,13 @@
 {
-  "help_ok": "Understood",
   "ship_summary_ok": "Ship It",
   "ship_summary_cancel": "Back to Crunch",
   "studio_briefing_ok": "Keep Current Legacy",
   "studio_briefing_cancel": "Take New Legacy",
   "end_run_continue_default": "Start Next Run",
-  "end_run_continue_second": "Start Run 2",
-  "end_run_continue_last": "Start Run 3 (Final Sprint)",
+  "end_run_continue_second": "Start Run 2 (First Real Attempt)",
+  "end_run_continue_third": "Start Run 3 (Second Real Attempt)",
+  "end_run_continue_last": "Start Run 4 (Final Attempt)",
   "end_run_continue_cycle": "Begin Next Studio Cycle",
   "end_run_menu": "Return to Main Menu",
-  "draft_pick_c": "Pick C",
-  "publisher_stance_c": "Stance C"
+	"draft_pick_c": "Pick C"
 }

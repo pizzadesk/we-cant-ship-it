@@ -1,32 +1,5 @@
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
-static func setup_event_feed(event_feed_panel: PanelContainer, event_feed_label: RichTextLabel) -> void:
-	if event_feed_panel == null or event_feed_label == null:
-		return
-
-	event_feed_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	var panel_style: StyleBoxFlat = StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.06, 0.08, 0.11, 0.86)
-	panel_style.border_width_left = 2
-	panel_style.border_width_top = 2
-	panel_style.border_width_right = 2
-	panel_style.border_width_bottom = 2
-	panel_style.border_color = Color(0.56, 0.73, 0.86, 0.92)
-	panel_style.corner_radius_top_left = 5
-	panel_style.corner_radius_top_right = 5
-	panel_style.corner_radius_bottom_left = 5
-	panel_style.corner_radius_bottom_right = 5
-	event_feed_panel.add_theme_stylebox_override("panel", panel_style)
-
-	event_feed_label.bbcode_enabled = false
-	event_feed_label.scroll_active = false
-	event_feed_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	event_feed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	event_feed_label.add_theme_font_size_override("normal_font_size", 15)
-	event_feed_label.add_theme_color_override("default_color", Color(0.90, 0.95, 0.98, 1.0))
-	event_feed_label.text = ""
-
 static func create_card_unlock_progress_label(left_column: Control) -> Label:
 	var label: Label = Label.new()
 	label.name = "CardUnlockProgress"

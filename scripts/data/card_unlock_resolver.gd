@@ -1,16 +1,19 @@
 extends RefCounted
 class_name CardUnlockResolver
 
+const ArchetypeRules = preload("res://scripts/data/services/archetype_rules.gd")
+
 ## Pure card-unlock logic extracted from AppState.
 ## GDD rule: Run 1 completion unlocks 1–2 uncommon cards.
 ##            Run 2 completion unlocks 1–2 rare cards.
+##            Run 3 completion can still unlock 1–2 rare cards for the final attempt.
 ##            Near-miss unlock logic: gap delta direction weights which specific card unlocks.
 ## Jank cards are handled separately in AppState.ship_it via JankResolver.
 
 static func resolve_unlock(
 	all_card_ids: PackedStringArray,
 	current_unlocked: PackedStringArray,
-	ending: String,
+	ending_id: String,
 	current_run: int,
 	card_metadata_cache: Dictionary,
 	rng: RandomNumberGenerator,
@@ -21,7 +24,7 @@ static func resolve_unlock(
 	soul: int,
 	archetype: String,
 ) -> Dictionary:
-	if current_run >= 3:
+	if current_run >= 4:
 		return {}
 	var locked_ids: PackedStringArray = PackedStringArray()
 	for card_id in all_card_ids:
@@ -35,11 +38,12 @@ static func resolve_unlock(
 	match current_run:
 		1: preferred_tier = "uncommon"
 		2: preferred_tier = "rare"
+		3: preferred_tier = "rare"
 		_: preferred_tier = "rare"
 
 	var unlocked: PackedStringArray = current_unlocked.duplicate()
 	var picked_ids: PackedStringArray = PackedStringArray()
-	var unlock_count: int = 2 if _should_grant_bonus_unlock(config, ambition, instability, soul, archetype, ending) else 1
+	var unlock_count: int = 2 if _should_grant_bonus_unlock(config, ambition, instability, soul, archetype, ending_id) else 1
 	for _slot in range(unlock_count):
 		var remaining_locked: PackedStringArray = PackedStringArray()
 		for card_id in all_card_ids:
@@ -151,7 +155,7 @@ static func _score_unlock_candidate(
 	else:
 		score += float(maxi(0, 6 - abs(card.ambition_value - 4))) * 0.25
 
-	var window: Array[int] = EndingResolver.get_goldilocks_window_for_archetype(config, archetype)
+	var window: Array[int] = ArchetypeRules.get_goldilocks_window_for_archetype(config, archetype)
 	if instability < window[0]:
 		score += float(maxi(card.instability_value, 0)) * 2.0
 	elif instability > window[1]:
@@ -163,15 +167,14 @@ static func _score_unlock_candidate(
 		score += 1.0
 	return score
 
-static func _should_grant_bonus_unlock(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, ending: String) -> bool:
-	var normalized_ending: String = EndingResolver.normalize_ending_name(ending)
-	if normalized_ending == "defining game":
+static func _should_grant_bonus_unlock(config: GameConfig, ambition: int, instability: int, soul: int, archetype: String, ending_id: String) -> bool:
+	if EndingResolver.normalize_ending_id(ending_id) == EndingResolver.DEFINING_GAME_ID:
 		return true
 	if config == null:
 		return false
 	var ambition_delta: int = maxi(0, config.goldilocks_ambition_min - ambition)
 	var soul_delta: int = maxi(0, config.goldilocks_soul_min - soul)
-	var window: Array[int] = EndingResolver.get_goldilocks_window_for_archetype(config, archetype)
+	var window: Array[int] = ArchetypeRules.get_goldilocks_window_for_archetype(config, archetype)
 	var instability_delta: int = 0
 	if instability < window[0]:
 		instability_delta = window[0] - instability

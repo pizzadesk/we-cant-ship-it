@@ -33,12 +33,11 @@ vertical_alignment = 1
 
 [node name="DescriptionLabel" type="Label" parent="Padding/VBox" unique_id=173413347]
 layout_mode = 2
-text = ""
+theme_override_colors/font_color = Color(0.74, 0.74, 0.74, 1)
+theme_override_font_sizes/font_size = 11
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
-theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.74, 0.74, 0.74, 1)
 
 [node name="TagsLabel" type="Label" parent="Padding/VBox" unique_id=173413348]
 custom_minimum_size = Vector2(0, 20)
@@ -47,3 +46,4 @@ text = "tags"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+uppercase = true

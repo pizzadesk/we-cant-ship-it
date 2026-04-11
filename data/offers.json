@@ -1,9 +1,9 @@
 {
 	"dilemmas": [
 		{
-			"title": "Publisher Ultimatum",
+			"title": "Funding Ultimatum",
 			"category": "intrusive",
-			"description": "Take marketing money now or stay independent and scrappy.",
+			"description": "Take outside money now or stay independent and scrappy.",
 			"choices": [
 				{ "label": "Take money", "effects": { "ambition": 4, "instability": 3, "soul": -2 } },
 				{ "label": "Stay indie", "effects": { "soul": 4, "runway_days": -1 } }
@@ -19,23 +19,6 @@
 			]
 		}
 	],
-	"dilemma_category_weights": {
-		"default": {
-			"intrusive": 1.0,
-			"creative": 1.0,
-			"default": 1.0
-		},
-		"high_trust": {
-			"intrusive": 0.5,
-			"creative": 1.5,
-			"default": 1.0
-		},
-		"low_trust": {
-			"intrusive": 1.8,
-			"creative": 0.6,
-			"default": 1.0
-		}
-	},
 	"draft_picks": {
 		"base": [
 			{ "title": "Hype Trailer Push", "effects": { "ambition": 3, "soul": 1, "instability": 2 } },

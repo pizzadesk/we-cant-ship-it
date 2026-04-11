@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://buxqbfarphxx8" path="res://scripts/main.gd" id="1_kf4jn"]
 [ext_resource type="Script" uid="uid://cw7q3moexv7o0" path="res://scripts/ui/feature_board.gd" id="2_1qn7e"]
-[ext_resource type="Script" uid="uid://d0fxywkgoojs6" path="res://scripts/ui/backlog_drop_zone.gd" id="3_5ga7v"]
-
 [sub_resource type="StyleBoxFlat" id="BoardBaseStyle"]
 bg_color = Color(0.08, 0.09, 0.12, 1)
 border_width_left = 2
@@ -145,7 +143,6 @@ autowrap_mode = 3
 [node name="CardScroll" type="ScrollContainer" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox" unique_id=436893366]
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("3_5ga7v")
 
 [node name="CardList" type="VBoxContainer" parent="RootMargin/Shell/Body/LeftColumn/LeftPadding/LeftVBox/CardScroll" unique_id=1258609703]
 unique_name_in_owner = true
@@ -193,7 +190,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "Drag features here to assemble game. Tags overlapping, they are creating glorious side effects."
+text = "Drag features here to assemble the build. Archetype mismatch creates the pressure now. The real payoff comes after shipping, when the studio discovers what kind of jank it actually made."
 autowrap_mode = 3
 
 [node name="BoardSeparator" type="HSeparator" parent="RootMargin/Shell/Body/FeatureBoard/BoardPadding/BoardVBox" unique_id=176739966]
@@ -270,12 +267,6 @@ theme_override_font_sizes/font_size = 14
 text = "Guide: Ambition boosts score. Instability creates jank but too much kills score and unlock quality. Soul turns weird bugs into fan love. Best outcomes come from controlled chaos, not total meltdown."
 autowrap_mode = 3
 
-[node name="IdentityValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1019906409]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Run Identity: Unformed"
-
 [node name="MetaValue" type="Label" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox" unique_id=1116139297]
 unique_name_in_owner = true
 layout_mode = 2
@@ -327,7 +318,7 @@ text = "RUNWAY"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Runway Days: 21"
+text = "Runway Days: 0"
 
 [node name="FeaturesBlock" type="VBoxContainer" parent="RootMargin/Shell/Body/RightColumn/StatsPanel/StatsPadding/StatsVBox/StatsRow" unique_id=1826973748]
 layout_mode = 2
@@ -448,6 +439,7 @@ cancel_button_text = "Main Menu"
 
 [node name="DilemmaDialog" type="ConfirmationDialog" parent="." unique_id=511329712]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Big Problem For Studio"
 initial_position = 1
 ok_button_text = "Choice A"
@@ -456,19 +448,13 @@ cancel_button_text = "Choice B"
 
 [node name="DraftDialog" type="ConfirmationDialog" parent="." unique_id=387466824]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Feature Direction / Choose Path"
 initial_position = 1
+size = Vector2i(230, 100)
 ok_button_text = "Pick A"
 dialog_text = "Pick a direction for this run."
 cancel_button_text = "Pick B"
-
-[node name="PublisherDialog" type="ConfirmationDialog" parent="." unique_id=664451133]
-unique_name_in_owner = true
-title = "Publisher Meeting"
-initial_position = 1
-ok_button_text = "Stance A"
-dialog_text = "Present your current build and choose a stance."
-cancel_button_text = "Stance B"
 
 [node name="JankTint" type="ColorRect" parent="." unique_id=878493183]
 unique_name_in_owner = true
@@ -560,16 +546,6 @@ autowrap_mode = 3
 [node name="MenuSpacer" type="Control" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=1777162968]
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
-
-[node name="PublisherTrustModeToggle" type="CheckBox" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=1807260670]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Enable Publisher Trust Mode (optional)"
-
-[node name="MinimalTextToggle" type="CheckBox" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=830483626]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Use minimal UI text"
 
 [node name="StartRunButton" type="Button" parent="MainMenuLayer/MainMenuPanel/MenuPadding/MenuVBox" unique_id=952626654]
 unique_name_in_owner = true

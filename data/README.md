@@ -22,14 +22,11 @@ UI text, organised by concern. Edit in any text editor. Changes take effect on n
 | `buttons.json` | Button labels (Ship It!, Keep Current Legacy, Pick C, etc.) |
 | `tooltips.json` | Action button tooltips (Fix Bugs, Dev Log, Ship It with context-sensitive variants) |
 | `log_messages.json` | Studio event feed messages (feature added, interactions, day spent, onboarding, etc.) |
-| `popups.json` | Dialog titles, ship summary headers, jank meter labels/flavours, review roulette intros per ending, ending epilogues, choice effect text, stat names |
-| `publisher.json` | All publisher dialog text — English bureaucratic absurdist voice. Edit tone here, not in code. Keys: `memorandum_header`, `grades`, `summaries`, `labels`, `effect_names`. |
-| `help.json` | Help dialog body — stored as an array of lines for easy editing. One array entry = one paragraph or blank line. |
+| `popups.json` | Dialog titles, ship summary headers, jank meter labels/flavours, review intros per ending, ending epilogues, choice effect text, stat names |
 | `card_ui.json` | Card widget display strings (stat format, progress label, "Feature Unknown", variant note, etc.) |
 
 **Voice guide:**
 - General UI: broken but sincere English — chaotic, affectionate, eurojank energy
-- Publisher dialogs: cold, formal, procedurally absurd — "Case Reference:", "Tentatively Viable", "Operationally Unacceptable"
 - Players are never told there is a correct choice
 
 ---
@@ -40,7 +37,7 @@ Feature card definitions. Each `.tres` is a `FeatureCard` resource with:
 - `feature_name` — display name shown in UI
 - `ambition_value` — ambition added when dropped onto the board
 - `instability_value` — instability added per drop
-- `tags` — array of strings; overlapping tags between cards trigger interactions (see `interaction_rules.json`)
+- `tags` — array of strings; used for review flavor and post-ship interpretation (see `interaction_rules.json`)
 - `interactions` — optional per-card override dictionary
 
 These are plain text files. You can open them in VS Code and edit values directly. Available tags: `physics`, `horses`, `combat`, `inventory`, `ui`, `multiplayer`, `quest`, `lore`, `weather`, `animation`.
@@ -55,7 +52,7 @@ Add your own cards here. Copy `card_template.tres`, rename it, and edit the fiel
 
 ## interaction_rules.json
 
-Defines what happens when two cards with overlapping tags are both on the board. Structure:
+Defines flavor text for noteworthy tag pairings inside shipped builds. These rules do not change live gameplay stats. They exist to help reviews describe what kind of mess the studio actually shipped. Structure:
 ```json
 {
   "rules": [
@@ -63,13 +60,13 @@ Defines what happens when two cards with overlapping tags are both on the board.
       "tags": ["tag_a", "tag_b"],
       "instability_delta": 3,
       "soul_delta": 2,
-      "flavors": ["Flavor text shown in the event feed. Tokens: {tag_a} {tag_b} {new_feature} {existing_feature}"],
+      "flavors": ["Flavor text for reviews. Tokens: {tag_a} {tag_b} {new_feature} {existing_feature}"],
       "soul_required": 20
     }
   ]
 }
 ```
-`soul_required` is optional — omit it and the interaction fires regardless of current soul.
+`soul_required` is optional — omit it and the flavor line can always appear.
 
 ---
 
@@ -100,4 +97,4 @@ Weighted review text pools used by ReviewService for the four reviewer archetype
 
 ## offers.json
 
-Defines all dilemma, draft, and publisher meeting events that fire during a run. Add new events here; the offer scheduling system in AppState picks them up automatically.
+Defines all dilemma and draft events that fire during a run. Add new events here; the offer scheduling system in AppState picks them up automatically.

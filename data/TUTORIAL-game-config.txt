@@ -252,12 +252,11 @@ PARAMETER REFERENCE
 
 === OFFER SCHEDULING ===
 
-  How often dilemma / draft / publisher events interrupt the run.
+	How often dilemma / draft events interrupt the run.
   Numbers are in runway days between offers.
 
   "dilemma_offer_interval": 6
   "draft_offer_interval": 5
-  "publisher_meeting_interval": 7
 
 
 ------------------------------------------------------------------------

@@ -8,24 +8,12 @@ class_name UiStrings
 const _PATHS: Dictionary = {
 	"buttons":      "res://data/strings/buttons.json",
 	"card_ui":      "res://data/strings/card_ui.json",
-	"help":         "res://data/strings/help.json",
 	"log_messages": "res://data/strings/log_messages.json",
 	"popups":       "res://data/strings/popups.json",
-	"publisher":    "res://data/strings/publisher.json",
 	"tooltips":     "res://data/strings/tooltips.json",
 }
 
 static var _cache: Dictionary = {}
-static var _minimal_mode: bool = false
-
-static func is_minimal_mode() -> bool:
-	return _minimal_mode
-
-static func set_minimal_mode(enabled: bool) -> void:
-	if _minimal_mode == enabled:
-		return
-	_minimal_mode = enabled
-	_cache.clear()
 
 # Returns the string for a key. If the key is missing, logs a warning and returns
 # `fallback` (or the key name itself when no fallback is given).
@@ -38,7 +26,7 @@ static func get_string(category: String, key: String, fallback: String = "") -> 
 		return fallback if not fallback.is_empty() else key
 	return String(value)
 
-# Returns a nested Dictionary value. Used for publisher sub-tables (topics, grades…).
+# Returns a nested Dictionary value.
 static func get_dict(category: String, key: String) -> Dictionary:
 	_ensure_loaded(category)
 	var cat: Dictionary = _cache.get(category, {})
@@ -46,15 +34,6 @@ static func get_dict(category: String, key: String) -> Dictionary:
 	if value is Dictionary:
 		return value
 	return {}
-
-# Returns an Array value. Used for help body lines.
-static func get_array(category: String, key: String) -> Array:
-	_ensure_loaded(category)
-	var cat: Dictionary = _cache.get(category, {})
-	var value: Variant = cat.get(key, null)
-	if value is Array:
-		return value
-	return []
 
 # Returns true when a key is present in a category — avoids false-positive warnings
 # when using optional/derived keys (e.g. roulette_intro_<ending>).
@@ -65,11 +44,7 @@ static func has_key(category: String, key: String) -> bool:
 static func _ensure_loaded(category: String) -> void:
 	if _cache.has(category):
 		return
-	var path: String
-	if _minimal_mode:
-		path = "res://data/strings/minimal/%s.json" % category
-	else:
-		path = String(_PATHS.get(category, ""))
+	var path: String = String(_PATHS.get(category, ""))
 	if path.is_empty():
 		push_warning("UiStrings: unknown category '%s'" % category)
 		_cache[category] = {}

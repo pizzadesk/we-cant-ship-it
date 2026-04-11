@@ -46,13 +46,11 @@ WHERE EVERYTHING IS
   |     |-- tooltips.json           <- Hover text on action buttons
   |     |-- popups.json             <- Dialog content, ending descriptions
   |     |-- log_messages.json       <- In-game event feed messages
-  |     |-- help.json               <- Help screen content
   |     |-- card_ui.json            <- Text on card widgets
-  |     `-- publisher.json          <- Publisher meeting dialog text
   |
   |-- archetypes.json               <- The three genre options (RPG etc.)
-  |-- interaction_rules.json        <- What happens when card tags overlap
-  |-- offers.json                   <- Dilemma / draft / publisher events
+  |-- interaction_rules.json        <- Flavor notes for shipped tag pairings
+  |-- offers.json                   <- Dilemma / draft events
   |-- threshold_events.json         <- Stat milestone pop-ups
   `-- review_pools.json             <- Reviewer text (critics, fans, etc.)
 
@@ -132,23 +130,15 @@ WHERE EVERYTHING IS
     popups.json
       Almost everything: dialog titles, ship summary headers, jank meter
       flavour text, ending descriptions (ending_desc_* keys), ending
-      epilogues (epilogue_* keys), review roulette intros, cycle recap.
+      epilogues (epilogue_* keys), review intros, cycle recap.
 
     log_messages.json
       Messages printed to the debug console during a run. These are not
       visible to players in real time but appear in the Godot Output panel.
 
-    help.json
-      The content of the in-game help screen. Each item in the array is
-      one line or paragraph. Add or remove lines freely.
-
     card_ui.json
       Text on the card widgets: stat format strings, "Feature Unknown",
       the "Draft Pick" label, progress bar labels, etc.
-
-    publisher.json
-      The publisher meeting dialogs. Formatted in cold bureaucratic prose.
-      Keys: memorandum_header, grades, summaries, labels, effect_names.
 
   JSON TEXT RULES:
     - Text goes between double quotes: "like this"

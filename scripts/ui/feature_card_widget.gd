@@ -1,8 +1,6 @@
 extends CardDisplayBase
 class_name FeatureCardWidget
 
-signal card_clicked(card: Resource)
-
 var drag_origin: String = "backlog"
 var _base_rotation: float = 0.0
 var _hover_tween: Tween
@@ -21,19 +19,34 @@ func _ready() -> void:
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
-	gui_input.connect(_on_gui_input)
 
 func _update_view() -> void:
 	super._update_view()
 	# Drag previews use pre-computed icon set before _ready() fires.
 	if not _drag_mismatch_icon.is_empty():
 		_name_label.text += " " + _drag_mismatch_icon
+	tooltip_text = ""
+	modulate = Color(1.0, 1.0, 1.0, 1.0)
 	# Alien card blocked by soul gate: dim and label so the player knows before dragging.
 	if drag_origin == "backlog" and feature_card is FeatureCard and AppState != null:
 		var fc: FeatureCard = feature_card as FeatureCard
+		var config: GameConfig = AppState.get_game_config() as GameConfig
+		var mismatch_level: int = int(AppState.get_archetype_mismatch_level(fc))
+		var mismatch_icons: PackedStringArray = PackedStringArray(["", "~", "⚠", "☠"])
+		if mismatch_level > 0:
+			_name_label.text += " " + mismatch_icons[clampi(mismatch_level, 0, 3)]
+		var preview_text: String = _build_mismatch_preview_text(fc, mismatch_level, config)
+		if not preview_text.is_empty():
+			if not _tags_label.text.is_empty():
+				_tags_label.text += " | " + preview_text
+			else:
+				_tags_label.text = preview_text
+			tooltip_text = preview_text
 		if fc.archetype_affinity.is_empty() and not AppState.can_place_card(fc):
 			modulate = Color(1.0, 0.4, 0.4, 0.6)
-			_name_label.text += " ☠ SOUL GATED"
+			_name_label.text += " SOUL GATED"
+			if tooltip_text.is_empty():
+				tooltip_text = preview_text
 
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin
@@ -67,13 +80,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	payload.card = feature_card
 	payload.origin_zone = drag_origin
 	return payload.to_dictionary()
-
-func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		if feature_card != null:
-			card_clicked.emit(feature_card)
-		get_tree().root.set_input_as_handled()
-
 func _apply_janky_look() -> void:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = Color(0.14 + _rng.randf_range(-0.03, 0.04), 0.11 + _rng.randf_range(-0.02, 0.03), 0.08 + _rng.randf_range(-0.02, 0.03))
@@ -113,3 +119,28 @@ func _play_hover_anim(hovered: bool) -> void:
 		_hover_tween.tween_property(self, "scale", Vector2.ONE, 0.14)
 		_hover_tween.parallel().tween_property(self, "rotation_degrees", _base_rotation, 0.14)
 		_hover_tween.parallel().tween_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.14)
+
+func _build_mismatch_preview_text(card: FeatureCard, mismatch_level: int, config: GameConfig) -> String:
+	if card == null or AppState == null:
+		return ""
+	match mismatch_level:
+		0:
+			return "On-archetype: no penalty"
+		1:
+			var stretch_inst: int = config.genre_stretch_instability_bonus if config != null else 2
+			return "Genre stretch: +%d Inst" % stretch_inst
+		2:
+			var wild_inst: int = config.archetype_mismatch_instability_bonus if config != null else 4
+			var wild_amb: int = config.archetype_mismatch_ambition_bonus if config != null else 2
+			var wild_soul: int = config.archetype_mismatch_soul_penalty if config != null else 1
+			return "Wild swing: +%d Inst, +%d Amb, -%d Soul" % [wild_inst, wild_amb, wild_soul]
+		3:
+			var alien_inst: int = config.alien_card_instability_bonus if config != null else 8
+			var alien_amb: int = config.alien_card_ambition_bonus if config != null else 4
+			var alien_soul: int = config.alien_card_soul_penalty if config != null else 3
+			var soul_gate: int = config.alien_card_soul_gate if config != null else 5
+			if AppState.can_place_card(card):
+				return "Alien card: +%d Inst, +%d Amb, -%d Soul" % [alien_inst, alien_amb, alien_soul]
+			return "Alien card: Soul %d+, +%d Inst, +%d Amb, -%d Soul" % [soul_gate, alien_inst, alien_amb, alien_soul]
+		_:
+			return ""

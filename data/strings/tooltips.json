@@ -7,5 +7,5 @@
   "dev_log_depleted": "No runway days remaining. The update will be late. The community will survive.",
   "ship_overloaded": "High Instability. Review risk is real. The chaos, however, is authentic.",
   "ship_underloaded": "Low Instability. Reviews should be friendly. Whether that is the goal is another matter.",
-  "ship_default": "Locks current stats into Review Roulette. The critics are waiting."
+  "ship_default": "Locks the build, reveals the jank, and sends it to the critics."
 }

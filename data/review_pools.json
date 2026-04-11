@@ -42,7 +42,7 @@
         "physics": [
           { "text": "{feature_name} introduces entropy into every room it enters.", "weight": 3 },
           { "text": "The simulation underneath {feature_name} suggests a competent engine doing its best under pressure.", "weight": 2 },
-          { "text": "Physics interactions produce emergent results that no QA pass could have anticipated.", "weight": 2 }
+          { "text": "Physics collisions produce emergent results that no QA pass could have anticipated.", "weight": 2 }
         ],
         "quest": [
           { "text": "{feature_name} carries the emotional weight the broader systems cannot quite support.", "weight": 3 },
@@ -103,22 +103,22 @@
         "progression": [
           { "text": "{feature_name} creates a meaningful progression loop that suggests intentional design underneath superficial chaos.", "weight": 2 },
           { "text": "Player advancement through {feature_name} communicates studio vision even as execution stumbles.", "weight": 2 },
-          { "text": "The meta-game of {{feature_name}} reveals depth that single playthroughs obscure.", "weight": 1 }
+          { "text": "The meta-game of {feature_name} reveals depth that single playthroughs obscure.", "weight": 1 }
         ],
         "modding": [
-          { "text": "The {{feature_name}} SDK suggests developers who understand community desire for creative control.", "weight": 2 },
-          { "text": "Mod support through {{feature_name}} indicates confidence in foundational systems despite rough execution.", "weight": 2 },
-          { "text": "The {{feature_name}} tools are clearly designed for player expression within reasonable limits.", "weight": 1 }
+          { "text": "The {feature_name} SDK suggests developers who understand community desire for creative control.", "weight": 2 },
+          { "text": "Mod support through {feature_name} indicates confidence in foundational systems despite rough execution.", "weight": 2 },
+          { "text": "The {feature_name} tools are clearly designed for player expression within reasonable limits.", "weight": 1 }
         ],
         "camera": [
-          { "text": "{{feature_name}} grants visual clarity that makes the technical accomplishment more apparent.", "weight": 2 },
-          { "text": "Creative freedom through {{feature_name}} reveals environmental detail that justifies demanding hardware.", "weight": 2 },
-          { "text": "Image quality from {{feature_name}} suggests this studio understands visual composition.", "weight": 1 }
+          { "text": "{feature_name} grants visual clarity that makes the technical accomplishment more apparent.", "weight": 2 },
+          { "text": "Creative freedom through {feature_name} reveals environmental detail that justifies demanding hardware.", "weight": 2 },
+          { "text": "Image quality from {feature_name} suggests this studio understands visual composition.", "weight": 1 }
         ],
         "audio": [
-          { "text": "The audio design in {{feature_name}} is ambitious and occasionally succeeds despite stability compromises.", "weight": 2 },
-          { "text": "{{feature_name}} creates moments of genuine atmospheric power through sound work.", "weight": 2 },
-          { "text": "The music system in {{feature_name}} demonstrates composition skill across shifting technical terrain.", "weight": 1 }
+          { "text": "The audio design in {feature_name} is ambitious and occasionally succeeds despite stability compromises.", "weight": 2 },
+          { "text": "{feature_name} creates moments of genuine atmospheric power through sound work.", "weight": 2 },
+          { "text": "The music system in {feature_name} demonstrates composition skill across shifting technical terrain.", "weight": 1 }
         ]
       }
     },
@@ -156,7 +156,7 @@
           { "text": "Proposed forum rule: no complaining about {feature_name}. It is working as intended. I have decided.", "weight": 1 }
         ],
         "combat": [
-          { "text": "{feature_name} has seventeen documented unintended interactions and I have found sixteen of them.", "weight": 3 },
+          { "text": "{feature_name} has seventeen documented failure states and I have found sixteen of them.", "weight": 3 },
           { "text": "The dodge roll through {feature_name} activates dialogue trees. It should not. Do not patch it.", "weight": 2 },
           { "text": "PvP community formed entirely around exploiting {feature_name}. We are thriving.", "weight": 2 },
           { "text": "Someone used {feature_name} to solve a puzzle it was never near. Video in thread.", "weight": 1 }
@@ -165,7 +165,7 @@
           { "text": "The {feature_name} trebuchet exploit now has its own Discord.", "weight": 3 },
           { "text": "Physics jank from {feature_name} is 40% of the content on this forum and I am okay with that.", "weight": 2 },
           { "text": "My character clipped through the floor via {feature_name} and found a room with no ceiling. There was a cow.", "weight": 2 },
-          { "text": "{feature_name} interaction chains have more depth than most intended mechanics.", "weight": 1 }
+          { "text": "{feature_name} glitch cascades have more depth than most intended mechanics.", "weight": 1 }
         ],
         "quest": [
           { "text": "I cried at the {feature_name} ending and then immediately reported a softlock in the same cutscene.", "weight": 3 },
@@ -213,37 +213,37 @@
         "dialogue": [
           { "text": "the dialogue in {feature_name} made me believe the studio suddenly got really good", "weight": 3 },
           { "text": "{feature_name} voice acting deserves a studio that can actually support voice acting", "weight": 2 },
-          { "text": "there are entire conversations in {{feature_name}} that made me feel things i did not expect", "weight": 1 }
+          { "text": "there are entire conversations in {feature_name} that made me feel things i did not expect", "weight": 1 }
         ],
         "romance": [
           { "text": "shipped {feature_name} as my power fantasy and nobody can convince me otherwise", "weight": 3 },
-          { "text": "started {{feature_name}} as a joke, it became genuinely meaningful, now i do not know what i believe", "weight": 2 },
-          { "text": "the {{feature_name}} writing quality suggests this team knows how to make people feel things", "weight": 1 }
+          { "text": "started {feature_name} as a joke, it became genuinely meaningful, now i do not know what i believe", "weight": 2 },
+          { "text": "the {feature_name} writing quality suggests this team knows how to make people feel things", "weight": 1 }
         ],
         "world": [
-          { "text": "the architecture in {{feature_name}} alone is worth exploring every inch of map for", "weight": 3 },
-          { "text": "environmental design in {{feature_name}} tells a story the main quest forgot to tell", "weight": 2 },
-          { "text": "{{feature_name}} makes the world feel lived in despite the loading screens", "weight": 1 }
+          { "text": "the architecture in {feature_name} alone is worth exploring every inch of map for", "weight": 3 },
+          { "text": "environmental design in {feature_name} tells a story the main quest forgot to tell", "weight": 2 },
+          { "text": "{feature_name} makes the world feel lived in despite the loading screens", "weight": 1 }
         ],
         "progression": [
-          { "text": "progression system {{feature_name}} is actually genius if you squint the right way", "weight": 2 },
-          { "text": "{{feature_name}} gates are frustrating but also drive community engagement accidentally", "weight": 2 },
-          { "text": "the meta of {{feature_name}} is unintentional but functional", "weight": 1 }
+          { "text": "progression system {feature_name} is actually genius if you squint the right way", "weight": 2 },
+          { "text": "{feature_name} gates are frustrating but also drive community engagement accidentally", "weight": 2 },
+          { "text": "the meta of {feature_name} is unintentional but functional", "weight": 1 }
         ],
         "modding": [
-          { "text": "modding tools in {{feature_name}} let us finish what the studio started and i respect that", "weight": 3 },
-          { "text": "someone used {{feature_name}} SDK to add content the patch notes said was coming. we got it faster.", "weight": 2 },
-          { "text": "{{feature_name}} mod community is carrying the game into year three", "weight": 1 }
+          { "text": "modding tools in {feature_name} let us finish what the studio started and i respect that", "weight": 3 },
+          { "text": "someone used {feature_name} SDK to add content the patch notes said was coming. we got it faster.", "weight": 2 },
+          { "text": "{feature_name} mod community is carrying the game into year three", "weight": 1 }
         ],
         "camera": [
-          { "text": "{{feature_name}} mode let me finally see all the detail work in this game", "weight": 3 },
-          { "text": "the pc gaming community immediately started making 4K screenshots with {{feature_name}}", "weight": 2 },
-          { "text": "{{feature_name}} proves the art department cares more than the crunch allows", "weight": 1 }
+          { "text": "{feature_name} mode let me finally see all the detail work in this game", "weight": 3 },
+          { "text": "the pc gaming community immediately started making 4K screenshots with {feature_name}", "weight": 2 },
+          { "text": "{feature_name} proves the art department cares more than the crunch allows", "weight": 1 }
         ],
         "audio": [
-          { "text": "{{feature_name}} audio is either a bug or genius and we have decided: genius", "weight": 3 },
-          { "text": "players with good sound systems finally found {{feature_name}} and cannot stop talking about it", "weight": 2 },
-          { "text": "the {{feature_name}} soundtrack is loading in real time and it slaps anyway", "weight": 1 }
+          { "text": "{feature_name} audio is either a bug or genius and we have decided: genius", "weight": 3 },
+          { "text": "players with good sound systems finally found {feature_name} and cannot stop talking about it", "weight": 2 },
+          { "text": "the {feature_name} soundtrack is loading in real time and it slaps anyway", "weight": 1 }
         ]
       }
     },
@@ -311,43 +311,43 @@
         ],
         "crafting": [
           { "text": "{feature_name} broke my brain in four dimensions. optimal", "weight": 3 },
-          { "text": "found a {{feature_name}} combo that makes the game easier. now i do not use anything else", "weight": 2 },
-          { "text": "{{feature_name}} depth is unhinged. i love it", "weight": 1 }
+          { "text": "found a {feature_name} combo that makes the game easier. now i do not use anything else", "weight": 2 },
+          { "text": "{feature_name} depth is unhinged. i love it", "weight": 1 }
         ],
         "dialogue": [
-          { "text": "{{feature_name}} made me care about npcs despite all odds", "weight": 3 },
-          { "text": "the writing in {{feature_name}} survived the jank. respect", "weight": 2 },
-          { "text": "{{feature_name}} cut me. deeply. somehow worth it", "weight": 1 }
+          { "text": "{feature_name} made me care about npcs despite all odds", "weight": 3 },
+          { "text": "the writing in {feature_name} survived the jank. respect", "weight": 2 },
+          { "text": "{feature_name} cut me. deeply. somehow worth it", "weight": 1 }
         ],
         "romance": [
-          { "text": "i did not expect {{feature_name}} to make me feel. mistakes were made", "weight": 3 },
-          { "text": "{{feature_name}} romance storylines hit harder than intended", "weight": 2 },
-          { "text": "{{feature_name}} taught me something about myself. uncomfortable. recommend", "weight": 1 }
+          { "text": "i did not expect {feature_name} to make me feel. mistakes were made", "weight": 3 },
+          { "text": "{feature_name} romance storylines hit harder than intended", "weight": 2 },
+          { "text": "{feature_name} taught me something about myself. uncomfortable. recommend", "weight": 1 }
         ],
         "world": [
-          { "text": "{{feature_name}} world design is actually incredible when you look. we looked", "weight": 3 },
-          { "text": "every corner of {{feature_name}} has story in the walls", "weight": 2 },
-          { "text": "the world in {{feature_name}} is the best part of this game", "weight": 1 }
+          { "text": "{feature_name} world design is actually incredible when you look. we looked", "weight": 3 },
+          { "text": "every corner of {feature_name} has story in the walls", "weight": 2 },
+          { "text": "the world in {feature_name} is the best part of this game", "weight": 1 }
         ],
         "progression": [
-          { "text": "{{feature_name}} progression grinds but somehow it hit different", "weight": 2 },
-          { "text": "{{feature_name}} leveling is a vibe actually", "weight": 2 },
-          { "text": "{{feature_name}} meta slaps", "weight": 1 }
+          { "text": "{feature_name} progression grinds but somehow it hit different", "weight": 2 },
+          { "text": "{feature_name} leveling is a vibe actually", "weight": 2 },
+          { "text": "{feature_name} meta slaps", "weight": 1 }
         ],
         "modding": [
-          { "text": "modded {{feature_name}}. game is now actually good. thanks community", "weight": 3 },
-          { "text": "{{feature_name}} SDK enabled chaos. 10/10", "weight": 2 },
-          { "text": "{{feature_name}} mods are carrying this on their backs into next year", "weight": 1 }
+          { "text": "modded {feature_name}. game is now actually good. thanks community", "weight": 3 },
+          { "text": "{feature_name} SDK enabled chaos. 10/10", "weight": 2 },
+          { "text": "{feature_name} mods are carrying this on their backs into next year", "weight": 1 }
         ],
         "camera": [
-          { "text": "{{feature_name}} photo mode better than actual game sometimes. but also the game", "weight": 3 },
-          { "text": "{{feature_name}} made screenshots my main hobby now", "weight": 2 },
-          { "text": "the art in {{feature_name}} deserves this camera", "weight": 1 }
+          { "text": "{feature_name} photo mode better than actual game sometimes. but also the game", "weight": 3 },
+          { "text": "{feature_name} made screenshots my main hobby now", "weight": 2 },
+          { "text": "the art in {feature_name} deserves this camera", "weight": 1 }
         ],
         "audio": [
-          { "text": "{{feature_name}} audio is cursed and perfect", "weight": 3 },
-          { "text": "turned up my sound just for {{feature_name}}. was not disappointed", "weight": 2 },
-          { "text": "{{feature_name}} soundtrack somehow? slaps", "weight": 1 }
+          { "text": "{feature_name} audio is cursed and perfect", "weight": 3 },
+          { "text": "turned up my sound just for {feature_name}. was not disappointed", "weight": 2 },
+          { "text": "{feature_name} soundtrack somehow? slaps", "weight": 1 }
         ]
       }
     },
@@ -449,7 +449,7 @@
         ],
         "progression": [
           { "text": "{feature_name} gates content through systems the writers and coders clearly disagreed about.", "weight": 3 },
-          { "text": "Player progression through {{feature_name}} is gated by stability thresholds that vary by hardware.", "weight": 2 },
+          { "text": "Player progression through {feature_name} is gated by stability thresholds that vary by hardware.", "weight": 2 },
           { "text": "The meta-game of {feature_name} is partially unintentional and better for it.", "weight": 1 }
         ],
         "modding": [
@@ -463,7 +463,7 @@
           { "text": "{feature_name} occasionally clips the camera through the world in artistically interesting ways.", "weight": 1 }
         ],
         "audio": [
-          { "text": "The {{feature_name}} system creates emergent soundscapes that feel almost intentional.", "weight": 3 },
+          { "text": "The {feature_name} system creates emergent soundscapes that feel almost intentional.", "weight": 3 },
           { "text": "Audio layering in {feature_name} occasionally forms melodic chains that should not be possible.", "weight": 2 },
           { "text": "{feature_name} is what happens when ambient generation meets creative ambition.", "weight": 1 }
         ]
