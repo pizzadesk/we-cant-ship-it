@@ -2,8 +2,7 @@ extends RefCounted
 class_name ChoiceFlowController
 
 const DialogSetupUtils = preload("res://scripts/ui/dialog_setup_utils.gd")
-const OfferDialogTextUtils = preload("res://scripts/ui/offer_dialog_text_utils.gd")
-const OfferLogicUtils = preload("res://scripts/ui/offer_logic_utils.gd")
+const OfferPresentation = preload("res://scripts/ui/offer_presentation.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
 var _game_state: Node = null
@@ -13,8 +12,6 @@ var _draft_pick_c_button: Button = null
 var _dilemma_dialog_size: Vector2i = Vector2i.ZERO
 var _draft_dialog_size: Vector2i = Vector2i.ZERO
 
-var _pending_dilemma: Dictionary = {}
-var _pending_draft_offer: Dictionary = {}
 var _choice_context: String = ""
 var _choice_base_title: String = ""
 var _choice_base_text: String = ""
@@ -35,29 +32,26 @@ func setup(
 	_draft_dialog_size = draft_dialog_size
 
 func clear() -> void:
-	_pending_dilemma.clear()
-	_pending_draft_offer.clear()
 	_stop_choice_context()
 
 func on_dilemma_offered(payload: DilemmaOfferPayload, menu_active: bool, run_ended: bool) -> void:
 	if menu_active or run_ended:
 		return
-	_pending_dilemma = payload.to_dictionary()
 	var choices: Array[Dictionary] = payload.choices
-	if not OfferLogicUtils.has_valid_offer_entries(choices, 2, "label"):
+	if not OfferPresentation.has_valid_offer_entries(choices, 2, "label"):
 		push_warning("Ignoring malformed dilemma payload")
 		return
 	var choice_a: Dictionary = choices[0]
 	var choice_b: Dictionary = choices[1]
-	_dilemma_dialog.title = OfferDialogTextUtils.format_dilemma_title(payload.title)
+	_dilemma_dialog.title = OfferPresentation.format_dilemma_title(payload.title)
 	var cards: Array[Dictionary] = [
 		{
-			"title": OfferDialogTextUtils.format_dilemma_choice_label(payload.title, String(choice_a.get("label", "Choice A"))),
+			"title": OfferPresentation.format_dilemma_choice_label(payload.title, String(choice_a.get("label", "Choice A"))),
 			"effects": choice_a.get("effects", {}),
 			"on_pick": func(): _dilemma_dialog.get_ok_button().pressed.emit(),
 		},
 		{
-			"title": OfferDialogTextUtils.format_dilemma_choice_label(payload.title, String(choice_b.get("label", "Choice B"))),
+			"title": OfferPresentation.format_dilemma_choice_label(payload.title, String(choice_b.get("label", "Choice B"))),
 			"effects": choice_b.get("effects", {}),
 			"on_pick": func(): _dilemma_dialog.get_cancel_button().pressed.emit(),
 		},
@@ -69,9 +63,8 @@ func on_dilemma_offered(payload: DilemmaOfferPayload, menu_active: bool, run_end
 func on_draft_offer(payload: DraftOfferPayload, menu_active: bool, run_ended: bool) -> void:
 	if menu_active or run_ended:
 		return
-	_pending_draft_offer = payload.to_dictionary()
 	var picks: Array[Dictionary] = payload.picks
-	if not OfferLogicUtils.has_valid_offer_entries(picks, 3, "title"):
+	if not OfferPresentation.has_valid_offer_entries(picks, 3, "title"):
 		push_warning("Ignoring malformed draft payload")
 		return
 	var pick_a: Dictionary = picks[0]
@@ -105,23 +98,20 @@ func on_draft_offer(payload: DraftOfferPayload, menu_active: bool, run_ended: bo
 
 func on_dilemma_choice(choice_index: int, log_key: String, append_log: Callable) -> void:
 	_stop_choice_context()
-	if OfferLogicUtils.apply_choice_if_pending(_game_state, _pending_dilemma, &"apply_dilemma_choice", choice_index):
+	if OfferPresentation.apply_choice(_game_state, &"apply_dilemma_choice", choice_index):
 		append_log.call(_S.get_string("log_messages", log_key))
-	_pending_dilemma.clear()
 
 func on_draft_pick(pick_index: int, log_key: String, append_log: Callable) -> void:
 	_stop_choice_context()
-	if OfferLogicUtils.apply_choice_if_pending(_game_state, _pending_draft_offer, &"apply_draft_pick", pick_index):
+	if OfferPresentation.apply_choice(_game_state, &"apply_draft_pick", pick_index):
 		append_log.call(_S.get_string("log_messages", log_key))
-	_pending_draft_offer.clear()
 
 func on_draft_custom_action(action: StringName, append_log: Callable) -> void:
 	if String(action) != "pick_c":
 		return
 	_stop_choice_context()
-	if OfferLogicUtils.apply_choice_if_pending(_game_state, _pending_draft_offer, &"apply_draft_pick", 2):
+	if OfferPresentation.apply_choice(_game_state, &"apply_draft_pick", 2):
 		append_log.call(_S.get_string("log_messages", "draft_c"))
-		_pending_draft_offer.clear()
 	_draft_dialog.hide()
 
 func _start_choice_context(context: String, title: String, body_text: String) -> void:

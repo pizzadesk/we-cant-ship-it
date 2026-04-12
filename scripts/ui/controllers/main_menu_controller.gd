@@ -1,7 +1,7 @@
 extends RefCounted
 class_name MainMenuController
 
-const PresentationTextUtils = preload("res://scripts/ui/presentation_text_utils.gd")
+const CyclePresentation = preload("res://scripts/ui/presenters/cycle_presentation.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
 var _game_state: Node = null
@@ -59,7 +59,9 @@ func show_archetype_select_dialog(on_missing: Callable) -> void:
 
 func on_archetype_dialog_confirmed() -> void:
 	if _game_state != null:
-		var key: String = _archetype_select_dialog.get_meta("ok_archetype_key", "rpg")
+		var key: String = "rpg"
+		if _archetype_select_dialog != null and _archetype_select_dialog.has_meta("ok_archetype_key"):
+			key = String(_archetype_select_dialog.get_meta("ok_archetype_key"))
 		_game_state.set_archetype(key)
 
 func on_archetype_dialog_canceled() -> void:
@@ -78,12 +80,12 @@ func show_previously_on() -> void:
 	var current_run: int = int(cycle.get("current_run", 1))
 	if current_run <= 1:
 		return
-	var content_node: RichTextLabel = _previously_on_dialog.get_node_or_null("PreviouslyOnContent") as RichTextLabel
+	var content_node: RichTextLabel = _previously_on_dialog.get_node_or_null("Content") as RichTextLabel
 	if content_node == null:
 		return
 	var prev_run: int = current_run - 1
 	var run_summary: Dictionary = _game_state.get_run_summary(prev_run) if _game_state.has_method("get_run_summary") else {}
 	var config: GameConfig = _game_state.get_game_config() if _game_state != null else null
-	content_node.text = PresentationTextUtils.build_previously_on_text(run_summary, current_run, config)
+	content_node.text = CyclePresentation.build_previously_on_text(run_summary, current_run, config)
 	content_node.scroll_to_line(0)
 	_previously_on_dialog.popup_centered(_previously_on_dialog.min_size)

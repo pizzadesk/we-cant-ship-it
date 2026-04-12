@@ -6,17 +6,24 @@ var severity: String = "info"
 var message: String = "Threshold event triggered."
 var effects: Dictionary = {}
 
-static func from_dictionary(event_data: Dictionary) -> ThresholdEventPayload:
+static func build(event_id: String, next_message: String, next_effects: Variant = {}, next_severity: String = "info") -> ThresholdEventPayload:
 	var payload: ThresholdEventPayload = ThresholdEventPayload.new()
-	payload.id = String(event_data.get("id", ""))
-	payload.severity = String(event_data.get("severity", "info"))
-	payload.message = String(event_data.get("message", "Threshold event triggered."))
-	var raw_effects: Variant = event_data.get("effects", {})
-	if raw_effects is Dictionary:
-		payload.effects = raw_effects.duplicate(true)
+	payload.id = event_id
+	payload.severity = next_severity
+	payload.message = next_message
+	if next_effects is Dictionary:
+		payload.effects = (next_effects as Dictionary).duplicate(true)
 	else:
 		payload.effects = {}
 	return payload
+
+static func from_dictionary(event_data: Dictionary) -> ThresholdEventPayload:
+	return build(
+		String(event_data.get("id", "")),
+		String(event_data.get("message", "Threshold event triggered.")),
+		event_data.get("effects", {}),
+		String(event_data.get("severity", "info"))
+	)
 
 func to_dictionary() -> Dictionary:
 	return {

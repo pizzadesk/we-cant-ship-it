@@ -1,7 +1,9 @@
 extends RefCounted
 class_name PostShipFlowController
 
-const PresentationTextUtils = preload("res://scripts/ui/presentation_text_utils.gd")
+const CyclePresentation = preload("res://scripts/ui/presenters/cycle_presentation.gd")
+const PostShipPresentation = preload("res://scripts/ui/presenters/post_ship_presentation.gd")
+const ReviewPresentation = preload("res://scripts/ui/presenters/review_presentation.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
 
 var _game_state: Node = null
@@ -59,7 +61,7 @@ func on_reviews_generated(payload: ShipResult, update_card_unlock_progress: Call
 		_post_ship_sequence.append("legacy")
 	_post_ship_sequence.append("end")
 
-	var review_text: String = PresentationTextUtils.build_review_fallout_text(_current_ship_results)
+	var review_text: String = ReviewPresentation.build_review_fallout_text(_current_ship_results)
 	if _review_content != null:
 		_review_content.text = review_text
 		_review_content.scroll_to_line(0)
@@ -94,7 +96,7 @@ func _show_gap_visualizer_dialog() -> void:
 		archetype = String(_game_state.get_chosen_archetype())
 	var completed_run: int = _game_state.get_last_completed_run() if _game_state != null else 1
 	var config: GameConfig = _game_state.get_game_config() if _game_state != null else null
-	_gap_visualizer_content.text = PresentationTextUtils.build_gap_visualizer_text(
+	_gap_visualizer_content.text = CyclePresentation.build_gap_visualizer_text(
 		_current_ship_results,
 		ambition,
 		instability,
@@ -110,7 +112,7 @@ func _show_jank_discovery_dialog() -> void:
 	if _jank_discovery_dialog == null or _jank_discovery_content == null:
 		advance_sequence(true)
 		return
-	_jank_discovery_content.text = PresentationTextUtils.build_jank_discovery_text(_current_ship_results)
+	_jank_discovery_content.text = PostShipPresentation.build_jank_discovery_text(_current_ship_results)
 	_jank_discovery_content.scroll_to_line(0)
 	_jank_discovery_dialog.popup_centered(Vector2i(900, 600))
 
@@ -120,7 +122,7 @@ func _show_cycle_legacy_dialog() -> void:
 		return
 	var cycle_state: Dictionary = _game_state.get_cycle_state()
 	if _cycle_legacy_content != null:
-		_cycle_legacy_content.text = PresentationTextUtils.build_cycle_legacy_text(cycle_state)
+		_cycle_legacy_content.text = CyclePresentation.build_cycle_legacy_text(cycle_state)
 		_cycle_legacy_content.scroll_to_line(0)
 	_cycle_legacy_dialog.popup_centered(_cycle_legacy_dialog.min_size)
 

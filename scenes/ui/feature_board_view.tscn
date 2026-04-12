@@ -1,0 +1,91 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/feature_board.gd" id="1_board"]
+[sub_resource type="StyleBoxFlat" id="BoardBaseStyle"]
+bg_color = Color(0.08, 0.09, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.52, 0.68, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="BoardHighlightStyle"]
+bg_color = Color(0.11, 0.11, 0.16, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.56, 0.24, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(1, 0.25, 0.18, 0.45)
+shadow_size = 14
+
+[node name="FeatureBoard" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_board")
+base_style = SubResource("BoardBaseStyle")
+highlight_style = SubResource("BoardHighlightStyle")
+
+[node name="BoardPadding" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="BoardVBox" type="VBoxContainer" parent="BoardPadding"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BoardTitle" type="Label" parent="BoardPadding/BoardVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Your Disaster"
+
+[node name="BoardHelp" type="Label" parent="BoardPadding/BoardVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Drag features here to assemble the build. Archetype mismatch creates the pressure now. The real payoff comes after shipping, when the studio discovers what kind of jank it actually made."
+autowrap_mode = 3
+
+[node name="BoardSeparator" type="HSeparator" parent="BoardPadding/BoardVBox"]
+layout_mode = 2
+
+[node name="BoardDropCue" type="Label" parent="BoardPadding/BoardVBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.705882, 0.333333, 1)
+theme_override_font_sizes/font_size = 21
+text = "HERE FEATURE DROPPING NOW"
+horizontal_alignment = 1
+
+[node name="BoardEmptyState" type="Label" parent="BoardPadding/BoardVBox"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "No features shipped yet, not one. Start by dragging one reckless idea from backlog."
+autowrap_mode = 3
+
+[node name="PlacedFeaturesScroll" type="ScrollContainer" parent="BoardPadding/BoardVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="PlacedFeaturesRow" type="GridContainer" parent="BoardPadding/BoardVBox/PlacedFeaturesScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 3

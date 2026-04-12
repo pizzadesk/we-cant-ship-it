@@ -1,8 +1,7 @@
 extends RefCounted
 class_name RunResolutionService
 
-const EndingResolver = preload("res://scripts/data/ending_resolver.gd")
-const ArchetypeRules = preload("res://scripts/data/services/archetype_rules.gd")
+const RunResolutionOutcomeType = preload("res://scripts/data/payloads/run_resolution_outcome.gd")
 
 var _content_repository: AppContentRepository = null
 var _cycle_mgr: CycleStateManager = null
@@ -39,7 +38,7 @@ func resolve_and_commit_run(
 	feature_board: Array[FeatureCard],
 	chosen_archetype: String,
 	current_run: int,
-) -> Dictionary:
+) -> RunResolutionOutcomeType:
 	var config: GameConfig = _content_repository.get_game_config()
 	var completed_run: int = current_run
 	var features_shipped: int = feature_board.size()
@@ -144,11 +143,11 @@ func resolve_and_commit_run(
 	result.jank_combination = jank_match
 	result.unlock_defining_game = ending_id == EndingResolver.DEFINING_GAME_ID
 	result.completed_run = completed_run
-	return {
-		"ship_result": result,
-		"last_completed_run": last_completed_run,
-		"current_run": _cycle_mgr.get_current_run(),
-	}
+	var outcome: RunResolutionOutcomeType = RunResolutionOutcomeType.new()
+	outcome.ship_result = result
+	outcome.last_completed_run = last_completed_run
+	outcome.current_run = _cycle_mgr.get_current_run()
+	return outcome
 
 func _enrich_unlock_result(unlock_result: Dictionary) -> void:
 	var unlocked_card_id: String = String(unlock_result.get("card_id", ""))

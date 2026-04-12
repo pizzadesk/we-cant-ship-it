@@ -1,7 +1,6 @@
 extends RefCounted
 class_name RunHudController
 
-const ArchetypeRules = preload("res://scripts/data/services/archetype_rules.gd")
 const CardProgressUtils = preload("res://scripts/ui/card_progress_utils.gd")
 const HudUiUtils = preload("res://scripts/ui/hud_ui_utils.gd")
 const _S = preload("res://scripts/ui/ui_strings.gd")
@@ -40,14 +39,17 @@ func setup(
 	features_value: Label,
 	soul_value: Label,
 	meta_value: Label,
+	card_unlock_progress_label: Label,
 	fix_bugs_button: Button,
 	dev_log_button: Button,
 	ship_button: Button,
-	left_column: Control,
-	ambition_block: VBoxContainer,
-	instability_block: VBoxContainer,
-	runway_block: VBoxContainer,
-	soul_block: VBoxContainer,
+	ambition_gauge: ProgressBar,
+	instability_gauge: ProgressBar,
+	runway_gauge: ProgressBar,
+	soul_gauge: ProgressBar,
+	soul_risk_label: Label,
+	goldilocks_floor_marker: ColorRect,
+	goldilocks_ceiling_marker: ColorRect,
 ) -> void:
 	_game_state = game_state
 	_ambition_value = ambition_value
@@ -56,31 +58,17 @@ func setup(
 	_features_value = features_value
 	_soul_value = soul_value
 	_meta_value = meta_value
+	_card_unlock_progress_label = card_unlock_progress_label
 	_fix_bugs_button = fix_bugs_button
 	_dev_log_button = dev_log_button
 	_ship_button = ship_button
-
-	var gauges: StatGaugeRefs = HudUiUtils.create_stat_gauges(
-		ambition_block,
-		instability_block,
-		runway_block,
-		soul_block
-	)
-	_ambition_gauge = gauges.ambition
-	_instability_gauge = gauges.instability
-	_runway_gauge = gauges.runway
-	_soul_gauge = gauges.soul
-	_goldilocks_floor_marker = gauges.goldilocks_floor_marker
-	_goldilocks_ceiling_marker = gauges.goldilocks_ceiling_marker
-
-	_soul_risk_label = Label.new()
-	_soul_risk_label.name = "SoulRiskLabel"
-	_soul_risk_label.add_theme_font_size_override("font_size", 11)
-	_soul_risk_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_soul_risk_label.visible = false
-	soul_block.add_child(_soul_risk_label)
-
-	_card_unlock_progress_label = HudUiUtils.create_card_unlock_progress_label(left_column)
+	_ambition_gauge = ambition_gauge
+	_instability_gauge = instability_gauge
+	_runway_gauge = runway_gauge
+	_soul_gauge = soul_gauge
+	_soul_risk_label = soul_risk_label
+	_goldilocks_floor_marker = goldilocks_floor_marker
+	_goldilocks_ceiling_marker = goldilocks_ceiling_marker
 
 func update_card_unlock_progress() -> void:
 	if _card_unlock_progress_label == null or _game_state == null:

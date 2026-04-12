@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/backlog_panel_view.gd" id="1_backlog"]
+
+[node name="LeftColumn" type="PanelContainer"]
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+script = ExtResource("1_backlog")
+
+[node name="LeftPadding" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LeftVBox" type="VBoxContainer" parent="LeftPadding"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="BacklogTitle" type="Label" parent="LeftPadding/LeftVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Here Is Chaos"
+
+[node name="BacklogHelp" type="Label" parent="LeftPadding/LeftVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Drag feature cards into your build. Ambition higher, this is impressing people. Instability higher, this is impressing bugs more."
+autowrap_mode = 3
+
+[node name="CardScroll" type="ScrollContainer" parent="LeftPadding/LeftVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardList" type="VBoxContainer" parent="LeftPadding/LeftVBox/CardScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BacklogFooter" type="Label" parent="LeftPadding/LeftVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Important: risky tags, they are colliding always in spectacular ways."
+autowrap_mode = 3
+
+[node name="CardUnlockProgress" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 28.0
+offset_top = 410.0
+offset_right = 228.0
+offset_bottom = 430.0
+theme_override_colors/font_color = Color(0.85, 0.95, 0.72, 0.9)
+theme_override_font_sizes/font_size = 13
+mouse_filter = 2
+text = "Loading deck..."

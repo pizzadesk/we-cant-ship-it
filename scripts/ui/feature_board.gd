@@ -5,6 +5,8 @@ const PLACED_FEATURE_TILE_SCENE: PackedScene = preload("res://scenes/ui/placed_f
 
 signal card_dropped(data: Dictionary)
 
+@onready var _board_title_label: Label = %BoardTitle
+@onready var _board_help_label: Label = %BoardHelp
 @onready var _drop_cue_label: Label = $BoardPadding/BoardVBox/BoardDropCue
 @onready var _empty_state_label: Label = $BoardPadding/BoardVBox/BoardEmptyState
 @onready var _placed_features_scroll: ScrollContainer = $BoardPadding/BoardVBox/PlacedFeaturesScroll
@@ -72,6 +74,9 @@ func clear_board() -> void:
 	_empty_state_label.show()
 	if _placed_features_scroll != null:
 		_placed_features_scroll.scroll_vertical = 0
+
+func get_corruptible_text_nodes() -> Array[Control]:
+	return [_board_title_label, _board_help_label]
 
 func _scroll_to_latest_feature() -> void:
 	if _placed_features_scroll == null:

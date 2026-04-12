@@ -6,6 +6,10 @@ const ScoreCalculator = preload("res://scripts/data/score_calculator.gd")
 const CycleStateManager = preload("res://scripts/data/cycle_state_manager.gd")
 @warning_ignore("shadowed_global_identifier")
 const OfferScheduler = preload("res://scripts/data/offer_scheduler.gd")
+const ChoiceResolutionType = preload("res://scripts/data/payloads/choice_resolution.gd")
+const RunStateDataType = preload("res://scripts/data/payloads/run_state_data.gd")
+const RunResolutionOutcomeType = preload("res://scripts/data/payloads/run_resolution_outcome.gd")
+const ThresholdEvaluationResultType = preload("res://scripts/data/payloads/threshold_evaluation_result.gd")
 
 # --- Run state ---
 var ambition: int = 0
@@ -181,7 +185,7 @@ func spend_day(reason: String) -> void:
 	_emit_state()
 
 func ship_it() -> ShipResult:
-	var outcome: Dictionary = _run_resolution.resolve_and_commit_run(
+	var outcome: RunResolutionOutcomeType = _run_resolution.resolve_and_commit_run(
 		ambition,
 		instability,
 		runway_days,
@@ -190,9 +194,11 @@ func ship_it() -> ShipResult:
 		chosen_archetype,
 		current_run
 	)
-	_last_completed_run = int(outcome.get("last_completed_run", 0))
-	current_run = int(outcome.get("current_run", current_run))
-	var result: ShipResult = outcome.get("ship_result", null) as ShipResult
+	if outcome == null:
+		outcome = RunResolutionOutcomeType.new()
+	_last_completed_run = outcome.last_completed_run
+	current_run = outcome.current_run
+	var result: ShipResult = outcome.ship_result
 	if result == null:
 		result = ShipResult.new()
 	if _event_bus != null:
@@ -200,19 +206,19 @@ func ship_it() -> ShipResult:
 	return result
 
 func apply_dilemma_choice(choice_index: int) -> void:
-	var outcome: Dictionary = _offer_flow.apply_dilemma_choice(choice_index, _capture_run_state())
-	if outcome.is_empty():
+	var outcome: ChoiceResolutionType = _offer_flow.apply_dilemma_choice(choice_index, _capture_run_state())
+	if outcome == null or outcome.is_empty():
 		return
-	_apply_run_state(outcome.get("state", {}))
-	_emit_threshold_event_from_dictionary(outcome.get("threshold_event", {}))
+	_apply_run_state(outcome.state)
+	_emit_threshold_event(outcome.threshold_event)
 	_emit_state()
 
 func apply_draft_pick(pick_index: int) -> void:
-	var outcome: Dictionary = _offer_flow.apply_draft_pick(pick_index, _capture_run_state())
-	if outcome.is_empty():
+	var outcome: ChoiceResolutionType = _offer_flow.apply_draft_pick(pick_index, _capture_run_state())
+	if outcome == null or outcome.is_empty():
 		return
-	_apply_run_state(outcome.get("state", {}))
-	_emit_threshold_event_from_dictionary(outcome.get("threshold_event", {}))
+	_apply_run_state(outcome.state)
+	_emit_threshold_event(outcome.threshold_event)
 	_emit_state()
 
 func calculate_predicted_score() -> float:
@@ -258,14 +264,14 @@ func _apply_archetype_mismatch(card: FeatureCard) -> void:
 	_emit_threshold_event_from_dictionary(mismatch)
 
 func _emit_state() -> void:
-	var threshold_result: Dictionary = _offer_flow.evaluate_threshold_events(
+	var threshold_result: ThresholdEvaluationResultType = _offer_flow.evaluate_threshold_events(
 		_content_repository.get_threshold_events(),
 		_capture_run_state()
 	)
-	_apply_run_state(threshold_result.get("state", {}))
-	for event_data in threshold_result.get("events", []):
-		if event_data is Dictionary:
-			_emit_threshold_event_from_dictionary(event_data as Dictionary)
+	if threshold_result != null:
+		_apply_run_state(threshold_result.state)
+		for event_payload: ThresholdEventPayload in threshold_result.events:
+			_emit_threshold_event(event_payload)
 	if _event_bus != null:
 		var snapshot: StateSnapshotPayload = StateSnapshotPayload.new()
 		snapshot.ambition = ambition
@@ -277,46 +283,32 @@ func _emit_state() -> void:
 		_event_bus.state_changed.emit(snapshot)
 
 func _maybe_offer_dilemma() -> bool:
-	var result: Dictionary = _offer_flow.maybe_offer_dilemma(
+	var result: DilemmaOfferPayload = _offer_flow.maybe_offer_dilemma(
 		_content_repository.get_game_config(), _content_repository.get_offers(), runway_days, soul,
 		current_run,
 		_cycle_mgr.get_pressure_modifier()
 	)
-	if result.is_empty():
+	if result == null:
 		return false
 	if _event_bus != null:
-		_event_bus.dilemma_offered.emit(DilemmaOfferPayload.from_dictionary(result))
+		_event_bus.dilemma_offered.emit(result)
 	return true
 
 func _maybe_offer_draft() -> bool:
-	var result: Dictionary = _offer_flow.maybe_offer_draft(
+	var result: DraftOfferPayload = _offer_flow.maybe_offer_draft(
 		_content_repository.get_game_config(), _content_repository.get_offers(), runway_days, soul, feature_board.is_empty(),
 		current_run,
 		_cycle_mgr.get_pressure_modifier()
 	)
-	if result.is_empty():
+	if result == null:
 		return false
 	if _event_bus != null:
-		_event_bus.draft_offer.emit(DraftOfferPayload.from_dictionary(result))
+		_event_bus.draft_offer.emit(result)
 	return true
 
-func _emit_threshold_event(
-	event_id: String,
-	message: String,
-	effects: Variant,
-	severity: String = "info",
-) -> void:
-	if _event_bus == null:
+func _emit_threshold_event(payload: ThresholdEventPayload) -> void:
+	if _event_bus == null or payload == null:
 		return
-	var safe_effects: Dictionary = {}
-	if effects is Dictionary:
-		safe_effects = (effects as Dictionary).duplicate(true)
-	var payload: ThresholdEventPayload = ThresholdEventPayload.from_dictionary({
-		"id": event_id,
-		"severity": severity,
-		"message": message,
-		"effects": safe_effects,
-	})
 	_event_bus.threshold_event.emit(payload)
 
 func _get_card_tier(card_id: String) -> String:
@@ -325,28 +317,23 @@ func _get_card_tier(card_id: String) -> String:
 func _load_card_by_id(card_id: String) -> FeatureCard:
 	return _content_repository.load_card_by_id(card_id)
 
-func _capture_run_state() -> Dictionary:
-	return {
-		"ambition": ambition,
-		"instability": instability,
-		"runway_days": runway_days,
-		"soul": soul,
-	}
+func _capture_run_state() -> RunStateDataType:
+	return RunStateDataType.from_values(ambition, instability, runway_days, soul)
 
-func _apply_run_state(state: Dictionary) -> void:
-	if state.is_empty():
+func _apply_run_state(state: RunStateDataType) -> void:
+	if state == null:
 		return
-	ambition = int(state.get("ambition", ambition))
-	instability = int(state.get("instability", instability))
-	runway_days = int(state.get("runway_days", runway_days))
-	soul = int(state.get("soul", soul))
+	ambition = state.ambition
+	instability = state.instability
+	runway_days = state.runway_days
+	soul = state.soul
 
 func _emit_threshold_event_from_dictionary(event_data: Dictionary) -> void:
 	if event_data.is_empty():
 		return
-	_emit_threshold_event(
+	_emit_threshold_event(ThresholdEventPayload.build(
 		String(event_data.get("event_id", event_data.get("id", ""))),
 		String(event_data.get("message", "Threshold event triggered.")),
 		event_data.get("effects", {}),
 		String(event_data.get("severity", "info"))
-	)
+	))

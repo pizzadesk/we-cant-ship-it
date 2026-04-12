@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[node name="RichTextAcceptDialog" type="AcceptDialog"]
+unresizable = true
+
+[node name="Content" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 52.0
+offset_right = -16.0
+offset_bottom = -60.0
+bbcode_enabled = true
+scroll_active = true
+fit_content = false
+size_flags_horizontal = 3
+size_flags_vertical = 3

@@ -1,8 +1,12 @@
 extends Control
 
 const CARD_WIDGET_SCENE: PackedScene = preload("res://scenes/ui/feature_card_widget.tscn")
-const PresentationTextUtils = preload("res://scripts/ui/presentation_text_utils.gd")
-const DialogSetupUtils = preload("res://scripts/ui/dialog_setup_utils.gd")
+const BacklogPanelViewType = preload("res://scripts/ui/backlog_panel_view.gd")
+const DialogHostViewType = preload("res://scripts/ui/dialog_host_view.gd")
+const HeaderBarViewType = preload("res://scripts/ui/header_bar_view.gd")
+const MainMenuOverlayViewType = preload("res://scripts/ui/main_menu_overlay_view.gd")
+const RunSidebarViewType = preload("res://scripts/ui/run_sidebar_view.gd")
+const PostShipPresentation = preload("res://scripts/ui/presenters/post_ship_presentation.gd")
 const CARDS_PATH: String = "res://data/cards"
 const CUSTOM_CARDS_PATH: String = "res://data/custom_cards"
 const DAILY_VISIBLE_CARDS: int = 3
@@ -23,45 +27,44 @@ const INSTABILITY_CEILING_ZONE_SIZE: int = 12
 const SCANLINE_SHADER: Shader = preload("res://shaders/scanline.gdshader")
 
 # HUD layout references
-@onready var _left_column: PanelContainer = $"%LeftColumn"
-@onready var _ambition_block: VBoxContainer = $"%AmbitionBlock"
-@onready var _instability_block: VBoxContainer = $"%InstabilityBlock"
-@onready var _runway_block: VBoxContainer = $"%RunwayBlock"
-@onready var _soul_block: VBoxContainer = $"%SoulBlock"
+@onready var _header_view: HeaderBarViewType = $"%HeaderPanel"
+@onready var _backlog_view: BacklogPanelViewType = $"%LeftColumn"
+@onready var _run_sidebar_view: RunSidebarViewType = $"%RightColumn"
 
 # Stat display labels
-@onready var _ambition_value: Label = $"%AmbitionValue"
-@onready var _instability_value: Label = $"%InstabilityValue"
-@onready var _runway_value: Label = $"%RunwayValue"
-@onready var _features_value: Label = $"%FeaturesValue"
-@onready var _soul_value: Label = $"%SoulValue"
-@onready var _meta_value: Label = $"%MetaValue"
+@onready var _ambition_value: Label = _run_sidebar_view.get_ambition_value()
+@onready var _instability_value: Label = _run_sidebar_view.get_instability_value()
+@onready var _runway_value: Label = _run_sidebar_view.get_runway_value()
+@onready var _features_value: Label = _run_sidebar_view.get_features_value()
+@onready var _soul_value: Label = _run_sidebar_view.get_soul_value()
+@onready var _meta_value: Label = _run_sidebar_view.get_meta_value()
 
 # Card and board references
-@onready var _card_list: VBoxContainer = $"%CardList"
-@onready var _feature_board: PanelContainer = $"%FeatureBoard"
+@onready var _card_list: VBoxContainer = _backlog_view.get_card_list()
+@onready var _feature_board: FeatureBoard = $"%FeatureBoard"
 
 # Action buttons
-@onready var _fix_bugs_button: Button = $"%FixBugsButton"
-@onready var _dev_log_button: Button = $"%DevLogButton"
-@onready var _ship_button: Button = $"%ShipButton"
+@onready var _fix_bugs_button: Button = _run_sidebar_view.get_fix_bugs_button()
+@onready var _dev_log_button: Button = _run_sidebar_view.get_dev_log_button()
+@onready var _ship_button: Button = _run_sidebar_view.get_ship_button()
 
 # Dialogs and layers
-@onready var _review_dialog: AcceptDialog = $"%ReviewDialog"
-@onready var _end_run_dialog: ConfirmationDialog = $"%EndRunDialog"
-@onready var _dilemma_dialog: ConfirmationDialog = $"%DilemmaDialog"
-@onready var _draft_dialog: ConfirmationDialog = $"%DraftDialog"
-@onready var _main_menu_layer: CanvasLayer = $"%MainMenuLayer"
-@onready var _start_run_button: Button = $"%StartRunButton"
-@onready var _reset_game_button: Button = $"%ResetGameButton"
-@onready var _menu_subtitle: Label = $"%MenuSubtitle"
-@onready var _quit_button: Button = $"%QuitButton"
+@onready var _dialog_host_view: DialogHostViewType = $"%DialogHost"
+@onready var _review_dialog: AcceptDialog = _dialog_host_view.get_review_dialog()
+@onready var _end_run_dialog: ConfirmationDialog = _dialog_host_view.get_end_run_dialog()
+@onready var _dilemma_dialog: ConfirmationDialog = _dialog_host_view.get_dilemma_dialog()
+@onready var _draft_dialog: ConfirmationDialog = _dialog_host_view.get_draft_dialog()
+@onready var _main_menu_view: MainMenuOverlayViewType = $"%MainMenuLayer"
+@onready var _start_run_button: Button = _main_menu_view.get_start_run_button()
+@onready var _reset_game_button: Button = _main_menu_view.get_reset_game_button()
+@onready var _menu_subtitle: Label = _main_menu_view.get_menu_subtitle()
+@onready var _quit_button: Button = _header_view.get_quit_button()
 
 # Visual corruption
 @onready var _scanline_overlay: ColorRect = $"%ScanlineOverlay"
 @onready var _jank_tint: ColorRect = $"%JankTint"
 @onready var _wobble_root: MarginContainer = $"%RootMargin"
-@onready var _action_panel: PanelContainer = $"%ActionPanel"
+@onready var _action_panel: PanelContainer = _run_sidebar_view.get_action_panel()
 @onready var _crunch_timer: Timer = $"%CrunchTimer"
 
 # Autoload references
@@ -95,7 +98,7 @@ var _jank_fx_controller: JankFxController = JankFxController.new()
 # -- Scene Lifecycle --
 func _ready() -> void:
 	_ui_rng.randomize()
-	_setup_dialog_runtime()
+	_setup_dialogs()
 	_setup_controllers()
 	_wire_events()
 	_show_main_menu()
@@ -112,9 +115,9 @@ func _notification(what: int) -> void:
 		get_tree().quit()
 
 # -- Setup: Dialogs and HUD --
-func _setup_dialog_runtime() -> void:
-	var refs: DialogRuntimeRefs = DialogSetupUtils.setup_runtime_dialogs(
-		self,
+func _setup_dialogs() -> void:
+	var refs: Dictionary = DialogFactory.configure_scene_dialogs(
+		_dialog_host_view,
 		_review_dialog,
 		_end_run_dialog,
 		_dilemma_dialog,
@@ -128,35 +131,21 @@ func _setup_dialog_runtime() -> void:
 		Callable(self, "_on_jank_discovery_confirmed"),
 		Callable(self, "_on_gap_visualizer_confirmed")
 	)
-	_ship_summary_dialog = refs.ship_summary_dialog
-	_jank_discovery_dialog = refs.jank_discovery_dialog
-	_jank_discovery_content = refs.jank_discovery_content
-	_gap_visualizer_dialog = refs.jank_dialog
-	_gap_visualizer_content = refs.jank_content
-	_review_content = refs.review_content
-	_draft_pick_c_button = refs.draft_pick_c_button
-	_archetype_select_dialog = refs.archetype_dialog
-	var cycle_legacy_refs: Dictionary = DialogSetupUtils.build_cycle_legacy_dialog(self)
-	_cycle_legacy_dialog = cycle_legacy_refs.get("dialog") as AcceptDialog
-	_cycle_legacy_content = cycle_legacy_refs.get("content") as RichTextLabel
-	_previously_on_dialog = DialogSetupUtils.build_previously_on_dialog(self)
-	_reset_confirm_dialog = ConfirmationDialog.new()
-	_reset_confirm_dialog.title = "Reset Campaign?"
-	_reset_confirm_dialog.dialog_text = "Erase all four-run progress and start a fresh campaign?"
-	_reset_confirm_dialog.min_size = Vector2(460, 100)
-	add_child(_reset_confirm_dialog)
+	_ship_summary_dialog = refs.get("ship_summary_dialog") as ConfirmationDialog
+	_jank_discovery_dialog = refs.get("jank_discovery_dialog") as AcceptDialog
+	_jank_discovery_content = refs.get("jank_discovery_content") as RichTextLabel
+	_gap_visualizer_dialog = refs.get("jank_dialog") as AcceptDialog
+	_gap_visualizer_content = refs.get("jank_content") as RichTextLabel
+	_review_content = refs.get("review_content") as RichTextLabel
+	_draft_pick_c_button = refs.get("draft_pick_c_button") as Button
+	_archetype_select_dialog = refs.get("archetype_dialog") as ConfirmationDialog
+	_cycle_legacy_dialog = refs.get("cycle_legacy_dialog") as AcceptDialog
+	_cycle_legacy_content = refs.get("cycle_legacy_content") as RichTextLabel
+	_previously_on_dialog = refs.get("previously_on_dialog") as AcceptDialog
+	_reset_confirm_dialog = _dialog_host_view.get_reset_confirm_dialog()
+	_quit_confirm_dialog = _dialog_host_view.get_quit_confirm_dialog()
 
-	_quit_confirm_dialog = ConfirmationDialog.new()
-	_quit_confirm_dialog.title = "Quit Game?"
-	_quit_confirm_dialog.dialog_text = "Sure you want to quit now?"
-	_quit_confirm_dialog.get_ok_button().text = "Yes, Quit"
-	_quit_confirm_dialog.get_cancel_button().text = "No, Keep Playing"
-	_quit_confirm_dialog.min_size = Vector2(380, 130)
-	add_child(_quit_confirm_dialog)
-	_quit_confirm_dialog.confirmed.connect(func(): get_tree().quit())
-
-	# Center the built-in dialog text labels on all scene-defined dialogs.
-	for _d: Window in [_review_dialog, _end_run_dialog, _dilemma_dialog, _draft_dialog, _reset_confirm_dialog, _quit_confirm_dialog]:
+	for _d: Window in _dialog_host_view.get_scene_dialogs():
 		var _lbl: Label = (_d as AcceptDialog).get_label()
 		if _lbl != null:
 			_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -171,14 +160,17 @@ func _setup_controllers() -> void:
 		_features_value,
 		_soul_value,
 		_meta_value,
+		_backlog_view.get_card_unlock_progress_label(),
 		_fix_bugs_button,
 		_dev_log_button,
 		_ship_button,
-		_left_column,
-		_ambition_block,
-		_instability_block,
-		_runway_block,
-		_soul_block
+		_run_sidebar_view.get_ambition_gauge(),
+		_run_sidebar_view.get_instability_gauge(),
+		_run_sidebar_view.get_runway_gauge(),
+		_run_sidebar_view.get_soul_gauge(),
+		_run_sidebar_view.get_soul_risk_label(),
+		_run_sidebar_view.get_goldilocks_floor_marker(),
+		_run_sidebar_view.get_goldilocks_ceiling_marker()
 	)
 	_backlog_controller.setup(
 		_game_state,
@@ -213,7 +205,7 @@ func _setup_controllers() -> void:
 	)
 	_main_menu_controller.setup(
 		_game_state,
-		_main_menu_layer,
+		_main_menu_view,
 		_start_run_button,
 		_reset_game_button,
 		_menu_subtitle,
@@ -229,28 +221,23 @@ func _setup_controllers() -> void:
 		_wobble_root,
 		_ship_button
 	)
-	_jank_fx_controller.apply_janky_ui_theme([
-		$"%HeaderPanel",
-		$"%LeftColumn",
-		$"%StatsPanel",
-		$"%ActionPanel",
-	])
-	_jank_fx_controller.cache_corruptible_ui_text([
-		$"%HeaderTitle",
-		$"%HeaderSubtitle",
-		$"%BacklogTitle",
-		$"%BacklogHelp",
-		$"%BacklogFooter",
-		$"%StatGuide",
-		$"%BoardTitle",
-		$"%BoardHelp",
-		$"%ActionTitle",
-		$"%ActionHelp",
+	var janky_panels: Array[Control] = [
+	]
+	janky_panels.append_array(_header_view.get_theme_panels())
+	janky_panels.append_array(_backlog_view.get_theme_panels())
+	janky_panels.append_array(_run_sidebar_view.get_theme_panels())
+	_jank_fx_controller.apply_janky_ui_theme(janky_panels)
+	var corruptible_ui: Array[Control] = [
 		_fix_bugs_button,
 		_dev_log_button,
 		_ship_button,
-		$"%MenuHint",
-	])
+	]
+	corruptible_ui.append_array(_header_view.get_corruptible_text_nodes())
+	corruptible_ui.append_array(_backlog_view.get_corruptible_text_nodes())
+	corruptible_ui.append_array(_feature_board.get_corruptible_text_nodes())
+	corruptible_ui.append_array(_run_sidebar_view.get_corruptible_text_nodes())
+	corruptible_ui.append_array(_main_menu_view.get_corruptible_text_nodes())
+	_jank_fx_controller.cache_corruptible_ui_text(corruptible_ui)
 	_jank_fx_controller.setup_synergy_toast()
 
 # -- UI Actions --
@@ -258,8 +245,10 @@ func _show_ship_summary() -> void:
 	if _ship_summary_dialog == null or _game_state == null:
 		return
 	var predicted_score: float = _game_state.calculate_predicted_score()
-	var content: String = PresentationTextUtils.build_ship_summary_text(_game_state, predicted_score)
-	var content_label: RichTextLabel = _ship_summary_dialog.get_child(0) as RichTextLabel
+	var content: String = PostShipPresentation.build_ship_summary_text(_game_state, predicted_score)
+	var content_label: RichTextLabel = _ship_summary_dialog.get_node_or_null("Content") as RichTextLabel
+	if content_label == null and _ship_summary_dialog.get_child_count() > 0:
+		content_label = _ship_summary_dialog.get_child(0) as RichTextLabel
 	if content_label != null:
 		content_label.text = content
 		content_label.scroll_to_line(0)
@@ -318,6 +307,9 @@ func _wire_events() -> void:
 	if _reset_confirm_dialog != null:
 		_reset_confirm_dialog.confirmed.connect(_on_reset_game_confirmed)
 
+	if _quit_confirm_dialog != null:
+		_quit_confirm_dialog.confirmed.connect(_on_quit_confirmed)
+
 	if _game_state != null:
 		_on_state_changed(_snapshot_from_state())
 
@@ -350,6 +342,9 @@ func _on_ship_pressed() -> void:
 func _on_quit_pressed() -> void:
 	if _quit_confirm_dialog != null:
 		_quit_confirm_dialog.popup_centered(_quit_confirm_dialog.min_size)
+
+func _on_quit_confirmed() -> void:
+	get_tree().quit()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and _quit_confirm_dialog != null and not _quit_confirm_dialog.visible:
@@ -474,7 +469,7 @@ func _start_new_run() -> void:
 		return
 	_menu_active = false
 	_run_ended = false
-	_main_menu_layer.visible = false
+	_main_menu_view.visible = false
 	_feature_board.clear_board()
 	_game_state.reset_run()
 	_hud_controller.update_card_unlock_progress()

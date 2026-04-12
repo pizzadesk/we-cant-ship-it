@@ -16,10 +16,3 @@ static func from_dictionary(event_data: Dictionary) -> DraftOfferPayload:
 			if pick is Dictionary:
 				payload.picks.append((pick as Dictionary).duplicate(true))
 	return payload
-
-func to_dictionary() -> Dictionary:
-	return {
-		"title": title,
-		"description": description,
-		"picks": picks.duplicate(true),
-	}

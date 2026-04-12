@@ -1,4 +1,4 @@
-static func apply_janky_panel_theme(panels: Array[Node], ui_rng: RandomNumberGenerator) -> void:
+static func apply_janky_panel_theme(panels: Array[Control], ui_rng: RandomNumberGenerator) -> void:
 	for panel_node in panels:
 		if panel_node is PanelContainer:
 			var panel: PanelContainer = panel_node as PanelContainer

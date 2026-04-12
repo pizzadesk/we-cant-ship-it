@@ -42,7 +42,7 @@ func setup(
 	_scanline_material.shader = _scanline_shader
 	_scanline_overlay.material = _scanline_material
 
-func apply_janky_ui_theme(panels: Array[Node]) -> void:
+func apply_janky_ui_theme(panels: Array[Control]) -> void:
 	ThemeUtils.apply_janky_panel_theme(panels, _ui_rng)
 
 func cache_corruptible_ui_text(controls: Array[Control]) -> void:

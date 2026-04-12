@@ -1,60 +1,62 @@
 extends RefCounted
 class_name RunOfferFlow
 
+const ChoiceResolutionType = preload("res://scripts/data/payloads/choice_resolution.gd")
+const RunStateDataType = preload("res://scripts/data/payloads/run_state_data.gd")
+const ThresholdEvaluationResultType = preload("res://scripts/data/payloads/threshold_evaluation_result.gd")
+
 var _offer_scheduler: OfferScheduler = null
 var _triggered_thresholds: Dictionary = {}
-var _pending_dilemma: Dictionary = {}
-var _pending_draft_offer: Dictionary = {}
+var _pending_dilemma: DilemmaOfferPayload = null
+var _pending_draft_offer: DraftOfferPayload = null
 
 func setup(offer_scheduler: OfferScheduler) -> void:
 	_offer_scheduler = offer_scheduler
 
 func reset() -> void:
 	_triggered_thresholds.clear()
-	_pending_dilemma.clear()
-	_pending_draft_offer.clear()
+	_pending_dilemma = null
+	_pending_draft_offer = null
 	if _offer_scheduler != null:
 		_offer_scheduler.reset()
 
-func apply_dilemma_choice(choice_index: int, state: Dictionary) -> Dictionary:
-	if _pending_dilemma.is_empty():
-		return {}
-	var choices: Array = _pending_dilemma.get("choices", [])
+func apply_dilemma_choice(choice_index: int, state: RunStateDataType) -> ChoiceResolutionType:
+	if _pending_dilemma == null:
+		return null
+	var choices: Array[Dictionary] = _pending_dilemma.choices
 	if choices.is_empty():
-		_pending_dilemma.clear()
-		return {}
+		_pending_dilemma = null
+		return null
 	var selected: Dictionary = choices[clampi(choice_index, 0, choices.size() - 1)]
-	var next_state: Dictionary = _apply_effects_to_state(state, selected.get("effects", {}))
-	_pending_dilemma.clear()
-	return {
-		"state": next_state,
-		"threshold_event": {
-			"id": "dilemma_choice",
-			"message": "Dilemma resolved: %s" % String(selected.get("label", "Choice applied")),
-			"effects": selected.get("effects", {}),
-			"severity": "info",
-		},
-	}
+	var resolution: ChoiceResolutionType = ChoiceResolutionType.new()
+	resolution.state = _apply_effects_to_state(state, selected.get("effects", {}))
+	resolution.threshold_event = ThresholdEventPayload.build(
+		"dilemma_choice",
+		"Dilemma resolved: %s" % String(selected.get("label", "Choice applied")),
+		selected.get("effects", {}),
+		"info"
+	)
+	_pending_dilemma = null
+	return resolution
 
-func apply_draft_pick(pick_index: int, state: Dictionary) -> Dictionary:
-	if _pending_draft_offer.is_empty():
-		return {}
-	var picks: Array = _pending_draft_offer.get("picks", [])
+func apply_draft_pick(pick_index: int, state: RunStateDataType) -> ChoiceResolutionType:
+	if _pending_draft_offer == null:
+		return null
+	var picks: Array[Dictionary] = _pending_draft_offer.picks
 	if picks.is_empty():
-		_pending_draft_offer.clear()
-		return {}
+		_pending_draft_offer = null
+		return null
 	var selected: Dictionary = picks[clampi(pick_index, 0, picks.size() - 1)]
-	var next_state: Dictionary = _apply_effects_to_state(state, selected.get("effects", {}))
-	_pending_draft_offer.clear()
-	return {
-		"state": next_state,
-		"threshold_event": {
-			"id": "draft_pick",
-			"message": "Draft pick accepted: %s" % String(selected.get("title", "Unknown pitch")),
-			"effects": selected.get("effects", {}),
-			"severity": "info",
-		},
-	}
+	var resolution: ChoiceResolutionType = ChoiceResolutionType.new()
+	resolution.state = _apply_effects_to_state(state, selected.get("effects", {}))
+	resolution.threshold_event = ThresholdEventPayload.build(
+		"draft_pick",
+		"Draft pick accepted: %s" % String(selected.get("title", "Unknown pitch")),
+		selected.get("effects", {}),
+		"info"
+	)
+	_pending_draft_offer = null
+	return resolution
 
 func maybe_offer_dilemma(
 	config: GameConfig,
@@ -63,9 +65,9 @@ func maybe_offer_dilemma(
 	soul: int,
 	current_run: int,
 	pressure_modifier: float,
-) -> Dictionary:
+) -> DilemmaOfferPayload:
 	if _offer_scheduler == null:
-		return {}
+		return null
 	var result: Dictionary = _offer_scheduler.maybe_offer_dilemma(
 		config,
 		offers,
@@ -75,9 +77,9 @@ func maybe_offer_dilemma(
 		pressure_modifier
 	)
 	if result.is_empty():
-		return {}
-	_pending_dilemma = result
-	return result
+		return null
+	_pending_dilemma = DilemmaOfferPayload.from_dictionary(result)
+	return _pending_dilemma
 
 func maybe_offer_draft(
 	config: GameConfig,
@@ -87,9 +89,9 @@ func maybe_offer_draft(
 	feature_board_empty: bool,
 	current_run: int,
 	pressure_modifier: float,
-) -> Dictionary:
+) -> DraftOfferPayload:
 	if _offer_scheduler == null:
-		return {}
+		return null
 	var result: Dictionary = _offer_scheduler.maybe_offer_draft(
 		config,
 		offers,
@@ -100,13 +102,13 @@ func maybe_offer_draft(
 		pressure_modifier
 	)
 	if result.is_empty():
-		return {}
-	_pending_draft_offer = result
-	return result
+		return null
+	_pending_draft_offer = DraftOfferPayload.from_dictionary(result)
+	return _pending_draft_offer
 
-func evaluate_threshold_events(threshold_events: Array[Dictionary], state: Dictionary) -> Dictionary:
-	var next_state: Dictionary = state.duplicate(true)
-	var emitted_events: Array[Dictionary] = []
+func evaluate_threshold_events(threshold_events: Array[Dictionary], state: RunStateDataType) -> ThresholdEvaluationResultType:
+	var next_state: RunStateDataType = state.duplicate_state() if state != null else RunStateDataType.new()
+	var result: ThresholdEvaluationResultType = ThresholdEvaluationResultType.new()
 	for threshold_event in threshold_events:
 		if threshold_event is not Dictionary:
 			continue
@@ -120,32 +122,25 @@ func evaluate_threshold_events(threshold_events: Array[Dictionary], state: Dicti
 		if threshold_effects.has("runway_days"):
 			threshold_effects.erase("runway_days")
 		next_state = _apply_effects_to_state(next_state, threshold_effects)
-		emitted_events.append({
-			"id": event_id,
-			"message": String(threshold_event.get("message", "Threshold event triggered.")),
-			"effects": threshold_effects,
-			"severity": String(threshold_event.get("severity", "info")),
-		})
-	return {
-		"state": next_state,
-		"events": emitted_events,
-	}
+		result.events.append(ThresholdEventPayload.build(
+			event_id,
+			String(threshold_event.get("message", "Threshold event triggered.")),
+			threshold_effects,
+			String(threshold_event.get("severity", "info"))
+		))
+	result.state = next_state
+	return result
 
-func _is_threshold_reached(threshold_event: Dictionary, state: Dictionary) -> bool:
+func _is_threshold_reached(threshold_event: Dictionary, state: RunStateDataType) -> bool:
 	var metric_name: String = String(threshold_event.get("metric", ""))
 	var threshold_value: int = int(threshold_event.get("threshold", 0))
 	var comparison: String = String(threshold_event.get("comparison", "gte"))
-	var metric_value: int = int(state.get(metric_name, 0))
+	var metric_value: int = state.get_metric(metric_name) if state != null else 0
 	if comparison == "lte":
 		return metric_value <= threshold_value
 	return metric_value >= threshold_value
 
-func _apply_effects_to_state(state: Dictionary, effects: Variant) -> Dictionary:
-	var next_state: Dictionary = state.duplicate(true)
-	if effects is not Dictionary:
-		return next_state
-	next_state["ambition"] = max(int(next_state.get("ambition", 0)) + int(effects.get("ambition", 0)), 0)
-	next_state["instability"] = max(int(next_state.get("instability", 0)) + int(effects.get("instability", 0)), 0)
-	next_state["runway_days"] = max(int(next_state.get("runway_days", 0)) + int(effects.get("runway_days", 0)), 0)
-	next_state["soul"] = max(int(next_state.get("soul", 0)) + int(effects.get("soul", 0)), 0)
-	return next_state
+func _apply_effects_to_state(state: RunStateDataType, effects: Variant) -> RunStateDataType:
+	if state == null:
+		return RunStateDataType.new().apply_effects(effects)
+	return state.apply_effects(effects)

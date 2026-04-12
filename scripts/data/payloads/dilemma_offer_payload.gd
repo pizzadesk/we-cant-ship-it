@@ -16,10 +16,3 @@ static func from_dictionary(event_data: Dictionary) -> DilemmaOfferPayload:
 			if choice is Dictionary:
 				payload.choices.append((choice as Dictionary).duplicate(true))
 	return payload
-
-func to_dictionary() -> Dictionary:
-	return {
-		"title": title,
-		"description": description,
-		"choices": choices.duplicate(true),
-	}

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/header_bar_view.gd" id="1_header"]
+
+[node name="HeaderPanel" type="PanelContainer"]
+layout_mode = 2
+script = ExtResource("1_header")
+
+[node name="HeaderPadding" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="HeaderVBox" type="VBoxContainer" parent="HeaderPadding"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="TitleRow" type="HBoxContainer" parent="HeaderPadding/HeaderVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderTitle" type="Label" parent="HeaderPadding/HeaderVBox/TitleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 34
+text = "WE CAN't SHIP IT"
+
+[node name="QuitButton" type="Button" parent="HeaderPadding/HeaderVBox/TitleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
+text = "✕ Quit"
+
+[node name="HeaderSubtitle" type="Label" parent="HeaderPadding/HeaderVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "You must to assemble ambitious disaster, manage fallout, and ship before money is evaporating completely."
+autowrap_mode = 3

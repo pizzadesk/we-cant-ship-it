@@ -1,0 +1,268 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/run_sidebar_view.gd" id="1_sidebar"]
+
+[node name="RightColumn" type="VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+script = ExtResource("1_sidebar")
+
+[node name="StatsPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatsPadding" type="MarginContainer" parent="StatsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="StatsVBox" type="VBoxContainer" parent="StatsPanel/StatsPadding"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StatsTitle" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Studio Under Pressure"
+
+[node name="StatsHelp" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "You must to ship before runway is hitting zero. Ambition, this is selling dream. Instability, this is making legendary."
+autowrap_mode = 3
+
+[node name="StatGuide" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.9, 0.94, 1)
+theme_override_font_sizes/font_size = 14
+text = "Guide: Ambition boosts score. Instability creates jank but too much kills score and unlock quality. Soul turns weird bugs into fan love. Best outcomes come from controlled chaos, not total meltdown."
+autowrap_mode = 3
+
+[node name="MetaValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Meta: Tier 0"
+
+[node name="StatsRow" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="AmbitionBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AmbitionLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
+layout_mode = 2
+text = "AMBITION"
+
+[node name="AmbitionValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Ambition: 0"
+
+[node name="AmbitionGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 8)
+layout_mode = 2
+mouse_filter = 2
+show_percentage = false
+max_value = 100.0
+value = 0.0
+modulate = Color(0.2, 0.8, 0.3, 1)
+
+[node name="InstabilityBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InstabilityLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
+layout_mode = 2
+text = "INSTABILITY"
+
+[node name="InstabilityValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Instability: 0"
+
+[node name="InstabilityGaugeContainer" type="Control" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
+custom_minimum_size = Vector2(60, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="InstabilityGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
+unique_name_in_owner = true
+offset_right = 60.0
+offset_bottom = 10.0
+mouse_filter = 2
+show_percentage = false
+max_value = 100.0
+value = 0.0
+modulate = Color(1, 0.3, 0.2, 1)
+
+[node name="GoldilocksFloorMarker" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
+unique_name_in_owner = true
+visible = false
+offset_left = 9.0
+offset_right = 11.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.35, 0.88, 0.45, 0.9)
+
+[node name="GoldilocksCeilingMarker" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
+unique_name_in_owner = true
+visible = false
+offset_left = 30.0
+offset_right = 32.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.92, 0.22, 0.18, 0.9)
+
+[node name="RunwayBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RunwayLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
+layout_mode = 2
+text = "RUNWAY"
+
+[node name="RunwayValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Runway Days: 0"
+
+[node name="RunwayGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 8)
+layout_mode = 2
+mouse_filter = 2
+show_percentage = false
+max_value = 21.0
+value = 0.0
+modulate = Color(0.3, 0.6, 1, 1)
+
+[node name="FeaturesBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
+layout_mode = 2
+
+[node name="FeaturesLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock"]
+layout_mode = 2
+text = "SHIPPED"
+
+[node name="FeaturesValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Features: 0"
+
+[node name="SoulBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SoulLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
+layout_mode = 2
+text = "SOUL"
+
+[node name="SoulValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Soul: 10"
+
+[node name="SoulGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 8)
+layout_mode = 2
+mouse_filter = 2
+show_percentage = false
+max_value = 20.0
+value = 0.0
+modulate = Color(1, 0.6, 0.8, 1)
+
+[node name="SoulRiskLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="ActionPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActionPadding" type="MarginContainer" parent="ActionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ActionVBox" type="VBoxContainer" parent="ActionPanel/ActionPadding"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ActionTitle" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "What We Can Do"
+
+[node name="ActionHelp" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Buy stability with bug fixing, earn soul with dev logs, or you can ship in any moment and face reviews."
+autowrap_mode = 3
+
+[node name="FixBugsButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Fix Bugs  [-2 Soul]"
+
+[node name="FixBugsHint" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Reduce instability, lose little soul, spend one day."
+autowrap_mode = 3
+
+[node name="DevLogButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Create Community Notes"
+
+[node name="DevLogHint" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Raise soul, invite little instability, spend one day, and feed the fan myth machine."
+autowrap_mode = 3
+
+[node name="ShipButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Ship It"
+
+[node name="ShipHint" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "End run now and trigger Review Roulette — is moment of truth."
+autowrap_mode = 3
