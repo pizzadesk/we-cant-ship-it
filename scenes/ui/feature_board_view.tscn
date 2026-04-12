@@ -67,6 +67,18 @@ corner_radius_bottom_left = 4
 shadow_color = Color(1, 0.36, 0.18, 0.3)
 shadow_size = 10
 
+[sub_resource type="StyleBoxFlat" id="ConsolePanelStyle"]
+bg_color = Color(0.07, 0.08, 0.11, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.44, 0.58, 0.95)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="FeatureBoard" type="PanelContainer"]
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -162,3 +174,51 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 columns = 3
+
+[node name="ConsolePanel" type="PanelContainer" parent="BoardPadding/BoardVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 152)
+layout_mode = 2
+theme_override_styles/panel = SubResource("ConsolePanelStyle")
+
+[node name="ConsolePadding" type="MarginContainer" parent="BoardPadding/BoardVBox/ConsolePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="ConsoleVBox" type="VBoxContainer" parent="BoardPadding/BoardVBox/ConsolePanel/ConsolePadding"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="ConsoleTitle" type="Label" parent="BoardPadding/BoardVBox/ConsolePanel/ConsolePadding/ConsoleVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.82, 0.9, 0.96, 1)
+text = "Studio Console"
+
+[node name="ConsoleHelp" type="Label" parent="BoardPadding/BoardVBox/ConsolePanel/ConsolePadding/ConsoleVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.69, 0.76, 0.86, 1)
+text = "Choices, collisions, and studio mood swings are recorded here."
+autowrap_mode = 3
+
+[node name="ConsoleLog" type="RichTextLabel" parent="BoardPadding/BoardVBox/ConsolePanel/ConsolePadding/ConsoleVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = false
+scroll_active = true
+selection_enabled = true
+context_menu_enabled = true
+shortcut_keys_enabled = false
+autowrap_mode = 3
+theme_override_colors/default_color = Color(0.88, 0.91, 0.95, 1)
+theme_override_font_sizes/normal_font_size = 13
+text = "Studio console is listening. The run has not made a move yet."

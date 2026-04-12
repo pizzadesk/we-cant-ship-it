@@ -10,6 +10,9 @@ signal card_dropped(data: Dictionary)
 @onready var _jank_state_box: PanelContainer = $BoardPadding/BoardVBox/JankStateBox
 @onready var _jank_state_title_label: Label = %JankStateTitle
 @onready var _jank_state_body_label: Label = %JankStateBody
+@onready var _console_title_label: Label = %ConsoleTitle
+@onready var _console_help_label: Label = %ConsoleHelp
+@onready var _console_log: RichTextLabel = %ConsoleLog
 @onready var _drop_cue_label: Label = $BoardPadding/BoardVBox/BoardDropCue
 @onready var _empty_state_label: Label = $BoardPadding/BoardVBox/BoardEmptyState
 @onready var _placed_features_scroll: ScrollContainer = $BoardPadding/BoardVBox/PlacedFeaturesScroll
@@ -25,6 +28,10 @@ var _tile_by_name: Dictionary = {}
 @export var locked_state_style: StyleBoxFlat
 var _is_highlighted: bool = false
 var _jank_state_tween: Tween = null
+var _log_entries: Array[String] = []
+
+const MAX_LOG_ENTRIES: int = 32
+const CONSOLE_IDLE_TEXT: String = "Studio console is listening. The run has not made a move yet."
 
 func _ready() -> void:
 	set_process(true)
@@ -32,6 +39,7 @@ func _ready() -> void:
 		add_theme_stylebox_override("panel", base_style)
 	if idle_state_style != null and _jank_state_box != null:
 		_jank_state_box.add_theme_stylebox_override("panel", idle_state_style)
+	_refresh_console_log()
 	_drop_cue_label.hide()
 
 func _process(_delta: float) -> void:
@@ -82,11 +90,26 @@ func clear_board() -> void:
 	_tile_by_name.clear()
 	_empty_state_label.show()
 	set_jank_pursuit_state({})
+	clear_console_log()
 	if _placed_features_scroll != null:
 		_placed_features_scroll.scroll_vertical = 0
 
 func get_corruptible_text_nodes() -> Array[Control]:
-	return [_board_title_label, _board_help_label, _jank_state_title_label, _jank_state_body_label]
+	return [_board_title_label, _board_help_label, _jank_state_title_label, _jank_state_body_label, _console_title_label, _console_help_label]
+
+func append_log_entry(message: String) -> void:
+	var trimmed: String = message.strip_edges()
+	if trimmed.is_empty():
+		return
+	_log_entries.append(_format_log_entry(trimmed))
+	while _log_entries.size() > MAX_LOG_ENTRIES:
+		_log_entries.remove_at(0)
+	_refresh_console_log()
+	call_deferred("_scroll_console_to_latest")
+
+func clear_console_log() -> void:
+	_log_entries.clear()
+	_refresh_console_log()
 
 func set_jank_pursuit_state(state: Dictionary) -> void:
 	var stage: String = String(state.get("stage", "idle"))
@@ -133,6 +156,29 @@ func pulse_jank_state(stage: String) -> void:
 	_jank_state_tween.parallel().tween_property(_jank_state_box, "modulate", flash_color, 0.14)
 	_jank_state_tween.tween_property(_jank_state_box, "scale", Vector2.ONE, 0.24)
 	_jank_state_tween.parallel().tween_property(_jank_state_box, "modulate", Color.WHITE, 0.24)
+
+func _refresh_console_log() -> void:
+	if _console_log == null:
+		return
+	if _log_entries.is_empty():
+		_console_log.text = CONSOLE_IDLE_TEXT
+		return
+	_console_log.text = "\n".join(PackedStringArray(_log_entries))
+
+func _scroll_console_to_latest() -> void:
+	if _console_log == null:
+		return
+	var last_line: int = maxi(_console_log.get_line_count() - 1, 0)
+	_console_log.scroll_to_line(last_line)
+
+func _format_log_entry(message: String) -> String:
+	if message.begins_with("[JANK PROSPECT] "):
+		return "> Prospect: %s" % message.trim_prefix("[JANK PROSPECT] ")
+	if message.begins_with("[JANK LOCKED] "):
+		return "> Signature: %s" % message.trim_prefix("[JANK LOCKED] ")
+	if message.begins_with("["):
+		return "> %s" % message
+	return "> %s" % message
 
 func _scroll_to_latest_feature() -> void:
 	if _placed_features_scroll == null:

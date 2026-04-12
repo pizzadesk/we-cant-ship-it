@@ -413,9 +413,11 @@ func _on_threshold_event(payload: ThresholdEventPayload) -> void:
 
 func _on_dilemma_offered(payload: DilemmaOfferPayload) -> void:
 	_choice_flow_controller.on_dilemma_offered(payload, _menu_active, _run_ended)
+	_append_log("Dilemma surfaced: %s" % payload.title)
 
 func _on_draft_offer(payload: DraftOfferPayload) -> void:
 	_choice_flow_controller.on_draft_offer(payload, _menu_active, _run_ended)
+	_append_log("Draft surfaced: %s" % payload.title)
 
 func _on_day_spent(payload: DaySpentPayload) -> void:
 	_backlog_controller.on_day_spent(payload)
@@ -430,6 +432,8 @@ func _on_reviews_generated(payload: ShipResult) -> void:
 	_post_ship_flow_controller.on_reviews_generated(payload, Callable(_hud_controller, "update_card_unlock_progress"))
 
 func _append_log(message: String) -> void:
+	if _feature_board != null and _feature_board.has_method("append_log_entry"):
+		_feature_board.append_log_entry(message)
 	print(message)
 
 func _on_viewport_size_changed() -> void:
