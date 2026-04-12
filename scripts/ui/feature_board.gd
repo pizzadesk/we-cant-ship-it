@@ -15,8 +15,8 @@ signal card_dropped(data: Dictionary)
 @onready var _console_log: RichTextLabel = %ConsoleLog
 @onready var _drop_cue_label: Label = $BoardPadding/BoardVBox/BoardDropCue
 @onready var _empty_state_label: Label = $BoardPadding/BoardVBox/BoardEmptyState
-@onready var _placed_features_scroll: ScrollContainer = $BoardPadding/BoardVBox/PlacedFeaturesScroll
-@onready var _placed_features_list: GridContainer = $BoardPadding/BoardVBox/PlacedFeaturesScroll/PlacedFeaturesRow
+@onready var _placed_features_scroll: ScrollContainer = %PlacedFeaturesScroll
+@onready var _placed_features_list: GridContainer = %PlacedFeaturesScroll.get_node("PlacedFeaturesRow")
 
 # Maps feature_name -> PlacedFeatureTile for stack tracking.
 var _tile_by_name: Dictionary = {}
@@ -32,6 +32,7 @@ var _log_entries: Array[String] = []
 
 const MAX_LOG_ENTRIES: int = 32
 const CONSOLE_IDLE_TEXT: String = "Studio console is listening. The run has not made a move yet."
+const PLACED_TILE_MIN_WIDTH: int = 180
 
 func _ready() -> void:
 	set_process(true)
@@ -39,6 +40,9 @@ func _ready() -> void:
 		add_theme_stylebox_override("panel", base_style)
 	if idle_state_style != null and _jank_state_box != null:
 		_jank_state_box.add_theme_stylebox_override("panel", idle_state_style)
+	if _placed_features_scroll != null and not _placed_features_scroll.resized.is_connected(_update_feature_grid_columns):
+		_placed_features_scroll.resized.connect(_update_feature_grid_columns)
+	call_deferred("_update_feature_grid_columns")
 	_refresh_console_log()
 	_drop_cue_label.hide()
 
@@ -82,6 +86,7 @@ func add_feature_to_board(card: Resource) -> void:
 	_placed_features_list.add_child(tile)
 	if not key.is_empty():
 		_tile_by_name[key] = tile
+	call_deferred("_update_feature_grid_columns")
 	call_deferred("_scroll_to_latest_feature")
 
 func clear_board() -> void:
@@ -93,6 +98,7 @@ func clear_board() -> void:
 	clear_console_log()
 	if _placed_features_scroll != null:
 		_placed_features_scroll.scroll_vertical = 0
+	call_deferred("_update_feature_grid_columns")
 
 func get_corruptible_text_nodes() -> Array[Control]:
 	return [_board_title_label, _board_help_label, _jank_state_title_label, _jank_state_body_label, _console_title_label, _console_help_label]
@@ -179,6 +185,17 @@ func _format_log_entry(message: String) -> String:
 	if message.begins_with("["):
 		return "> %s" % message
 	return "> %s" % message
+
+func _update_feature_grid_columns() -> void:
+	if _placed_features_list == null or _placed_features_scroll == null:
+		return
+	var available_width: float = _placed_features_scroll.size.x
+	if available_width <= 0.0:
+		return
+	var h_separation: int = _placed_features_list.get_theme_constant("h_separation", "GridContainer")
+	var column_width: int = PLACED_TILE_MIN_WIDTH + h_separation
+	var computed_columns: int = maxi(1, int(floor((available_width + h_separation) / float(column_width))))
+	_placed_features_list.columns = computed_columns
 
 func _scroll_to_latest_feature() -> void:
 	if _placed_features_scroll == null:
