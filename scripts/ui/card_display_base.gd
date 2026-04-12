@@ -15,6 +15,7 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 @onready var _name_label: Label = $Padding/VBox/NameLabel
 @onready var _stats_label: Label = $Padding/VBox/StatsLabel
 @onready var _tags_label: Label = $Padding/VBox/TagsLabel
+var _risk_label: Label = null
 # Optional — present in both scenes, but only populated when the field exists.
 var _description_label: Label = null
 # When true: stats row is hidden, description (if any) is shown instead.
@@ -22,6 +23,7 @@ var _placed_mode: bool = false
 
 func _ready() -> void:
 	_rng.randomize()
+	_risk_label = get_node_or_null("Padding/VBox/RiskLabel") as Label
 	_description_label = get_node_or_null("Padding/VBox/DescriptionLabel") as Label
 	_apply_janky_look()
 	_update_view()
@@ -35,6 +37,8 @@ func _update_view() -> void:
 	if feature_card == null:
 		_name_label.text = _S.get_string("card_ui", "feature_unknown")
 		_stats_label.text = _S.get_string("card_ui", "stats_empty")
+		if _risk_label != null:
+			_risk_label.text = ""
 		_tags_label.text = ""
 		return
 
@@ -46,6 +50,8 @@ func _update_view() -> void:
 		var desc: String = feature_card.description if feature_card is FeatureCard else ""
 		_description_label.text = desc
 		_description_label.visible = not desc.is_empty()
+	if _risk_label != null:
+		_risk_label.visible = not _placed_mode
 	_tags_label.text = ", ".join(feature_card.tags)
 	_stats_label.add_theme_color_override("font_color", FeatureCard.get_instability_color(feature_card.instability_value))
 	_apply_tier_accent()

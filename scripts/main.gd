@@ -18,6 +18,8 @@ const SYNERGY_TOAST_DURATION: float = 2.5
 const _S = preload("res://scripts/ui/ui_strings.gd")
 const SYNERGY_TOAST_FADE_IN: float = 0.15
 const SYNERGY_TOAST_FADE_OUT: float = 0.4
+const JANK_PROSPECT_TOAST_DURATION: float = 4.0
+const JANK_LOCKED_TOAST_DURATION: float = 4.4
 const WOBBLE_CLAMP: float = 10.0
 # How many instability points below the archetype ceiling define the danger zone.
 # Within this zone wobble intensifies relative to the archetype window edge, so a
@@ -165,12 +167,17 @@ func _setup_controllers() -> void:
 		_dev_log_button,
 		_ship_button,
 		_run_sidebar_view.get_ambition_gauge(),
+		_run_sidebar_view.get_ambition_status(),
 		_run_sidebar_view.get_instability_gauge(),
+		_run_sidebar_view.get_instability_target_band(),
+		_run_sidebar_view.get_instability_status(),
 		_run_sidebar_view.get_runway_gauge(),
 		_run_sidebar_view.get_soul_gauge(),
 		_run_sidebar_view.get_soul_risk_label(),
 		_run_sidebar_view.get_goldilocks_floor_marker(),
-		_run_sidebar_view.get_goldilocks_ceiling_marker()
+		_run_sidebar_view.get_goldilocks_ceiling_marker(),
+		_run_sidebar_view.get_stat_guide(),
+		_run_sidebar_view.get_action_help()
 	)
 	_backlog_controller.setup(
 		_game_state,
@@ -373,18 +380,23 @@ func _on_state_changed(payload: StateSnapshotPayload) -> void:
 # -- Event Bus: Core Gameplay --
 func _on_feature_added(card: FeatureCard) -> void:
 	_feature_board.add_feature_to_board(card)
+	_refresh_jank_pursuit_display()
 	_append_log(_S.get_string("log_messages", "feature_added") % card.feature_name)
 
 func _on_jank_prospect_updated(payload: Dictionary) -> void:
 	var title: String = String(payload.get("prospect_title", "Jank Prospect"))
 	var message: String = String(payload.get("message", "Something strange is taking shape."))
-	_show_synergy_toast("%s: %s" % [title, message], 0, 0)
+	_show_synergy_toast(title, "%s\nOne more collision may lock it in." % message, "prospect", 0, JANK_PROSPECT_TOAST_DURATION)
+	if _feature_board != null:
+		_feature_board.pulse_jank_state("prospect")
 	_append_log("[JANK PROSPECT] %s — %s" % [title, message])
 
 func _on_jank_signature_locked(payload: Dictionary) -> void:
 	var message: String = String(payload.get("message", "Signature jank locked."))
 	var soul_reward: int = int(payload.get("soul_reward", 0))
-	_show_synergy_toast(message, 0, soul_reward)
+	_show_synergy_toast("SIGNATURE LOCKED", message, "locked", soul_reward, JANK_LOCKED_TOAST_DURATION)
+	if _feature_board != null:
+		_feature_board.pulse_jank_state("locked")
 	var reward_text: String = ""
 	if soul_reward > 0:
 		reward_text = " (Soul +%d)" % soul_reward
@@ -489,6 +501,7 @@ func _start_new_run() -> void:
 	_main_menu_view.visible = false
 	_feature_board.clear_board()
 	_game_state.reset_run()
+	_refresh_jank_pursuit_display()
 	_hud_controller.update_card_unlock_progress()
 	_choice_flow_controller.clear()
 	_post_ship_flow_controller.clear()
@@ -534,6 +547,7 @@ func _show_main_menu() -> void:
 	_ship_button.disabled = true
 	_crunch_timer.stop()
 	_feature_board.clear_board()
+	_refresh_jank_pursuit_display()
 	_choice_flow_controller.clear()
 	_post_ship_flow_controller.clear()
 	_backlog_controller.clear_visible_backlog()
@@ -550,12 +564,13 @@ func _on_archetype_chosen_visual(archetype: String) -> void:
 func _snapshot_from_state() -> StateSnapshotPayload:
 	return _hud_controller.snapshot_from_state()
 
-func _show_synergy_toast(flavor: String, instability_delta: int, soul_delta: int) -> void:
+func _show_synergy_toast(title: String, body: String, stage: String, soul_delta: int, duration: float = SYNERGY_TOAST_DURATION) -> void:
 	_jank_fx_controller.show_synergy_toast(
-		flavor,
-		instability_delta,
+		title,
+		body,
+		stage,
 		soul_delta,
-		SYNERGY_TOAST_DURATION,
+		duration,
 		SYNERGY_TOAST_FADE_IN,
 		Callable(self, "_on_synergy_toast_timeout")
 	)
@@ -567,3 +582,8 @@ func _on_synergy_toast_timeout() -> void:
 	await fade_out_tween.finished
 	_jank_fx_controller.hide_synergy_toast()
 	_jank_fx_controller.clear_synergy_toast_timer()
+
+func _refresh_jank_pursuit_display() -> void:
+	if _feature_board == null or _game_state == null or not _game_state.has_method("get_jank_pursuit_state"):
+		return
+	_feature_board.set_jank_pursuit_state(_game_state.get_jank_pursuit_state())

@@ -6,9 +6,9 @@
   "ambition_stat_format": "Ambition: +%d",
   "instability_stat_format": "Instability: +%d",
   "variant_note": "\n[i]Stats randomized slightly.[/i]",
-  "progress_calculating": "Deck: calculating...",
-  "progress_format": "Deck Unlocked: %d/%d (%d%%)",
-  "progress_low_suffix": " \u2014 ship more to unlock.",
-  "progress_mid_suffix": " \u2014 almost full.",
-  "deck_loading": "Loading deck progression..."
+  "progress_calculating": "Run memory: calculating...",
+  "progress_format": "Known Features: %d/%d (%d%%)",
+  "progress_low_suffix": " \u2014 keep shipping to widen the studio's instincts.",
+  "progress_mid_suffix": " \u2014 the studio voice is filling out.",
+  "deck_loading": "Loading run memory..."
 }

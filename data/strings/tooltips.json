@@ -1,11 +1,11 @@
 {
   "ship_empty": "Nothing shipped. Critics are not known for rating the concept.",
-  "fix_bugs_active": "-10 Instability, -2 Ambition, -2 Soul. The team has opinions about this decision.",
-  "fix_bugs_exhausted": "-10 Instability, -2 Ambition, -2 Soul. Soul is critically low. The team will document this grievance.",
+  "fix_bugs_active": "-10 Instability, -2 Ambition, -2 Soul. Emergency brake only.",
+  "fix_bugs_exhausted": "-10 Instability, -2 Ambition, -2 Soul. Soul is critically low and the team feels it.",
   "fix_bugs_depleted": "No runway days remaining. Only shipping is available.",
-  "dev_log_active": "+1 Soul. The community will mythologize whatever you post.",
+  "dev_log_active": "+1 Soul. You are buying belief, not stability.",
   "dev_log_depleted": "No runway days remaining. The update will be late. The community will survive.",
-  "ship_overloaded": "High Instability. Review risk is real. The chaos, however, is authentic.",
-  "ship_underloaded": "Low Instability. Reviews should be friendly. Whether that is the goal is another matter.",
-  "ship_default": "Locks the build, reveals the jank, and sends it to the critics."
+  "ship_overloaded": "High Instability. This might become legendary for the wrong reasons.",
+  "ship_underloaded": "Low Instability. Safe shipping may cost you the run's identity.",
+  "ship_default": "Lock the build, face the critics, and see whether this run became a Defining Game or a memorable mistake."
 }

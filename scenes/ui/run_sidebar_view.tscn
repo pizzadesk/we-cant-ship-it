@@ -29,13 +29,13 @@ theme_override_constants/separation = 4
 [node name="StatsTitle" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Studio Under Pressure"
+text = "Defining Game Readout"
 
 [node name="StatsHelp" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "You must to ship before runway is hitting zero. Ambition, this is selling dream. Instability, this is making legendary."
+text = "The right run is not clean. It is ambitious enough, unstable enough, and sincere enough to hold together."
 autowrap_mode = 3
 
 [node name="StatGuide" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
@@ -44,14 +44,14 @@ custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.9, 0.94, 1)
 theme_override_font_sizes/font_size = 14
-text = "Guide: Ambition boosts score. Instability creates jank but too much kills score and unlock quality. Soul turns weird bugs into fan love. Best outcomes come from controlled chaos, not total meltdown."
+text = "Defining Game target will appear here once the run starts."
 autowrap_mode = 3
 
 [node name="MetaValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "Meta: Tier 0"
+text = "Run Memory: Tier 0"
 
 [node name="StatsRow" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox"]
 layout_mode = 2
@@ -81,6 +81,16 @@ show_percentage = false
 max_value = 100.0
 value = 0.0
 modulate = Color(0.2, 0.8, 0.3, 1)
+
+[node name="AmbitionStatus" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.9, 0.86, 0.72, 1)
+text = "Need Ambition"
+autowrap_mode = 3
 
 [node name="InstabilityBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
 unique_name_in_owner = true
@@ -112,6 +122,15 @@ max_value = 100.0
 value = 0.0
 modulate = Color(1, 0.3, 0.2, 1)
 
+[node name="InstabilityTargetBand" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
+unique_name_in_owner = true
+visible = false
+offset_left = 12.0
+offset_right = 28.0
+offset_bottom = 10.0
+mouse_filter = 2
+color = Color(0.78, 0.94, 0.52, 0.28)
+
 [node name="GoldilocksFloorMarker" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
 unique_name_in_owner = true
 visible = false
@@ -130,13 +149,23 @@ offset_bottom = 10.0
 mouse_filter = 2
 color = Color(0.92, 0.22, 0.18, 0.9)
 
+[node name="InstabilityStatus" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.9, 0.86, 0.72, 1)
+text = "Waiting on archetype"
+autowrap_mode = 3
+
 [node name="RunwayBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="RunwayLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
 layout_mode = 2
-text = "RUNWAY"
+text = "DAYS LEFT"
 
 [node name="RunwayValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
 unique_name_in_owner = true
@@ -159,7 +188,7 @@ layout_mode = 2
 
 [node name="FeaturesLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock"]
 layout_mode = 2
-text = "SHIPPED"
+text = "IN BUILD"
 
 [node name="FeaturesValue" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/FeaturesBlock"]
 unique_name_in_owner = true
@@ -217,40 +246,40 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "What We Can Do"
+text = "Next Move"
 
 [node name="ActionHelp" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "Buy stability with bug fixing, earn soul with dev logs, or you can ship in any moment and face reviews."
+text = "Current recommendation will appear here once the run starts."
 autowrap_mode = 3
 
 [node name="FixBugsButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Fix Bugs  [-2 Soul]"
+text = "Fix Bugs"
 
 [node name="FixBugsHint" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Reduce instability, lose little soul, spend one day."
+text = "-10 Instability, -2 Ambition, -2 Soul, spend 1 day. Use it to pull back from collapse, not as a routine habit."
 autowrap_mode = 3
 
 [node name="DevLogButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Create Community Notes"
+text = "Write Dev Log"
 
 [node name="DevLogHint" type="Label" parent="ActionPanel/ActionPadding/ActionVBox"]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Raise soul, invite little instability, spend one day, and feed the fan myth machine."
+text = "+1 Soul, spend 1 day. Recover sincerity, steady the studio, and feed the myth around the run."
 autowrap_mode = 3
 
 [node name="ShipButton" type="Button" parent="ActionPanel/ActionPadding/ActionVBox"]
@@ -264,5 +293,5 @@ text = "Ship It"
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "End run now and trigger Review Roulette — is moment of truth."
+text = "End the run now. Reviews, jank payoff, and next-run rewards all lock in from this decision."
 autowrap_mode = 3

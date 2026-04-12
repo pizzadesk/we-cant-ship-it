@@ -36,6 +36,7 @@ var _run_resolution: RunResolutionService
 # Transient: which run was just completed via ship_it(). Used by UI post-ship dialogs.
 var _last_completed_run: int = 0
 var _current_prospect_jank_id: String = ""
+var _current_prospect_jank: Dictionary = {}
 var _hinted_prospect_jank_ids: Dictionary = {}
 var _locked_signature_jank: Dictionary = {}
 var _signature_jank_reward_granted: bool = false
@@ -69,6 +70,7 @@ func reset_run() -> void:
 	feature_board.clear()
 	chosen_archetype = ""
 	_current_prospect_jank_id = ""
+	_current_prospect_jank.clear()
 	_hinted_prospect_jank_ids.clear()
 	_locked_signature_jank.clear()
 	_signature_jank_reward_granted = false
@@ -136,6 +138,25 @@ func has_locked_signature_jank() -> bool:
 
 func get_locked_signature_jank() -> Dictionary:
 	return _locked_signature_jank.duplicate(true)
+
+func get_jank_pursuit_state() -> Dictionary:
+	if not _locked_signature_jank.is_empty():
+		return {
+			"stage": "locked",
+			"display_title": "Signature Locked: %s" % String(_locked_signature_jank.get("name", "Unknown Jank")),
+			"display_body": String(_locked_signature_jank.get("lock_in_line", "This run has become something irreversible.")),
+		}
+	if not _current_prospect_jank.is_empty():
+		return {
+			"stage": "prospect",
+			"display_title": "Prospect Forming: %s" % String(_current_prospect_jank.get("prospect_title", "Jank Prospect")),
+			"display_body": String(_current_prospect_jank.get("prospect_hint", "Something strange is taking shape.")),
+		}
+	return {
+		"stage": "idle",
+		"display_title": "No Signature Yet",
+		"display_body": "Combine features and watch for collisions that feel a little too meaningful.",
+	}
 
 ## Tier availability is gated by current run number in the four-run cycle.
 func is_tier_available(tier: String) -> bool:
@@ -380,6 +401,7 @@ func _evaluate_jank_prospecting(placed_card: FeatureCard) -> Array[Dictionary]:
 	var lock_match: Dictionary = JankResolver.find_combination(feature_board, chosen_archetype, combinations)
 	if not lock_match.is_empty():
 		_locked_signature_jank = lock_match.duplicate(true)
+		_current_prospect_jank.clear()
 		_current_prospect_jank_id = String(lock_match.get("jank_card_id", ""))
 		var locked_payload: Dictionary = lock_match.duplicate(true)
 		locked_payload["stage"] = "locked"
@@ -399,12 +421,15 @@ func _evaluate_jank_prospecting(placed_card: FeatureCard) -> Array[Dictionary]:
 	var prospect: Dictionary = JankResolver.find_prospect(feature_board, chosen_archetype, placed_card, combinations)
 	if prospect.is_empty():
 		_current_prospect_jank_id = ""
+		_current_prospect_jank.clear()
 		return feedback
 
 	var prospect_id: String = String(prospect.get("jank_card_id", ""))
 	if prospect_id.is_empty():
+		_current_prospect_jank.clear()
 		return feedback
 	_current_prospect_jank_id = prospect_id
+	_current_prospect_jank = prospect.duplicate(true)
 	if bool(_hinted_prospect_jank_ids.get(prospect_id, false)):
 		return feedback
 	_hinted_prospect_jank_ids[prospect_id] = true

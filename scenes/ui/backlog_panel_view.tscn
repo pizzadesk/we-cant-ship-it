@@ -1,65 +1,64 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cqxuuwvtn3482"]
 
-[ext_resource type="Script" path="res://scripts/ui/backlog_panel_view.gd" id="1_backlog"]
+[ext_resource type="Script" uid="uid://0olsajdvk4h" path="res://scripts/ui/backlog_panel_view.gd" id="1_backlog"]
 
-[node name="LeftColumn" type="PanelContainer"]
+[node name="LeftColumn" type="PanelContainer" unique_id=1639192725]
 custom_minimum_size = Vector2(290, 0)
-layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 script = ExtResource("1_backlog")
 
-[node name="LeftPadding" type="MarginContainer" parent="."]
+[node name="LeftPadding" type="MarginContainer" parent="." unique_id=48239909]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="LeftVBox" type="VBoxContainer" parent="LeftPadding"]
+[node name="LeftVBox" type="VBoxContainer" parent="LeftPadding" unique_id=1631981539]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="BacklogTitle" type="Label" parent="LeftPadding/LeftVBox"]
+[node name="BacklogTitle" type="Label" parent="LeftPadding/LeftVBox" unique_id=1500124753]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Here Is Chaos"
+text = "Feature Draft"
+horizontal_alignment = 1
 
-[node name="BacklogHelp" type="Label" parent="LeftPadding/LeftVBox"]
+[node name="BacklogHelp" type="Label" parent="LeftPadding/LeftVBox" unique_id=869857768]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Drag feature cards into your build. Ambition higher, this is impressing people. Instability higher, this is impressing bugs more."
+text = "Drag features into the build. Every card pushes Ambition and Instability. Some cards also tempt signature jank if you let them collide."
+horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="CardScroll" type="ScrollContainer" parent="LeftPadding/LeftVBox"]
+[node name="CardScroll" type="ScrollContainer" parent="LeftPadding/LeftVBox" unique_id=316014637]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CardList" type="VBoxContainer" parent="LeftPadding/LeftVBox/CardScroll"]
+[node name="CardList" type="VBoxContainer" parent="LeftPadding/LeftVBox/CardScroll" unique_id=94921655]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="BacklogFooter" type="Label" parent="LeftPadding/LeftVBox"]
+[node name="BacklogFooter" type="Label" parent="LeftPadding/LeftVBox" unique_id=1967107943]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "Important: risky tags, they are colliding always in spectacular ways."
+text = "Watch for risky fits, off-archetype pulls, and cards that feel like they want each other."
+horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="CardUnlockProgress" type="Label" parent="."]
+[node name="CardUnlockProgress" type="Label" parent="." unique_id=305567056]
 unique_name_in_owner = true
-offset_left = 28.0
-offset_top = 410.0
-offset_right = 228.0
-offset_bottom = 430.0
+visible = false
+layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.95, 0.72, 0.9)
 theme_override_font_sizes/font_size = 13
-mouse_filter = 2
 text = "Loading deck..."

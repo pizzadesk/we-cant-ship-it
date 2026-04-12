@@ -1,20 +1,20 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://bi418uiibmoud"]
 
-[ext_resource type="Script" path="res://scripts/ui/dialog_host_view.gd" id="1_dialog_host"]
+[ext_resource type="Script" uid="uid://b0adbgubdtjqp" path="res://scripts/ui/dialog_host_view.gd" id="1_dialog_host"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogs/rich_text_accept_dialog.tscn" id="2_rich_accept"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogs/rich_text_confirmation_dialog.tscn" id="3_rich_confirm"]
 
-[node name="DialogHost" type="Node"]
+[node name="DialogHost" type="Node" unique_id=217081206]
 script = ExtResource("1_dialog_host")
 
-[node name="ReviewDialog" type="AcceptDialog" parent="."]
+[node name="ReviewDialog" type="AcceptDialog" parent="." unique_id=2112289742]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Review Roulette / Judgment"
 initial_position = 1
 ok_button_text = "Close"
 
-[node name="EndRunDialog" type="ConfirmationDialog" parent="."]
+[node name="EndRunDialog" type="ConfirmationDialog" parent="." unique_id=582144862]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Run Is Complete"
@@ -24,7 +24,7 @@ ok_button_text = "New Run"
 dialog_text = "Start a new run?"
 cancel_button_text = "Main Menu"
 
-[node name="DilemmaDialog" type="ConfirmationDialog" parent="."]
+[node name="DilemmaDialog" type="ConfirmationDialog" parent="." unique_id=2129113178]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Big Problem For Studio"
@@ -33,7 +33,7 @@ ok_button_text = "Choice A"
 dialog_text = "A dilemma appears."
 cancel_button_text = "Choice B"
 
-[node name="DraftDialog" type="ConfirmationDialog" parent="."]
+[node name="DraftDialog" type="ConfirmationDialog" parent="." unique_id=1300076938]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Feature Direction / Choose Path"
@@ -43,52 +43,53 @@ ok_button_text = "Pick A"
 dialog_text = "Pick a direction for this run."
 cancel_button_text = "Pick B"
 
-[node name="ShipSummaryDialog" parent="." instance=ExtResource("3_rich_confirm")]
+[node name="ShipSummaryDialog" parent="." unique_id=967903571 instance=ExtResource("3_rich_confirm")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Ship It For Real?"
 initial_position = 1
 
-[node name="JankDiscoveryDialog" parent="." instance=ExtResource("2_rich_accept")]
+[node name="JankDiscoveryDialog" parent="." unique_id=756663057 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
 title = "How The Machine Works"
 initial_position = 1
 
-[node name="GapVisualizerDialog" parent="." instance=ExtResource("2_rich_accept")]
+[node name="GapVisualizerDialog" parent="." unique_id=1332734296 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
 title = "Gap Visualizer"
 initial_position = 1
 
-[node name="CycleLegacyDialog" parent="." instance=ExtResource("2_rich_accept")]
+[node name="CycleLegacyDialog" parent="." unique_id=1567001682 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
 title = "What This Run Left Behind"
 initial_position = 1
 
-[node name="PreviouslyOnDialog" parent="." instance=ExtResource("2_rich_accept")]
+[node name="PreviouslyOnDialog" parent="." unique_id=1808776669 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
 title = "Previously On..."
 initial_position = 1
 
-[node name="ArchetypeSelectDialog" parent="." instance=ExtResource("3_rich_confirm")]
+[node name="ArchetypeSelectDialog" parent="." unique_id=1883942007 instance=ExtResource("3_rich_confirm")]
 unique_name_in_owner = true
 title = "Target Genre"
 initial_position = 1
 
-[node name="ResetConfirmDialog" type="ConfirmationDialog" parent="."]
+[node name="ResetConfirmDialog" type="ConfirmationDialog" parent="." unique_id=664928898]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Reset Campaign?"
 initial_position = 1
+size = Vector2i(460, 100)
 min_size = Vector2i(460, 100)
-size = Vector2i(230, 100)
 dialog_text = "Erase all four-run progress and start a fresh campaign?"
 
-[node name="QuitConfirmDialog" type="ConfirmationDialog" parent="."]
+[node name="QuitConfirmDialog" type="ConfirmationDialog" parent="." unique_id=815521032]
 unique_name_in_owner = true
 oversampling_override = 1.0
 title = "Quit Game?"
 initial_position = 1
+size = Vector2i(380, 130)
 min_size = Vector2i(380, 130)
-size = Vector2i(230, 100)
 ok_button_text = "Yes, Quit"
 dialog_text = "Sure you want to quit now?"
 cancel_button_text = "No, Keep Playing"

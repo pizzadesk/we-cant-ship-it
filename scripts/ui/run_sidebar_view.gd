@@ -10,7 +10,10 @@ class_name RunSidebarView
 @onready var _soul_value: Label = %SoulValue
 @onready var _meta_value: Label = %MetaValue
 @onready var _ambition_gauge: ProgressBar = %AmbitionGauge
+@onready var _ambition_status: Label = %AmbitionStatus
 @onready var _instability_gauge: ProgressBar = %InstabilityGauge
+@onready var _instability_target_band: ColorRect = %InstabilityTargetBand
+@onready var _instability_status: Label = %InstabilityStatus
 @onready var _runway_gauge: ProgressBar = %RunwayGauge
 @onready var _soul_gauge: ProgressBar = %SoulGauge
 @onready var _soul_risk_label: Label = %SoulRiskLabel
@@ -50,8 +53,17 @@ func get_meta_value() -> Label:
 func get_ambition_gauge() -> ProgressBar:
 	return _ambition_gauge
 
+func get_ambition_status() -> Label:
+	return _ambition_status
+
 func get_instability_gauge() -> ProgressBar:
 	return _instability_gauge
+
+func get_instability_target_band() -> ColorRect:
+	return _instability_target_band
+
+func get_instability_status() -> Label:
+	return _instability_status
 
 func get_runway_gauge() -> ProgressBar:
 	return _runway_gauge
@@ -61,6 +73,12 @@ func get_soul_gauge() -> ProgressBar:
 
 func get_soul_risk_label() -> Label:
 	return _soul_risk_label
+
+func get_stat_guide() -> Label:
+	return _stat_guide
+
+func get_action_help() -> Label:
+	return _action_help
 
 func get_goldilocks_floor_marker() -> ColorRect:
 	return _goldilocks_floor_marker

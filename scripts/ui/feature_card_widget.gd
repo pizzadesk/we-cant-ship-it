@@ -4,6 +4,7 @@ class_name FeatureCardWidget
 var drag_origin: String = "backlog"
 var _base_rotation: float = 0.0
 var _hover_tween: Tween
+@onready var _risk_label_widget: Label = $Padding/VBox/RiskLabel
 # Drag hint icon — stored on the preview duplicate so it survives _ready() → _update_view().
 var _drag_mismatch_icon: String = ""
 
@@ -25,6 +26,9 @@ func _update_view() -> void:
 	# Drag previews use pre-computed icon set before _ready() fires.
 	if not _drag_mismatch_icon.is_empty():
 		_name_label.text += " " + _drag_mismatch_icon
+	if _risk_label_widget != null:
+		_risk_label_widget.text = "FIT: On-archetype"
+		_risk_label_widget.add_theme_color_override("font_color", Color(0.72, 0.96, 0.80, 1.0))
 	tooltip_text = ""
 	modulate = Color(1.0, 1.0, 1.0, 1.0)
 	# Alien card blocked by soul gate: dim and label so the player knows before dragging.
@@ -36,15 +40,17 @@ func _update_view() -> void:
 		if mismatch_level > 0:
 			_name_label.text += " " + mismatch_icons[clampi(mismatch_level, 0, 3)]
 		var preview_text: String = _build_mismatch_preview_text(fc, mismatch_level, config)
+		var risk_text: String = _build_risk_scan_text(fc, mismatch_level, config)
+		if _risk_label_widget != null and not risk_text.is_empty():
+			_risk_label_widget.text = risk_text
+			_apply_risk_style(mismatch_level, fc, config)
 		if not preview_text.is_empty():
-			if not _tags_label.text.is_empty():
-				_tags_label.text += " | " + preview_text
-			else:
-				_tags_label.text = preview_text
 			tooltip_text = preview_text
 		if fc.archetype_affinity.is_empty() and not AppState.can_place_card(fc):
 			modulate = Color(1.0, 0.4, 0.4, 0.6)
-			_name_label.text += " SOUL GATED"
+			if _risk_label_widget != null:
+				_risk_label_widget.text = _build_risk_scan_text(fc, mismatch_level, config, true)
+				_apply_risk_style(3, fc, config, true)
 			if tooltip_text.is_empty():
 				tooltip_text = preview_text
 
@@ -144,3 +150,36 @@ func _build_mismatch_preview_text(card: FeatureCard, mismatch_level: int, config
 			return "Alien card: Soul %d+, +%d Inst, +%d Amb, -%d Soul" % [soul_gate, alien_inst, alien_amb, alien_soul]
 		_:
 			return ""
+
+func _build_risk_scan_text(card: FeatureCard, mismatch_level: int, config: GameConfig, blocked: bool = false) -> String:
+	if card == null:
+		return ""
+	match mismatch_level:
+		0:
+			return "FIT: On-archetype"
+		1:
+			return "~ RISK: Genre stretch"
+		2:
+			return "⚠ RISK: Wild swing"
+		3:
+			var soul_gate: int = config.alien_card_soul_gate if config != null else 5
+			if blocked:
+				return "☠ RISK: Alien card | Soul %d+" % soul_gate
+			return "☠ RISK: Alien card"
+		_:
+			return ""
+
+func _apply_risk_style(mismatch_level: int, _card: FeatureCard, _config: GameConfig, blocked: bool = false) -> void:
+	if _risk_label_widget == null:
+		return
+	match mismatch_level:
+		0:
+			_risk_label_widget.add_theme_color_override("font_color", Color(0.72, 0.96, 0.80, 1.0))
+		1:
+			_risk_label_widget.add_theme_color_override("font_color", Color(0.96, 0.87, 0.54, 1.0))
+		2:
+			_risk_label_widget.add_theme_color_override("font_color", Color(1.0, 0.72, 0.42, 1.0))
+		3:
+			_risk_label_widget.add_theme_color_override("font_color", Color(1.0, 0.48, 0.48, 1.0) if blocked else Color(0.97, 0.62, 0.62, 1.0))
+		_:
+			_risk_label_widget.add_theme_color_override("font_color", Color(0.9, 0.86, 0.72, 1.0))

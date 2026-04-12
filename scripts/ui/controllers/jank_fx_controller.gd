@@ -97,8 +97,9 @@ func setup_synergy_toast() -> void:
 	_synergy_toast = SynergyToastUtils.setup_synergy_toast(_owner)
 
 func show_synergy_toast(
-	flavor: String,
-	instability_delta: int,
+	title: String,
+	body: String,
+	stage: String,
 	soul_delta: int,
 	synergy_toast_duration: float,
 	synergy_toast_fade_in: float,
@@ -108,8 +109,9 @@ func show_synergy_toast(
 		_owner,
 		_synergy_toast,
 		_synergy_toast_timer,
-		flavor,
-		instability_delta,
+		title,
+		body,
+		stage,
 		soul_delta,
 		synergy_toast_duration,
 		synergy_toast_fade_in,
