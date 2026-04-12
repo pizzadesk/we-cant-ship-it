@@ -92,7 +92,8 @@ func resolve_and_commit_run(
 			features_shipped,
 			feature_board,
 			String(ship_window.get("label", "")),
-			ending_id
+			ending_id,
+			jank_match
 		)
 
 	var unlocked: PackedStringArray = _cycle_mgr.get_unlocked_card_ids()

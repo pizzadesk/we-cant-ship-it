@@ -6,7 +6,7 @@
       "score_max": 8.0,
       "openers": [
         { "text": "A bold swing from a tiny studio", "weight": 3 },
-        { "text": "An ambitious RPG with real personality", "weight": 2 },
+        { "text": "An ambitious release with real personality", "weight": 2 },
         { "text": "A rough but fascinating release", "weight": 2 },
         { "text": "Few games this year have surprised us quite like this", "weight": 2 },
         { "text": "There is something genuinely compelling buried in here", "weight": 2 },
@@ -25,6 +25,42 @@
         { "text": "The patching road ahead is long, but so is the potential.", "weight": 2 },
         { "text": "We recommend it conditionally and sincerely.", "weight": 1 },
         { "text": "Nothing else launched this year feels quite like it.", "weight": 1 }
+      ],
+      "meme_family_callouts": {
+        "pilgrimage_site": [
+          { "text": "{jank_name} has already produced the sort of player pilgrimage normally reserved for beloved secrets rather than production mistakes.", "weight": 3 },
+          { "text": "Communities are treating {jank_name} like a place to visit rather than a defect to report, which says as much about the audience as it does the game.", "weight": 2 }
+        ],
+        "sacred_timing": [
+          { "text": "{jank_name} has fostered a strange ritual culture around timing windows, as if the community were preserving a seasonal event instead of a bug.", "weight": 3 },
+          { "text": "Players now speak about triggering {jank_name} at the correct hour with a degree of seriousness the rest of the game never asked for.", "weight": 2 }
+        ],
+        "patch_defense": [
+          { "text": "The conversation around {jank_name} has already turned preservationist, with players arguing that a future fix would remove part of the game's accidental identity.", "weight": 3 },
+          { "text": "What might once have been a patch note for {jank_name} now reads like a curatorial decision about what this release is allowed to remain.", "weight": 2 }
+        ],
+        "theorycraft_canon": [
+          { "text": "{jank_name} has generated a disproportionate amount of player exegesis, suggesting the audience senses coherence there whether or not the team intended it.", "weight": 3 },
+          { "text": "The communal reading of {jank_name} has already hardened into a form of canon, despite originating in technical instability.", "weight": 2 }
+        ],
+        "lore_archive": [
+          { "text": "{jank_name} appears to inspire archivist behaviour almost immediately, turning bug reports into essays, timelines, and speculative history.", "weight": 3 },
+          { "text": "Players are documenting {jank_name} with the seriousness usually reserved for actual lore, and the game is stronger for the confusion.", "weight": 2 }
+        ],
+        "build_cult": [
+          { "text": "{jank_name} is already producing doctrinal playstyles, with players treating one accidental interaction as the correct way to inhabit the game.", "weight": 3 },
+          { "text": "The build discourse around {jank_name} has the energy of a small religion forming around a spreadsheet.", "weight": 2 }
+        ],
+        "competitive_ritual": [
+          { "text": "{jank_name} has escaped the realm of bug reporting and entered organised competition, which is a stronger endorsement than most marketing campaigns manage.", "weight": 3 },
+          { "text": "Players have already begun ritualising {jank_name} into brackets, routes, and repeatable challenges the game never formally supports.", "weight": 2 }
+        ]
+      },
+      "signature_jank_callouts": [
+        { "text": "{jank_name} is the clearest expression of this game's accidental authorship, folding {card_a} into {card_b} until both systems become stranger and more legible.", "weight": 3 },
+        { "text": "The interaction between {card_a} and {card_b} produces {jank_name}, a signature bug that players are already treating as a defining feature rather than a defect.", "weight": 3 },
+        { "text": "{jank_name} may be the bug this release is ultimately remembered for, and the uncomfortable truth is that the memory is deserved.", "weight": 2 },
+        { "text": "We kept returning to {jank_name}, not because it is polished, but because it communicates exactly what this studio becomes under pressure.", "weight": 2 }
       ],
       "tag_callouts": {
         "horses": [
@@ -147,6 +183,42 @@
         { "text": "Fourteen forum pages of chaos and this is still my top recommendation.", "weight": 1 },
         { "text": "Mod tools when. We have plans.", "weight": 2 }
       ],
+      "meme_family_callouts": {
+        "pilgrimage_site": [
+          { "text": "{jank_name} has a route now. People are escorting new players to it like it is a monument and not a production wound.", "weight": 3 },
+          { "text": "Pinned thread for {jank_name}: where to stand, what not to patch, and how to know you have witnessed the authentic version.", "weight": 2 }
+        ],
+        "sacred_timing": [
+          { "text": "We have a community clock for {jank_name} now. If you miss the window, wait and respect the ritual.", "weight": 3 },
+          { "text": "{jank_name} only really counts if you trigger it under the proper conditions. Yes, there is a guide. No, it is not ironic.", "weight": 2 }
+        ],
+        "patch_defense": [
+          { "text": "Do not patch {jank_name}. I am saying this calmly, as a citizen trying to protect a cultural site.", "weight": 3 },
+          { "text": "Every time someone suggests fixing {jank_name}, three more forum users arrive with clips, receipts, and moral clarity.", "weight": 2 }
+        ],
+        "theorycraft_canon": [
+          { "text": "There are now competing schools of interpretation around {jank_name}. Read the primer before taking a position.", "weight": 3 },
+          { "text": "{jank_name} stopped being a bug the second the community started footnoting it.", "weight": 2 }
+        ],
+        "lore_archive": [
+          { "text": "The community timeline for {jank_name} is now longer than some official lore sections. This feels correct.", "weight": 3 },
+          { "text": "We are archiving every known manifestation of {jank_name}. Future players deserve the full record.", "weight": 2 }
+        ],
+        "build_cult": [
+          { "text": "{jank_name} has become one of those forum beliefs you either commit to fully or spend months pretending you are above.", "weight": 3 },
+          { "text": "Build thread update: {jank_name} is not optional anymore. The doctrine has simplified matters.", "weight": 2 }
+        ],
+        "competitive_ritual": [
+          { "text": "{jank_name} already has brackets, category rules, and one moderator who takes disputes extremely seriously.", "weight": 3 },
+          { "text": "We turned {jank_name} into a weekly challenge format because the game clearly wanted us to.", "weight": 2 }
+        ]
+      },
+      "signature_jank_callouts": [
+        { "text": "{jank_name} already has a preservation thread, a reproducibility guide, and three people claiming they found the purest version of it.", "weight": 3 },
+        { "text": "Current forum consensus: {jank_name} is load-bearing and anyone asking for a fix should have to explain themselves in full sentences.", "weight": 3 },
+        { "text": "{jank_name} turned {card_a} and {card_b} into community property. The spreadsheet is pinned. Read before posting.", "weight": 2 },
+        { "text": "I have seen enough of {jank_name} to say this confidently: if the studio patches it, they owe us a memorial plaque.", "weight": 2 }
+      ],
       "tag_callouts": {
         "horses": [
           { "text": "{feature_name} is literally the reason I still log in daily.", "weight": 5 },
@@ -207,18 +279,18 @@
         ],
         "crafting": [
           { "text": "{feature_name} is honestly deeper than most 'systems' games and nobody talks about it.", "weight": 3 },
-          { "text": "discovered a {feature_name} loop that breaks the economy in just the right ways", "weight": 2 },
-          { "text": "theorycraft thread for {feature_name} optimization is now 200 pages. it is still growing.", "weight": 1 }
+          { "text": "discovered a {feature_name} loop that breaks the economy in exactly the right way", "weight": 2 },
+          { "text": "theorycraft thread for {feature_name} optimization is now 200 pages. still growing.", "weight": 1 }
         ],
         "dialogue": [
-          { "text": "the dialogue in {feature_name} made me believe the studio suddenly got really good", "weight": 3 },
-          { "text": "{feature_name} voice acting deserves a studio that can actually support voice acting", "weight": 2 },
-          { "text": "there are entire conversations in {feature_name} that made me feel things i did not expect", "weight": 1 }
+          { "text": "the dialogue in {feature_name} made me believe the studio knew exactly what it was doing for three whole scenes", "weight": 3 },
+          { "text": "{feature_name} voice acting deserves an infrastructure capable of surviving voice acting", "weight": 2 },
+          { "text": "there are conversations in {feature_name} that made me feel things i was not prepared to file correctly", "weight": 1 }
         ],
         "romance": [
-          { "text": "shipped {feature_name} as my power fantasy and nobody can convince me otherwise", "weight": 3 },
-          { "text": "started {feature_name} as a joke, it became genuinely meaningful, now i do not know what i believe", "weight": 2 },
-          { "text": "the {feature_name} writing quality suggests this team knows how to make people feel things", "weight": 1 }
+          { "text": "shipped {feature_name} as my power fantasy and nobody is moving me from that position", "weight": 3 },
+          { "text": "started {feature_name} as a joke. it became sincere before i could stop it.", "weight": 2 },
+          { "text": "the {feature_name} writing suggests this team knows exactly where the soft tissue is", "weight": 1 }
         ],
         "world": [
           { "text": "the architecture in {feature_name} alone is worth exploring every inch of map for", "weight": 3 },
@@ -250,15 +322,52 @@
     "steam": {
       "author": "steam_user_2000h",
       "entries": [
-        { "text": "yes", "weight": 5 },
-        { "text": "horse", "weight": 2 },
+        { "text": "wrong in the right ways", "weight": 5 },
+        { "text": "horse still sacred", "weight": 2 },
         { "text": "installed for joke; stayed for destiny", "weight": 1 },
-        { "text": "game good", "weight": 3 },
+        { "text": "game broken. heart intact.", "weight": 3 },
         { "text": "refunded. re-bought. refunded. re-bought.", "weight": 2 },
         { "text": "do not ask me to explain. just play.", "weight": 2 },
         { "text": "gave this as a gift to six people. two are speaking to me.", "weight": 1 },
         { "text": "the jank is plot", "weight": 2 },
         { "text": "technically negative hours played somehow. still recommend.", "weight": 1 }
+      ],
+      "meme_family_callouts": {
+        "pilgrimage_site": [
+          { "text": "went to see {jank_name}. worth trip.", "weight": 3 },
+          { "text": "{jank_name} is basically a tourist attraction now.", "weight": 2 }
+        ],
+        "sacred_timing": [
+          { "text": "set alarm for {jank_name}. no regrets.", "weight": 3 },
+          { "text": "{jank_name} only hits right if you do it on schedule. respect the craft.", "weight": 2 }
+        ],
+        "patch_defense": [
+          { "text": "if they patch {jank_name} i become difficult.", "weight": 3 },
+          { "text": "{jank_name}: do not improve this.", "weight": 2 }
+        ],
+        "theorycraft_canon": [
+          { "text": "read a 12 page thread about {jank_name}. convinced now.", "weight": 3 },
+          { "text": "{jank_name} has lore somehow. community built different.", "weight": 2 }
+        ],
+        "lore_archive": [
+          { "text": "people made a timeline for {jank_name}. i believe them.", "weight": 3 },
+          { "text": "{jank_name} got documented harder than the main quest.", "weight": 2 }
+        ],
+        "build_cult": [
+          { "text": "{jank_name} changed my whole build. no going back.", "weight": 3 },
+          { "text": "everyone using {jank_name} now. society advanced.", "weight": 2 }
+        ],
+        "competitive_ritual": [
+          { "text": "{jank_name} has categories now. naturally.", "weight": 3 },
+          { "text": "learned {jank_name} route tech from strangers online. beautiful community.", "weight": 2 }
+        ]
+      },
+      "signature_jank_callouts": [
+        { "text": "{jank_name} happened. stayed for 200 more hours.", "weight": 3 },
+        { "text": "{jank_name} broke {card_b}. improved game.", "weight": 2 },
+        { "text": "saw {jank_name} once. spent whole weekend learning how to make it happen again.", "weight": 3 },
+        { "text": "{jank_name} turned {card_a} into religion. recommend.", "weight": 2 },
+        { "text": "{jank_summary} 10/10.", "weight": 1 }
       ],
       "tag_callouts": {
         "horses": [
@@ -374,6 +483,42 @@
         { "text": "The studio made something unrepeatable. Whether intentionally is beside the point.", "weight": 1 },
         { "text": "More studios should fail this courageously.", "weight": 2 },
         { "text": "Whatever it was trying to be, it became something better.", "weight": 1 }
+      ],
+      "meme_family_callouts": {
+        "pilgrimage_site": [
+          { "text": "{jank_name} has already become the kind of accidental landmark that players visit in order to prove they were there when the folklore was still alive.", "weight": 3 },
+          { "text": "The community response to {jank_name} resembles pilgrimage more than bug triage, which is a strange but revealing form of cultural success.", "weight": 2 }
+        ],
+        "sacred_timing": [
+          { "text": "The ritual timing around {jank_name} reveals how quickly communities will turn a reproducible defect into liturgy.", "weight": 3 },
+          { "text": "Players have assigned ceremonial significance to the trigger conditions of {jank_name}, and the game is richer for that improvised seriousness.", "weight": 2 }
+        ],
+        "patch_defense": [
+          { "text": "The preservationist instinct surrounding {jank_name} is telling: players sense that fixing it would erase evidence of the game's most human contradiction.", "weight": 3 },
+          { "text": "{jank_name} has already entered the category of errors the audience would rather curate than correct.", "weight": 2 }
+        ],
+        "theorycraft_canon": [
+          { "text": "The interpretive machinery now attached to {jank_name} is as interesting as the bug itself, suggesting that players are co-authoring the game's meaning in public.", "weight": 3 },
+          { "text": "{jank_name} has produced not just discussion but doctrine, a communal argument about what accidental systems are allowed to mean.", "weight": 2 }
+        ],
+        "lore_archive": [
+          { "text": "The archival behaviour around {jank_name} turns emergent error into civic memory, and that transformation may be the game's most lasting achievement.", "weight": 3 },
+          { "text": "Players are cataloguing {jank_name} with the intensity of historians recovering a lost text, which feels absurd until it feels entirely earned.", "weight": 2 }
+        ],
+        "build_cult": [
+          { "text": "{jank_name} has inspired a minor theology of optimal play, one in which accidental interactions become moral recommendations.", "weight": 3 },
+          { "text": "The player culture forming around {jank_name} treats build choices less as options and more as articles of faith.", "weight": 2 }
+        ],
+        "competitive_ritual": [
+          { "text": "The speed with which {jank_name} became a competitive ritual says everything about the game's ability to turn instability into repeatable theatre.", "weight": 3 },
+          { "text": "{jank_name} has already been abstracted into routes, brackets, and community rulesets, which is to say it has become part of the social game.", "weight": 2 }
+        ]
+      },
+      "signature_jank_callouts": [
+        { "text": "{jank_name} is where the shipped work stops being a compromised production and becomes a statement, whether the studio meant to make that statement or not.", "weight": 3 },
+        { "text": "The collision between {card_a} and {card_b} produces {jank_name}, a system-level mistake so coherent that players immediately read it as meaning.", "weight": 3 },
+        { "text": "{jank_name} demonstrates the game's central miracle: under enough pressure, technical error can harden into cultural texture.", "weight": 2 },
+        { "text": "If this release has a thesis, it may well be {jank_name}, which turns failure into an authored kind of folklore.", "weight": 2 }
       ],
       "tag_callouts": {
         "horses": [

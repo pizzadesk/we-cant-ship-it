@@ -1,0 +1,280 @@
+WE CAN'T SHIP IT -- Global Voice Guide
+=====================================
+
+This is the source of truth for the game's narrative flavor.
+
+If you are writing cards, reviews, popups, console messages, jank names,
+prospect hints, or event text, follow this guide first.
+
+
+------------------------------------------------------------------------
+CORE IDEA
+------------------------------------------------------------------------
+
+The game is about a studio shipping something too ambitious, slightly
+broken, and weirdly sincere.
+
+The voice should feel:
+  - deadpan
+  - observant
+  - specific
+  - affectionate toward failure
+  - sincere about accidental beauty
+
+The voice should NOT feel:
+  - random
+  - loud for its own sake
+  - cruel toward the studio
+  - smug toward the player
+  - generic game-marketing copy
+  - placeholder debug output
+
+
+------------------------------------------------------------------------
+THE GOLD STANDARD
+------------------------------------------------------------------------
+
+The feature card descriptions are the target voice.
+
+They usually work like this:
+  1. State the system plainly.
+  2. Add one concrete complication or contradiction.
+  3. End on a dry sting that makes the failure memorable.
+
+Example shape:
+  "Bodies collapse with physical accuracy. Two stack at the doorway.
+   One slides down the hill until you leave the area."
+
+That rhythm should guide the rest of the game.
+
+
+------------------------------------------------------------------------
+UNIVERSAL RULES
+------------------------------------------------------------------------
+
+1. Be concrete.
+   Name the system, the bug, the consequence, the ritual, the object,
+   the room, the time of day. Avoid vague phrasing like "things got weird"
+   when you can say what actually happened.
+
+2. Treat jank as culture, not just failure.
+   The best lines are about what people did with the accident:
+   preserved it, argued about it, routed around it, mythologized it,
+   built a challenge around it, wrote lore about it.
+
+3. Stay straight-faced.
+   The writing can be funny, but the narrator should not sound like it is
+   begging for laughs.
+
+4. Never mock the player for caring.
+   If players turn a bug into a ritual, archive, doctrine, pilgrimage,
+   or competitive format, the game should treat that as real meaning.
+
+5. Avoid empty "lol random" absurdity.
+   Weirdness must come from systems colliding, not from unrelated jokes.
+
+6. Avoid generic industry language unless it is the joke.
+   Words like synergy, innovation, immersion, content, engagement, and
+   polish are weak unless used very deliberately.
+
+7. End strong.
+   Good lines often close on a crisp reversal, verdict, or aftershock.
+
+
+------------------------------------------------------------------------
+WHAT THE GAME BELIEVES
+------------------------------------------------------------------------
+
+The game believes these things sincerely:
+
+  - broken games can still be loved
+  - accidents can reveal authorship
+  - communities finish the meaning of shipped work
+  - pressure deforms the work, but can also make it specific
+  - a game can fail technically and still succeed culturally
+
+If a line contradicts that worldview, it is probably wrong.
+
+
+------------------------------------------------------------------------
+SURFACE-BY-SURFACE RULES
+------------------------------------------------------------------------
+
+1. FEATURE CARDS
+
+  Voice:
+    concise, system-first, dry, sharply observed
+
+  Use:
+    concrete mechanics, visible consequences, one memorable sting
+
+  Avoid:
+    internet slang, over-explaining, sentimental phrasing
+
+
+2. STUDIO CONSOLE
+
+  Voice:
+    in-universe production diary
+
+  It should sound like:
+    the team, the room, the board, the schedule, the morale, the cost,
+    the decision that just became real
+
+  It should not sound like:
+    telemetry, debug logging, button labels, or menu state output
+
+
+3. POPUPS / ENDINGS / RECAPS
+
+  Voice:
+    larger, more reflective, still restrained
+
+  These lines can be:
+    more sincere, mythic, or conclusive than card text
+
+  But they still must:
+    stay specific and earned
+
+
+4. OFFERS / DILEMMAS / THRESHOLD EVENTS
+
+  Voice:
+    production pressure made legible
+
+  Every choice should feel like:
+    a tradeoff the studio could plausibly argue about in a room
+
+  Never frame one option as obviously correct.
+
+
+5. SIGNATURE JANK
+
+  Voice:
+    named folklore
+
+  Names and descriptions should suggest:
+    a real emergent phenomenon players would remember, clip, route,
+    defend, archive, or worship
+
+  Good signature jank feels:
+    specific enough to picture, strange enough to retell
+
+
+6. REVIEWS
+
+  Voice:
+    outlet-specific, but always tied to the shipped game
+
+  Rule:
+    reviewers are allowed to sound different from each other,
+    but they must still react to the actual shipped accident, mechanic,
+    or cultural afterlife of the build
+
+  Reviewers do not describe abstract genre promises.
+  They describe what players are actually seeing, doing, preserving,
+  arguing about, or recommending.
+
+
+------------------------------------------------------------------------
+MEMEOLOGY RULES
+------------------------------------------------------------------------
+
+Recurring community myth should usually fall into one or more of these
+families:
+
+  - patch_defense
+      Players argue the bug must never be fixed.
+
+  - pilgrimage_site
+      Players visit a place, state, route, or moment because it became
+      culturally important.
+
+  - sacred_timing
+      A bug acquires a ritual hour, condition, or timing window.
+
+  - theorycraft_canon
+      Players write explanations, doctrine, spreadsheets, or arguments
+      until the accident hardens into shared truth.
+
+  - lore_archive
+      Players document the bug like history, canon, or sacred text.
+
+  - build_cult
+      Players reorganize how they play around the accident.
+
+  - competitive_ritual
+      Players turn the accident into routes, categories, tournaments,
+      or challenge rules.
+
+Horses are one meme lineage, not the whole game.
+
+
+------------------------------------------------------------------------
+OUTLET RULES FOR REVIEWS
+------------------------------------------------------------------------
+
+MegaScore Weekly:
+  polished editorial voice, measured, sincere, mildly formal
+
+HorseQuestFanForum user #8841:
+  obsessive, evangelizing, preservationist, deeply invested
+
+steam_user_2000h:
+  compressed, chaotic, casual, but still about the real bug or ritual
+
+Indie Orbit:
+  reflective, interpretive, art-criticism energy without parody
+
+Important:
+  Different voice does NOT mean different subject.
+  They all review the same shipped game.
+
+
+------------------------------------------------------------------------
+GOOD VS BAD
+------------------------------------------------------------------------
+
+GOOD:
+  "Quest markers persist after completion in dense world areas. Players
+   reported following a ghost. Fan fiction resulted."
+
+WHY IT WORKS:
+  specific system, concrete consequence, cultural afterlife
+
+
+BAD:
+  "A weird bug created some funny emergent gameplay moments."
+
+WHY IT FAILS:
+  vague, generic, no image, no consequence, no point of view
+
+
+GOOD:
+  "The room chose Venture Funding. The runway relaxed. The game did not."
+
+WHY IT WORKS:
+  sounds like studio diary, not UI telemetry
+
+
+BAD:
+  "Choice accepted: Venture Funding"
+
+WHY IT FAILS:
+  placeholder system output
+
+
+------------------------------------------------------------------------
+QUICK CHECKLIST
+------------------------------------------------------------------------
+
+Before you save new text, ask:
+
+  - Can I picture what is happening?
+  - Does this sound like the game, not a template?
+  - Is the humor dry rather than noisy?
+  - Is the line affectionate toward the mess?
+  - Does this describe a real consequence or community response?
+  - Could this be mistaken for placeholder/debug text?
+
+If the answer to the last question is yes, rewrite it.

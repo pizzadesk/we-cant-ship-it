@@ -3,16 +3,16 @@
 		{
 			"title": "Funding Ultimatum",
 			"category": "intrusive",
-			"description": "Take outside money now or stay independent and scrappy.",
+			"description": "A publisher wants the build and a say in what it becomes. Take the runway or keep the voice.",
 			"choices": [
-				{ "label": "Take money", "effects": { "ambition": 4, "instability": 3, "soul": -2 } },
+				{ "label": "Take the money", "effects": { "ambition": 4, "instability": 3, "soul": -2 } },
 				{ "label": "Stay indie", "effects": { "soul": 4, "runway_days": -1 } }
 			]
 		},
 		{
 			"title": "Engine Rewrite Temptation",
 			"category": "creative",
-			"description": "Rewrite now for long-term gains or patch over the crater.",
+			"description": "You can rebuild the foundation now or teach the current crater better manners.",
 			"choices": [
 				{ "label": "Rewrite", "effects": { "ambition": 3, "runway_days": -2, "instability": -3 } },
 				{ "label": "Patch it", "effects": { "instability": 4, "soul": 2 } }
@@ -30,7 +30,7 @@
 		{
 			"title": "Community Wants The Glitch",
 			"category": "community",
-			"description": "A broken interaction clip is going viral. Patch it or make it part of the legend.",
+			"description": "A broken interaction clip is going viral. Patch it now or accept that the accident belongs to the game.",
 			"choices": [
 				{ "label": "Canonize it", "effects": { "instability": 4, "soul": 3, "ambition": 1 } },
 				{ "label": "Patch it before streamers see", "effects": { "instability": -4, "soul": -1 } }
@@ -48,7 +48,7 @@
 		{
 			"title": "Unexpected Fan Heat",
 			"category": "community",
-			"description": "An early clip caught on. Do you feed the cult audience or retreat to safer ground.",
+			"description": "An early clip caught fire. Feed the little cult forming around it or retreat to safer work.",
 			"choices": [
 				{ "label": "Lean into the cult", "effects": { "soul": 4, "instability": 2 } },
 				{ "label": "Play it safe", "effects": { "instability": -2, "runway_days": -1 } }
@@ -57,7 +57,7 @@
 		{
 			"title": "Romance Thread Demands",
 			"category": "creative",
-			"description": "Players have latched onto two characters with exactly one exchange. Ignore it or build on it.",
+			"description": "Two characters shared one exchange. The audience wrote the rest overnight. Ignore it or make it true.",
 			"choices": [
 				{ "label": "Write it properly", "effects": { "soul": 3, "ambition": 2, "instability": 1 } },
 				{ "label": "Say no and move on", "effects": { "runway_days": 1, "soul": -1 } }
@@ -66,7 +66,7 @@
 		{
 			"title": "Middleware Sale",
 			"category": "technical",
-			"description": "A middleware vendor offers a miracle fix package in the middle of production.",
+			"description": "A vendor is selling salvation in a PDF and a contract. Adopt it mid-run or keep your current disaster.",
 			"choices": [
 				{ "label": "Adopt it mid-run", "effects": { "ambition": 2, "instability": 4 } },
 				{ "label": "Stick with your broken stack", "effects": { "soul": 2, "instability": 1 } }
@@ -75,7 +75,7 @@
 		{
 			"title": "QA Found A Load-Bearing Bug",
 			"category": "technical",
-			"description": "Removing one bug fixes the build and makes the game less itself. Decide what kind of studio you are.",
+			"description": "One fix stabilizes the build and erases part of its personality. Decide what survives.",
 			"choices": [
 				{ "label": "Design around it", "effects": { "ambition": 2, "instability": 3, "soul": 2 } },
 				{ "label": "Kill it now", "effects": { "instability": -6, "soul": -2, "ambition": -1 } }

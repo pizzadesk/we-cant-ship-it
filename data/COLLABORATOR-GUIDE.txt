@@ -22,6 +22,7 @@ THE FOUR THINGS YOU CAN CHANGE
 
   3. ALL IN-GAME TEXT (button labels, popup text, review flavour, etc.)
      -> Folder: data/strings/
+      -> Voice guide: data/VOICE-GUIDE.txt
      -> No special guide needed -- just open the file, change the text,
         save. See the section below for what each file controls.
 
@@ -52,6 +53,7 @@ WHERE EVERYTHING IS
   |     |-- popups.json             <- Dialog content, ending descriptions
   |     |-- log_messages.json       <- In-game event feed messages
   |     |-- card_ui.json            <- Text on card widgets
+  |-- VOICE-GUIDE.txt               <- Global tone / writing rules
   |
   |-- archetypes.json               <- The three genre options (RPG etc.)
   |-- interaction_rules.json        <- Flavor notes for shipped tag pairings
@@ -124,6 +126,14 @@ WHERE EVERYTHING IS
   Change the text between the quotes. Do not touch the key names (left
   side of the colon). Save. Run the game.
 
+    BEFORE WRITING NEW COPY:
+
+      Read data/VOICE-GUIDE.txt.
+
+      That file defines the global tone rules for cards, the Studio
+      Console, popups, signature jank, dilemmas, and reviews. The feature
+      card descriptions are the gold standard for the whole project.
+
   WHAT IS IN EACH FILE:
 
     buttons.json
@@ -165,6 +175,10 @@ WHERE EVERYTHING IS
     - prospect_title       shown mid-run when the combo begins to form
     - prospect_hint        shown mid-run as the prospect detail
     - lock_in_line         shown when the signature locks during play
+    - meme_families        optional community folklore tags used by
+                 review text (patch_defense, pilgrimage_site,
+                 sacred_timing, theorycraft_canon,
+                 lore_archive, build_cult, competitive_ritual)
 
   IMPORTANT:
     - card names must match the actual feature_name values used by cards

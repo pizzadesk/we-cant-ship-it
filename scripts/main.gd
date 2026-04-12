@@ -413,11 +413,11 @@ func _on_threshold_event(payload: ThresholdEventPayload) -> void:
 
 func _on_dilemma_offered(payload: DilemmaOfferPayload) -> void:
 	_choice_flow_controller.on_dilemma_offered(payload, _menu_active, _run_ended)
-	_append_log("Dilemma surfaced: %s" % payload.title)
+	_append_log(_S.get_string("log_messages", "dilemma_surfaced") % payload.title)
 
 func _on_draft_offer(payload: DraftOfferPayload) -> void:
 	_choice_flow_controller.on_draft_offer(payload, _menu_active, _run_ended)
-	_append_log("Draft surfaced: %s" % payload.title)
+	_append_log(_S.get_string("log_messages", "draft_surfaced") % payload.title)
 
 func _on_day_spent(payload: DaySpentPayload) -> void:
 	_backlog_controller.on_day_spent(payload)
@@ -483,16 +483,16 @@ func _on_end_run_dialog_menu() -> void:
 	_show_main_menu()
 
 func _on_dilemma_dialog_choice_a() -> void:
-	_choice_flow_controller.on_dilemma_choice(0, "dilemma_a", Callable(self, "_append_log"))
+	_choice_flow_controller.on_dilemma_choice(0, Callable(self, "_append_log"))
 
 func _on_dilemma_dialog_choice_b() -> void:
-	_choice_flow_controller.on_dilemma_choice(1, "dilemma_b", Callable(self, "_append_log"))
+	_choice_flow_controller.on_dilemma_choice(1, Callable(self, "_append_log"))
 
 func _on_draft_dialog_pick_a() -> void:
-	_choice_flow_controller.on_draft_pick(0, "draft_a", Callable(self, "_append_log"))
+	_choice_flow_controller.on_draft_pick(0, Callable(self, "_append_log"))
 
 func _on_draft_dialog_pick_b() -> void:
-	_choice_flow_controller.on_draft_pick(1, "draft_b", Callable(self, "_append_log"))
+	_choice_flow_controller.on_draft_pick(1, Callable(self, "_append_log"))
 
 func _on_draft_dialog_custom_action(action: StringName) -> void:
 	_choice_flow_controller.on_draft_custom_action(action, Callable(self, "_append_log"))

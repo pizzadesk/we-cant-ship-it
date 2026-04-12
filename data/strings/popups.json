@@ -54,9 +54,9 @@
   "roulette_intro_defining_game": "The critics have been arguing for three hours about whether it counts. It counts.",
   "roulette_intro_legendary_jank": "Damage reports and four-star reviews arrived in the same press cycle.",
   "roulette_intro_prestige_collapse": "Technically impressive. The critics will note this. Then they will note what is absent.",
-  "roulette_intro_high_score": "The numbers are good. The reviews are coming in.",
-  "roulette_intro_low_score": "The launch window has closed. Prepare accordingly.",
-  "roulette_intro_default": "The build shipped. Nobody agrees on what it is. The reviews are coming in.",
+  "roulette_intro_high_score": "The numbers landed. Now the arguments arrive with them.",
+  "roulette_intro_low_score": "The launch window closed. The consequences are already writing back.",
+  "roulette_intro_default": "The build shipped. The public is deciding whether that was brave, doomed, or both.",
 
   "epilogue_surprise_hit": "The sequel meeting was scheduled before the studio finished reading the reviews.",
   "epilogue_defining_game": "It limps. It sings. The studio has made something only it could have made, which means it now has to do it again.",
@@ -76,7 +76,7 @@
   "ending_desc_legendary_jank": "Legendary Jank: It barely functions. Speedrunners have mapped every failure.",
   "ending_desc_surprise_hit": "Surprise Hit: Smaller than planned. More beloved than expected. The sequel meeting is already scheduled.",
   "ending_desc_prestige_collapse": "Prestige Collapse: Every system functions. Nobody can explain why it feels like a eulogy.",
-  "ending_desc_shipped_something": "Shipped Something: Not legendary. Not a disaster. The studio is still open.",
+  "ending_desc_shipped_something": "Shipped Something: Not legendary. Not ruined. The doors stay open.",
 
   "archetype_dialog_intro": "[b]What game is this studio making?[/b]\n\nYour choice seeds the run. Cards that match your genre place cleanly. Off-genre cards produce friction \u2014 occasionally the good kind."
 }

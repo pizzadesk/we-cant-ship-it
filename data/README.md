@@ -26,8 +26,9 @@ UI text, organised by concern. Edit in any text editor. Changes take effect on n
 | `card_ui.json` | Card widget display strings (stat format, progress label, "Feature Unknown", variant note, etc.) |
 
 **Voice guide:**
-- General UI: broken but sincere English — chaotic, affectionate, eurojank energy
-- Players are never told there is a correct choice
+- Read `VOICE-GUIDE.txt` before editing any narrative copy.
+- The feature card descriptions are the gold standard for all other text surfaces.
+- Players are never told there is a correct choice.
 
 ---
 
@@ -92,6 +93,8 @@ All numeric thresholds for the run: score formula coefficients, ending condition
 ## review_pools.json
 
 Weighted review text pools used by ReviewService for the four reviewer archetypes (MegaScore Weekly, HorseQuestFanForum, steam_user_2000h, Indie Orbit). Do not add new archetypes without instruction — the structure is tightly coupled to ReviewService.
+
+Reviewers must stay outlet-specific while still reacting to the shipped game that actually exists. Signature jank and meme-family language should be preferred over generic genre chatter.
 
 ---
 

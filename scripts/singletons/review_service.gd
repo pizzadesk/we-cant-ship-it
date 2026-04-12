@@ -1,7 +1,5 @@
 extends Node
 
-const EndingResolver = preload("res://scripts/data/ending_resolver.gd")
-
 const REVIEW_POOLS_PATH: String = "res://data/review_pools.json"
 const INTERACTION_RULES_PATH: String = "res://data/interaction_rules.json"
 
@@ -15,11 +13,20 @@ func _ready() -> void:
 	_load_pools()
 	_load_interaction_rules()
 
-func generate_reviews(critic_score: float, instability: int, soul: int, features_shipped: int, shipped_cards: Array[FeatureCard] = [], ship_window_label: String = "", ending_id: String = "") -> Array[Dictionary]:
+func generate_reviews(
+	critic_score: float,
+	instability: int,
+	soul: int,
+	features_shipped: int,
+	shipped_cards: Array[FeatureCard] = [],
+	ship_window_label: String = "",
+	ending_id: String = "",
+	jank_combination: Dictionary = {},
+) -> Array[Dictionary]:
 	if features_shipped <= 0:
 		return _generate_unrateable_reviews()
 	var normalized_ending: String = EndingResolver.normalize_ending_id(ending_id)
-	var context: Dictionary = _extract_shipped_context(shipped_cards)
+	var context: Dictionary = _extract_shipped_context(shipped_cards, jank_combination)
 	var reviews: Array[Dictionary] = []
 	reviews.append(_generate_ign_review(critic_score, instability, soul, context, normalized_ending, ship_window_label))
 	reviews.append(_generate_forum_review(critic_score, soul, instability, context, normalized_ending, ship_window_label))
@@ -115,8 +122,11 @@ func _generate_steam_review(critic_score: float, features_shipped: int, soul: in
 	var ratio: float = float(soul) / float(instability + 1)
 	var played_hours: int = max(features_shipped * 120, 240)
 	var callout: String = _pick_contextual_callout(archetype, context)
+	var has_signature_jank: bool = not Dictionary(context.get("jank", {})).is_empty()
 	var body: String
-	if not callout.is_empty() and _rng.randi_range(0, 1) == 0:
+	if has_signature_jank and not callout.is_empty():
+		body = callout
+	elif not callout.is_empty() and _rng.randi_range(0, 1) == 0:
 		body = callout
 	else:
 		body = _pick_weighted_text(archetype.get("entries", []), "yes")
@@ -335,11 +345,12 @@ func _steam_recommends(critic_score: float, ratio: float, ending: String) -> boo
 	return false
 
 # Builds a lookup of which tags are present in shipped cards and which feature names carry each tag.
-func _extract_shipped_context(shipped_cards: Array[FeatureCard]) -> Dictionary:
+func _extract_shipped_context(shipped_cards: Array[FeatureCard], jank_combination: Dictionary = {}) -> Dictionary:
 	var tags_present: Array = []
 	var names_by_tag: Dictionary = {}
 	var matched_flavors: Array[String] = []
 	var seen_flavors: Dictionary = {}
+	var jank_context: Dictionary = _extract_jank_context(jank_combination)
 	for card in shipped_cards:
 		if card is not FeatureCard:
 			continue
@@ -382,7 +393,34 @@ func _extract_shipped_context(shipped_cards: Array[FeatureCard]) -> Dictionary:
 		"tags": tags_present,
 		"names_by_tag": names_by_tag,
 		"matched_flavors": matched_flavors,
+		"jank": jank_context,
 	}
+
+func _extract_jank_context(jank_combination: Dictionary) -> Dictionary:
+	if jank_combination.is_empty():
+		return {}
+	var description: String = String(jank_combination.get("description", "")).strip_edges()
+	var meme_families: Array[String] = []
+	for family in jank_combination.get("meme_families", []):
+		meme_families.append(String(family))
+	return {
+		"id": String(jank_combination.get("jank_card_id", "")),
+		"name": String(jank_combination.get("name", "Signature Jank")).strip_edges(),
+		"description": description,
+		"summary": _summarize_jank_description(description),
+		"card_a": String(jank_combination.get("card_a", "")).strip_edges(),
+		"card_b": String(jank_combination.get("card_b", "")).strip_edges(),
+		"meme_families": meme_families,
+	}
+
+func _summarize_jank_description(description: String) -> String:
+	var cleaned: String = description.strip_edges()
+	if cleaned.is_empty():
+		return ""
+	var sentence_end: int = cleaned.find(".")
+	if sentence_end == -1:
+		return cleaned
+	return cleaned.substr(0, sentence_end + 1)
 
 # Picks a tag_callout sentence from the archetype that matches the shipped card set.
 # Shuffles tag order for variety; substitutes {feature_name} with a random matching card name.
@@ -390,6 +428,9 @@ func _pick_contextual_callout(archetype: Dictionary, context: Dictionary) -> Str
 	var tag_callouts: Dictionary = archetype.get("tag_callouts", {})
 	if context.is_empty():
 		return ""
+	var signature_jank_callout: String = _pick_signature_jank_callout(archetype, context)
+	if not signature_jank_callout.is_empty():
+		return signature_jank_callout
 	var matched_flavors: Array = context.get("matched_flavors", [])
 	if not matched_flavors.is_empty():
 		return String(matched_flavors[_rng.randi_range(0, matched_flavors.size() - 1)])
@@ -411,6 +452,47 @@ func _pick_contextual_callout(archetype: Dictionary, context: Dictionary) -> Str
 			text = text.replace("{feature_name}", String(names[_rng.randi_range(0, names.size() - 1)]))
 		return text
 	return ""
+
+func _pick_signature_jank_callout(archetype: Dictionary, context: Dictionary) -> String:
+	var jank: Dictionary = context.get("jank", {})
+	if jank.is_empty():
+		return ""
+	var meme_family_callout: String = _pick_meme_family_callout(archetype, jank)
+	if not meme_family_callout.is_empty():
+		return _fill_jank_tokens(meme_family_callout, jank)
+	var templates: Array = archetype.get("signature_jank_callouts", [])
+	var text: String = _pick_weighted_text(templates, "")
+	if text.is_empty():
+		text = _default_signature_jank_callout(jank)
+	return _fill_jank_tokens(text, jank)
+
+func _pick_meme_family_callout(archetype: Dictionary, jank: Dictionary) -> String:
+	var meme_family_callouts: Dictionary = archetype.get("meme_family_callouts", {})
+	if meme_family_callouts.is_empty():
+		return ""
+	var families: Array[String] = jank.get("meme_families", [])
+	if families.is_empty():
+		return ""
+	var shuffled: Array[String] = families.duplicate()
+	shuffled.shuffle()
+	for family in shuffled:
+		if not meme_family_callouts.has(family):
+			continue
+		var text: String = _pick_weighted_text(meme_family_callouts[family], "")
+		if not text.is_empty():
+			return text
+	return ""
+
+func _default_signature_jank_callout(_jank: Dictionary) -> String:
+	return "{jank_name} is this run's signature accident, turning {card_a} and {card_b} into something players will remember more vividly than intended."
+
+func _fill_jank_tokens(text: String, jank: Dictionary) -> String:
+	return text \
+		.replace("{jank_name}", String(jank.get("name", "Signature Jank"))) \
+		.replace("{jank_description}", String(jank.get("description", ""))) \
+		.replace("{jank_summary}", String(jank.get("summary", ""))) \
+		.replace("{card_a}", String(jank.get("card_a", "system A"))) \
+		.replace("{card_b}", String(jank.get("card_b", "system B")))
 
 func _pick_weighted_text(entries: Variant, fallback: String) -> String:
 	if entries is not Array or entries.is_empty():
