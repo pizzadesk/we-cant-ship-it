@@ -8,7 +8,7 @@ Everything editable is a plain text file. No special software, no coding.
 
 
 ------------------------------------------------------------------------
-THE THREE THINGS YOU CAN CHANGE
+THE FOUR THINGS YOU CAN CHANGE
 ------------------------------------------------------------------------
 
   1. GAME RULES (numbers, thresholds, balance)
@@ -24,6 +24,11 @@ THE THREE THINGS YOU CAN CHANGE
      -> Folder: data/strings/
      -> No special guide needed -- just open the file, change the text,
         save. See the section below for what each file controls.
+
+  4. SIGNATURE JANK RECIPES (what card pairs can become named jank)
+     -> File: data/jank_combinations.json
+     -> Edit the card pair, archetype, name, description, prospect title,
+        hint, and lock-in line.
 
 
 ------------------------------------------------------------------------
@@ -50,6 +55,7 @@ WHERE EVERYTHING IS
   |
   |-- archetypes.json               <- The three genre options (RPG etc.)
   |-- interaction_rules.json        <- Flavor notes for shipped tag pairings
+  |-- jank_combinations.json        <- Signature jank recipe list
   |-- offers.json                   <- Dilemma / draft events
   |-- threshold_events.json         <- Stat milestone pop-ups
   `-- review_pools.json             <- Reviewer text (critics, fans, etc.)
@@ -133,12 +139,39 @@ WHERE EVERYTHING IS
       epilogues (epilogue_* keys), review intros, cycle recap.
 
     log_messages.json
-      Messages printed to the debug console during a run. These are not
-      visible to players in real time but appear in the Godot Output panel.
+      Messages shown in the in-game Studio Console during a run and also
+      printed to the Godot Output panel.
 
     card_ui.json
       Text on the card widgets: stat format strings, "Feature Unknown",
       the "Draft Pick" label, progress bar labels, etc.
+
+
+------------------------------------------------------------------------
+4. EDITING SIGNATURE JANK RECIPES
+------------------------------------------------------------------------
+
+  Open: data/jank_combinations.json
+
+  Each entry is one authored recipe:
+
+    card_a + card_b + archetype -> jank_card_id / name / description
+
+  Example fields:
+    - card_a / card_b      which two feature cards make the combo
+    - archetype            rpg / shooter / action_adventure, or blank for any
+    - name                 the final signature jank name
+    - description          shown in post-ship recap and legacy screens
+    - prospect_title       shown mid-run when the combo begins to form
+    - prospect_hint        shown mid-run as the prospect detail
+    - lock_in_line         shown when the signature locks during play
+
+  IMPORTANT:
+    - card names must match the actual feature_name values used by cards
+    - this system is authored, not automatic; if a pair is not listed,
+      it will not create named signature jank
+    - the first exact lock in a run becomes that run's canonical signature
+      and is the one preserved for the post-ship recap
 
   JSON TEXT RULES:
     - Text goes between double quotes: "like this"
@@ -193,7 +226,11 @@ READING THE NUMBERS: QUICK ENDING REFERENCE
   When you ship, your stats are checked against these thresholds in order:
 
     DEFINING GAME (best)
-      All of: ambition >= 25, instability 18-42, soul >= 7
+      All of: ambition >= 25, soul >= 7, and instability inside the chosen
+      archetype window:
+        RPG                12-54
+        Action-Adventure   15-50
+        Shooter            18-42
 
     CULT DISASTER
       instability >= 41 AND soul <= 4
