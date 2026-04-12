@@ -139,6 +139,23 @@ func has_locked_signature_jank() -> bool:
 func get_locked_signature_jank() -> Dictionary:
 	return _locked_signature_jank.duplicate(true)
 
+func get_active_prospect_offer_targets() -> PackedStringArray:
+	var targets: PackedStringArray = PackedStringArray()
+	if _current_prospect_jank.is_empty() or not _locked_signature_jank.is_empty():
+		return targets
+	var board_ids: PackedStringArray = _collect_feature_board_ids()
+	var card_a: String = _normalize_feature_name(String(_current_prospect_jank.get("card_a", "")))
+	var card_b: String = _normalize_feature_name(String(_current_prospect_jank.get("card_b", "")))
+	if card_a.is_empty() or card_b.is_empty():
+		return targets
+	var has_a: bool = board_ids.has(card_a)
+	var has_b: bool = board_ids.has(card_b)
+	if has_a and not has_b:
+		targets.append(card_b)
+	elif has_b and not has_a:
+		targets.append(card_a)
+	return targets
+
 func get_jank_pursuit_state() -> Dictionary:
 	if not _locked_signature_jank.is_empty():
 		return {
@@ -438,3 +455,13 @@ func _evaluate_jank_prospecting(placed_card: FeatureCard) -> Array[Dictionary]:
 	prospect_payload["message"] = String(prospect_payload.get("prospect_hint", "Something strange is taking shape."))
 	feedback.append(prospect_payload)
 	return feedback
+
+func _collect_feature_board_ids() -> PackedStringArray:
+	var board_ids: PackedStringArray = PackedStringArray()
+	for card in feature_board:
+		if card is FeatureCard:
+			board_ids.append(_normalize_feature_name(String((card as FeatureCard).feature_name)))
+	return board_ids
+
+func _normalize_feature_name(raw: String) -> String:
+	return raw.to_lower().strip_edges().replace(" ", "_").replace("-", "_")

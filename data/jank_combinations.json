@@ -38,6 +38,30 @@
       "lock_in_line": "Signature jank locked: The Devoted Horse. Loyalty has acquired hooves."
     },
     {
+      "card_a": "Tavern Tales",
+      "card_b": "Player Journal",
+      "archetype": "rpg",
+      "jank_card_id": "secondhand_questline",
+      "name": "The Secondhand Questline",
+      "meme_families": ["lore_archive", "theorycraft_canon"],
+      "description": "Tavern rumor text can register as accepted journal objectives. Players finish quests nobody remembers assigning. The wiki treats hearsay as canon now.",
+      "prospect_title": "Hearsay Objective",
+      "prospect_hint": "The journal is starting to take bar gossip personally.",
+      "lock_in_line": "Signature jank locked: The Secondhand Questline. Rumor now enters the log as obligation."
+    },
+    {
+      "card_a": "Reputation Rumors",
+      "card_b": "NPC Emotion Engine",
+      "archetype": "rpg",
+      "jank_card_id": "rumor_weather",
+      "name": "Rumor Weather",
+      "meme_families": ["theorycraft_canon", "build_cult"],
+      "description": "Ambient rumor values bleed into NPC mood state. Whole towns become furious about events that only almost happened. Players learn to gossip offensively.",
+      "prospect_title": "Mood Front",
+      "prospect_hint": "Rumors are starting to move through the town like weather instead of information.",
+      "lock_in_line": "Signature jank locked: Rumor Weather. Public mood now changes faster than facts can travel."
+    },
+    {
       "card_a": "Faction Reputation",
       "card_b": "Dynamic Faction Wars",
       "archetype": "rpg",
@@ -62,6 +86,42 @@
       "lock_in_line": "Signature jank locked: Midnight Recoil. The guns have chosen a sacred time."
     },
     {
+      "card_a": "Hit Markers",
+      "card_b": "Enemy Kill Animations",
+      "archetype": "shooter",
+      "jank_card_id": "premature_confirmation",
+      "name": "Premature Confirmation",
+      "meme_families": ["competitive_ritual", "patch_defense"],
+      "description": "Severe hits can trigger kill animations before the target is actually dead. Players reload out of politeness and lose firefights for their manners.",
+      "prospect_title": "False Positive",
+      "prospect_hint": "Combat feedback is starting to celebrate before the health bar agrees.",
+      "lock_in_line": "Signature jank locked: Premature Confirmation. The game now congratulates you ahead of schedule."
+    },
+    {
+      "card_a": "Kill Feed",
+      "card_b": "Bone Break System",
+      "archetype": "shooter",
+      "jank_card_id": "orthopedic_esports",
+      "name": "Orthopedic Esports",
+      "meme_families": ["competitive_ritual", "lore_archive"],
+      "description": "The kill feed starts broadcasting fracture chains like highlight commentary. The community invents limb combo categories and argues about tibia percent with a straight face.",
+      "prospect_title": "Broadcast Trauma",
+      "prospect_hint": "Combat telemetry is starting to sound medically specific.",
+      "lock_in_line": "Signature jank locked: Orthopedic Esports. The feed now covers anatomy like a ranked ladder."
+    },
+    {
+      "card_a": "Grappling Hook",
+      "card_b": "Explosive Barrels",
+      "archetype": "shooter",
+      "jank_card_id": "tactical_yoyo",
+      "name": "Tactical Yo-Yo",
+      "meme_families": ["build_cult", "competitive_ritual"],
+      "description": "Grapple logic can reel armed barrels back through the air before release. High-level players turn hesitation into an area-denial style and refuse to call it cheese.",
+      "prospect_title": "Retrieved Ordnance",
+      "prospect_hint": "Traversal tech is beginning to negotiate directly with explosives.",
+      "lock_in_line": "Signature jank locked: Tactical Yo-Yo. The battlefield now allows returns."
+    },
+    {
       "card_a": "Side Quest Generator",
       "card_b": "Seamless Open World",
       "archetype": "action_adventure",
@@ -72,6 +132,42 @@
       "prospect_title": "Ghost Route",
       "prospect_hint": "Quest direction keeps lingering where completion should have buried it.",
       "lock_in_line": "Signature jank locked: The Haunted Waypoint. The map now remembers what the quest forgot."
+    },
+    {
+      "card_a": "Grappling Hook",
+      "card_b": "Climbable Surfaces",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_unnecessary_route",
+      "name": "The Unnecessary Route",
+      "meme_families": ["competitive_ritual", "pilgrimage_site"],
+      "description": "Grapple validation inherits climb flags, turning half the scenery into legal traversal if approached from a bad enough angle. Speedrunners stop acknowledging doors.",
+      "prospect_title": "Route Drift",
+      "prospect_hint": "Traversal is starting to treat architecture as a suggestion.",
+      "lock_in_line": "Signature jank locked: The Unnecessary Route. The walls now believe in shortcuts."
+    },
+    {
+      "card_a": "Player Journal",
+      "card_b": "World Events",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_spoiler_journal",
+      "name": "The Spoiler Journal",
+      "meme_families": ["lore_archive", "theorycraft_canon"],
+      "description": "Journal entries resolve before world events actually fire. Players evacuate villages from disasters they were never formally told about. The notebook is treated like prophecy.",
+      "prospect_title": "Ahead Of Schedule",
+      "prospect_hint": "The journal is beginning to remember world events before the world does.",
+      "lock_in_line": "Signature jank locked: The Spoiler Journal. The notebook now knows what the map has not admitted yet."
+    },
+    {
+      "card_a": "Ambient Soundscape",
+      "card_b": "Day-Night Cycle",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_3am_door",
+      "name": "The 3AM Door",
+      "meme_families": ["sacred_timing", "pilgrimage_site"],
+      "description": "Ambient cues advance one state ahead of the clock. Players wait outside a certain door at 3am because the hinge sound means a secret is about to desync into existence.",
+      "prospect_title": "Nocturnal Hinge",
+      "prospect_hint": "The soundscape is starting to notice a different hour than the rest of the game.",
+      "lock_in_line": "Signature jank locked: The 3AM Door. The world now keeps one appointment after midnight."
     },
     {
       "card_a": "Ambush AI Encounters",

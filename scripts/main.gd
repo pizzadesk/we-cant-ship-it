@@ -376,6 +376,7 @@ func _on_state_changed(payload: StateSnapshotPayload) -> void:
 		INSTABILITY_CEILING_ZONE_SIZE,
 		Callable(_jank_fx_controller, "update_ship_button_danger")
 	)
+	_refresh_jank_pursuit_display()
 
 # -- Event Bus: Core Gameplay --
 func _on_feature_added(card: FeatureCard) -> void:
@@ -386,6 +387,7 @@ func _on_feature_added(card: FeatureCard) -> void:
 func _on_jank_prospect_updated(payload: Dictionary) -> void:
 	var title: String = String(payload.get("prospect_title", "Jank Prospect"))
 	var message: String = String(payload.get("message", "Something strange is taking shape."))
+	_refresh_jank_pursuit_display()
 	_show_synergy_toast(title, "%s\nOne more collision may lock it in." % message, "prospect", 0, JANK_PROSPECT_TOAST_DURATION)
 	if _feature_board != null:
 		_feature_board.pulse_jank_state("prospect")
@@ -394,6 +396,7 @@ func _on_jank_prospect_updated(payload: Dictionary) -> void:
 func _on_jank_signature_locked(payload: Dictionary) -> void:
 	var message: String = String(payload.get("message", "Signature jank locked."))
 	var soul_reward: int = int(payload.get("soul_reward", 0))
+	_refresh_jank_pursuit_display()
 	_show_synergy_toast("SIGNATURE LOCKED", message, "locked", soul_reward, JANK_LOCKED_TOAST_DURATION)
 	if _feature_board != null:
 		_feature_board.pulse_jank_state("locked")

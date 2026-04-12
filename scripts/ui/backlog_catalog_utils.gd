@@ -3,6 +3,7 @@ const UNIVERSAL_OFFER_WEIGHT: float = 9.0
 const GENRE_STRETCH_OFFER_WEIGHT: float = 4.0
 const WILD_SWING_OFFER_WEIGHT: float = 1.5
 const ALIEN_OFFER_WEIGHT: float = 0.5
+const PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER: float = 6.0
 
 static func ensure_template_cards_loaded(
 	template_cards: Array[Resource],
@@ -51,8 +52,11 @@ static func rebuild_daily_offer(
 
 	var available_templates: Array[Resource] = []
 	var chosen_archetype: String = ""
+	var prospect_targets: PackedStringArray = PackedStringArray()
 	if game_state != null and game_state.has_method("get_chosen_archetype"):
 		chosen_archetype = String(game_state.get_chosen_archetype())
+	if game_state != null and game_state.has_method("get_active_prospect_offer_targets"):
+		prospect_targets = PackedStringArray(game_state.get_active_prospect_offer_targets())
 
 	# Build the eligible pool, respecting unlock and run-tier rules.
 	# Archetype commitment is enforced by weighted offers rather than hard filtering,
@@ -71,7 +75,7 @@ static func rebuild_daily_offer(
 	# remain — guarantees a full offer every day.
 	if not already_offered_paths.is_empty():
 		for template in eligible_templates:
-			if not already_offered_paths.has(template.resource_path):
+			if not already_offered_paths.has(template.resource_path) or _is_prospect_target_template(template, prospect_targets):
 				available_templates.append(template)
 		if available_templates.size() < daily_visible_cards:
 			# Pool nearly or fully exhausted — wrap to the full eligible pool.
@@ -88,7 +92,7 @@ static func rebuild_daily_offer(
 
 	var visible_count: int = mini(daily_visible_cards, available_templates.size())
 	for _pick in range(visible_count):
-		var pick_index: int = _pick_weighted_template_index(available_templates, chosen_archetype, ui_rng)
+		var pick_index: int = _pick_weighted_template_index(available_templates, chosen_archetype, ui_rng, prospect_targets)
 		if pick_index < 0:
 			break
 		var template: Resource = available_templates[pick_index]
@@ -131,7 +135,12 @@ static func card_id_from_resource(card: Resource) -> String:
 		return file_name.trim_suffix(".res.remap")
 	return ""
 
-static func _pick_weighted_template_index(templates: Array[Resource], chosen_archetype: String, ui_rng: RandomNumberGenerator) -> int:
+static func _pick_weighted_template_index(
+	templates: Array[Resource],
+	chosen_archetype: String,
+	ui_rng: RandomNumberGenerator,
+	prospect_targets: PackedStringArray = PackedStringArray(),
+) -> int:
 	if templates.is_empty():
 		return -1
 	var total_weight: float = 0.0
@@ -139,7 +148,7 @@ static func _pick_weighted_template_index(templates: Array[Resource], chosen_arc
 	for template in templates:
 		var weight: float = 1.0
 		if template is FeatureCard:
-			weight = _offer_weight_for_archetype(template as FeatureCard, chosen_archetype)
+			weight = _offer_weight_for_archetype(template as FeatureCard, chosen_archetype, prospect_targets)
 		weights.append(weight)
 		total_weight += weight
 	if total_weight <= 0.0:
@@ -152,23 +161,48 @@ static func _pick_weighted_template_index(templates: Array[Resource], chosen_arc
 			return idx
 	return templates.size() - 1
 
-static func _offer_weight_for_archetype(card: FeatureCard, chosen_archetype: String) -> float:
+static func _offer_weight_for_archetype(
+	card: FeatureCard,
+	chosen_archetype: String,
+	prospect_targets: PackedStringArray = PackedStringArray(),
+) -> float:
 	if card == null or chosen_archetype.is_empty():
-		return 1.0
+		var neutral_weight: float = 1.0
+		if _is_prospect_target_card(card, prospect_targets):
+			neutral_weight *= PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER
+		return neutral_weight
+	var weight: float = 1.0
 	var affinity_count: int = card.archetype_affinity.size()
 	if affinity_count >= 3:
-		return UNIVERSAL_OFFER_WEIGHT
-	if affinity_count > 0 and card.archetype_affinity.has(chosen_archetype):
-		return ON_ARCHETYPE_OFFER_WEIGHT
-	match affinity_count:
-		0:
-			return ALIEN_OFFER_WEIGHT
-		1:
-			return WILD_SWING_OFFER_WEIGHT
-		2:
-			return GENRE_STRETCH_OFFER_WEIGHT
-		_:
-			return UNIVERSAL_OFFER_WEIGHT
+		weight = UNIVERSAL_OFFER_WEIGHT
+	elif affinity_count > 0 and card.archetype_affinity.has(chosen_archetype):
+		weight = ON_ARCHETYPE_OFFER_WEIGHT
+	else:
+		match affinity_count:
+			0:
+				weight = ALIEN_OFFER_WEIGHT
+			1:
+				weight = WILD_SWING_OFFER_WEIGHT
+			2:
+				weight = GENRE_STRETCH_OFFER_WEIGHT
+			_:
+				weight = UNIVERSAL_OFFER_WEIGHT
+	if _is_prospect_target_card(card, prospect_targets):
+		weight *= PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER
+	return weight
+
+static func _is_prospect_target_template(template: Resource, prospect_targets: PackedStringArray) -> bool:
+	if template is not FeatureCard:
+		return false
+	return _is_prospect_target_card(template as FeatureCard, prospect_targets)
+
+static func _is_prospect_target_card(card: FeatureCard, prospect_targets: PackedStringArray) -> bool:
+	if card == null or prospect_targets.is_empty():
+		return false
+	return prospect_targets.has(_normalize_feature_name(card.feature_name))
+
+static func _normalize_feature_name(raw: String) -> String:
+	return raw.to_lower().strip_edges().replace(" ", "_").replace("-", "_")
 
 static func refresh_backlog_list(card_list: VBoxContainer, backlog_cards: Array[Resource], card_widget_scene: PackedScene, origin: String = "backlog") -> void:
 	for child in card_list.get_children():

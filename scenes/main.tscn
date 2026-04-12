@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/feature_board_view.tscn" id="2_board_view"]
 [ext_resource type="PackedScene" path="res://scenes/ui/main_menu_overlay_view.tscn" id="3_menu_view"]
 [ext_resource type="PackedScene" path="res://scenes/ui/run_sidebar_view.tscn" id="4_sidebar_view"]
-[ext_resource type="PackedScene" path="res://scenes/ui/backlog_panel_view.tscn" id="5_backlog_view"]
+[ext_resource type="PackedScene" uid="uid://cqxuuwvtn3482" path="res://scenes/ui/backlog_panel_view.tscn" id="5_backlog_view"]
 [ext_resource type="PackedScene" path="res://scenes/ui/header_bar_view.tscn" id="6_header_view"]
-[ext_resource type="PackedScene" path="res://scenes/ui/dialog_host_view.tscn" id="7_dialog_host_view"]
+[ext_resource type="PackedScene" uid="uid://bi418uiibmoud" path="res://scenes/ui/dialog_host_view.tscn" id="7_dialog_host_view"]
 
 [node name="Main" type="Control" unique_id=510743200]
 clip_contents = true
@@ -39,9 +39,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="HeaderPanel" parent="RootMargin/Shell" instance=ExtResource("6_header_view")]
+[node name="HeaderPanel" parent="RootMargin/Shell" unique_id=1920698363 instance=ExtResource("6_header_view")]
 unique_name_in_owner = true
-layout_mode = 2
 
 [node name="Body" type="HBoxContainer" parent="RootMargin/Shell" unique_id=1880076598]
 unique_name_in_owner = true
@@ -50,23 +49,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="LeftColumn" parent="RootMargin/Shell/Body" instance=ExtResource("5_backlog_view")]
-unique_name_in_owner = true
-
-[node name="FeatureBoard" parent="RootMargin/Shell/Body" instance=ExtResource("2_board_view")]
+[node name="LeftColumn" parent="RootMargin/Shell/Body" unique_id=1581437713 instance=ExtResource("5_backlog_view")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="RightColumn" parent="RootMargin/Shell/Body" instance=ExtResource("4_sidebar_view")]
+[node name="FeatureBoard" parent="RootMargin/Shell/Body" unique_id=512175184 instance=ExtResource("2_board_view")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RightColumn" parent="RootMargin/Shell/Body" unique_id=276800468 instance=ExtResource("4_sidebar_view")]
 unique_name_in_owner = true
 
 [node name="CrunchTimer" type="Timer" parent="." unique_id=1987069347]
 unique_name_in_owner = true
 wait_time = 8.0
 
-[node name="DialogHost" parent="." instance=ExtResource("7_dialog_host_view")]
+[node name="DialogHost" parent="." unique_id=366294511 instance=ExtResource("7_dialog_host_view")]
 unique_name_in_owner = true
 
 [node name="JankTint" type="ColorRect" parent="." unique_id=878493183]
@@ -93,5 +91,5 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="MainMenuLayer" parent="." instance=ExtResource("3_menu_view")]
+[node name="MainMenuLayer" parent="." unique_id=976162227 instance=ExtResource("3_menu_view")]
 unique_name_in_owner = true
