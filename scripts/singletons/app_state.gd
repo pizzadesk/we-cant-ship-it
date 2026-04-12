@@ -176,9 +176,15 @@ func spend_day(reason: String) -> void:
 	runway_days = max(runway_days - 1, 0)
 	if _event_bus != null:
 		_event_bus.day_spent.emit(DaySpentPayload.build(reason, runway_days))
-	var popup_offered: bool = _maybe_offer_dilemma()
-	if not popup_offered:
+	var popup_offered: bool = false
+	if _offer_flow != null and _offer_flow.has_deferred_draft_offer():
 		popup_offered = _maybe_offer_draft()
+		if not popup_offered:
+			popup_offered = _maybe_offer_dilemma()
+	else:
+		popup_offered = _maybe_offer_dilemma()
+		if not popup_offered:
+			popup_offered = _maybe_offer_draft()
 	if runway_days == 0:
 		if _event_bus != null:
 			_event_bus.runway_depleted.emit(RunwayDepletedPayload.build(runway_days))

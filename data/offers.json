@@ -17,15 +17,97 @@
 				{ "label": "Rewrite", "effects": { "ambition": 3, "runway_days": -2, "instability": -3 } },
 				{ "label": "Patch it", "effects": { "instability": 4, "soul": 2 } }
 			]
+		},
+		{
+			"title": "Vertical Slice Meltdown",
+			"category": "production",
+			"description": "The showcase build is collapsing. Cut scope or bluff your way through the demo.",
+			"choices": [
+				{ "label": "Cut the slice down", "effects": { "ambition": -2, "instability": -3, "soul": 2, "runway_days": 1 } },
+				{ "label": "Fake it live", "effects": { "ambition": 4, "instability": 5, "soul": -1 } }
+			]
+		},
+		{
+			"title": "Community Wants The Glitch",
+			"category": "community",
+			"description": "A broken interaction clip is going viral. Patch it or make it part of the legend.",
+			"choices": [
+				{ "label": "Canonize it", "effects": { "instability": 4, "soul": 3, "ambition": 1 } },
+				{ "label": "Patch it before streamers see", "effects": { "instability": -4, "soul": -1 } }
+			]
+		},
+		{
+			"title": "Senior Dev Burnout",
+			"category": "team",
+			"description": "Your most reliable systems dev is fading. Protect the team or push through the week.",
+			"choices": [
+				{ "label": "Scope down this week", "effects": { "ambition": -3, "soul": 3, "instability": -2 } },
+				{ "label": "Crunch through it", "effects": { "ambition": 3, "instability": 4, "soul": -3 } }
+			]
+		},
+		{
+			"title": "Unexpected Fan Heat",
+			"category": "community",
+			"description": "An early clip caught on. Do you feed the cult audience or retreat to safer ground.",
+			"choices": [
+				{ "label": "Lean into the cult", "effects": { "soul": 4, "instability": 2 } },
+				{ "label": "Play it safe", "effects": { "instability": -2, "runway_days": -1 } }
+			]
+		},
+		{
+			"title": "Romance Thread Demands",
+			"category": "creative",
+			"description": "Players have latched onto two characters with exactly one exchange. Ignore it or build on it.",
+			"choices": [
+				{ "label": "Write it properly", "effects": { "soul": 3, "ambition": 2, "instability": 1 } },
+				{ "label": "Say no and move on", "effects": { "runway_days": 1, "soul": -1 } }
+			]
+		},
+		{
+			"title": "Middleware Sale",
+			"category": "technical",
+			"description": "A middleware vendor offers a miracle fix package in the middle of production.",
+			"choices": [
+				{ "label": "Adopt it mid-run", "effects": { "ambition": 2, "instability": 4 } },
+				{ "label": "Stick with your broken stack", "effects": { "soul": 2, "instability": 1 } }
+			]
+		},
+		{
+			"title": "QA Found A Load-Bearing Bug",
+			"category": "technical",
+			"description": "Removing one bug fixes the build and makes the game less itself. Decide what kind of studio you are.",
+			"choices": [
+				{ "label": "Design around it", "effects": { "ambition": 2, "instability": 3, "soul": 2 } },
+				{ "label": "Kill it now", "effects": { "instability": -6, "soul": -2, "ambition": -1 } }
+			]
 		}
 	],
 	"draft_picks": {
 		"base": [
 			{ "title": "Hype Trailer Push", "effects": { "ambition": 3, "soul": 1, "instability": 2 } },
 			{ "title": "Stability Sprint", "effects": { "instability": -5, "runway_days": -1 } },
-			{ "title": "Community Patch Notes", "effects": { "soul": 4, "ambition": 1 } }
+			{ "title": "Community Patch Notes", "effects": { "soul": 4, "ambition": 1 } },
+			{ "title": "Feature Freeze Pact", "effects": { "instability": -3, "soul": 2, "ambition": -1 } },
+			{ "title": "Weird Bug Spotlight", "effects": { "instability": 4, "soul": 3 } },
+			{ "title": "Combat Juice Pass", "effects": { "ambition": 2, "instability": 2, "soul": 1 } },
+			{ "title": "Narrative Focus Week", "effects": { "soul": 3, "ambition": 2, "instability": -1 } },
+			{ "title": "Systemic Overreach", "effects": { "ambition": 5, "instability": 4, "soul": -2 } },
+			{ "title": "UX Triage", "effects": { "instability": -2, "soul": 1, "runway_days": -1 } },
+			{ "title": "Prototype Jam", "effects": { "ambition": 4, "instability": 3 } },
+			{ "title": "Outsource Optimization", "effects": { "instability": -4, "soul": -1 } },
+			{ "title": "Cult Following Dev Log", "effects": { "soul": 5, "instability": 1 } }
 		],
 		"soul_gated": [
+			{
+				"title": "The Team Finds Its Voice",
+				"effects": { "soul": 5, "ambition": 3, "instability": 2 },
+				"soul_required": 18
+			},
+			{
+				"title": "Moonshot Vertical Slice",
+				"effects": { "ambition": 6, "instability": 4, "soul": 2 },
+				"soul_required": 22
+			},
 			{
 				"title": "We're Going For It",
 				"effects": { "ambition": 4, "soul": 6, "instability": 5 },

@@ -11,7 +11,7 @@
 	"__section_action_economy": "=== ACTION ECONOMY ===",
 	"soul_start": 12,
 	"tutorial_runway_days": 5,
-	"standard_runway_days": 21,
+	"standard_runway_days": 19,
 	"fix_bugs_instability_reduction": 10,
 	"fix_bugs_soul_cost": 2,
 	"fix_bugs_ambition_penalty": 2,
@@ -40,11 +40,11 @@
 	"sweet_spot_runway_max": 9,
 	"sweet_spot_instability_min": 18,
 	"sweet_spot_instability_max": 45,
-	"too_early_runway_threshold": 13,
+	"too_early_runway_threshold": 12,
 	"panic_ship_runway_threshold": 2,
 
 	"__section_ship_modifiers": "=== SHIP WINDOW SCORE MODIFIERS ===",
-	"sweet_spot_score_bonus": 1.2,
+	"sweet_spot_score_bonus": 0.9,
 	"too_early_score_penalty": -0.5,
 	"panic_ship_score_penalty": -0.4,
 
@@ -56,7 +56,7 @@
 	"sweet_spot_instability_zone_max": 62,
 
 	"__section_card_progression": "=== CARD PROGRESSION === stage_threshold_runways: runway day thresholds for visual stage changes [stage0, stage1, stage2, stage3]",
-	"initial_card_unlock_count": 8,
+	"initial_card_unlock_count": 12,
 	"stage_threshold_runways": [15, 10, 5, 0],
 
 	"__section_archetype": "=== ARCHETYPE MISMATCH SYSTEM === alien = card has no genre affinity at all. mismatch = card has some affinity but not the chosen genre.",

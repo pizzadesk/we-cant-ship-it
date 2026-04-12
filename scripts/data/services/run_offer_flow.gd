@@ -20,6 +20,9 @@ func reset() -> void:
 	if _offer_scheduler != null:
 		_offer_scheduler.reset()
 
+func has_deferred_draft_offer() -> bool:
+	return _offer_scheduler != null and _offer_scheduler.has_deferred_draft_offer()
+
 func apply_dilemma_choice(choice_index: int, state: RunStateDataType) -> ChoiceResolutionType:
 	if _pending_dilemma == null:
 		return null

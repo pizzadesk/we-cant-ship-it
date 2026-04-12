@@ -1,11 +1,27 @@
 [
 	{
+		"id": "ambition_creative_breakthrough",
+		"metric": "ambition",
+		"threshold": 10,
+		"severity": "info",
+		"message": "Creative breakthrough: The team can finally describe the game without apologizing first.",
+		"effects": {"soul": 1}
+	},
+	{
 		"id": "ambition_investor_call",
 		"metric": "ambition",
 		"threshold": 20,
 		"severity": "info",
 		"message": "Investor call: Your pitch deck is terrifying, but strangely convincing.",
 		"effects": {"soul": 2}
+	},
+	{
+		"id": "instability_warning_band",
+		"metric": "instability",
+		"threshold": 22,
+		"severity": "info",
+		"message": "Warning band: The build has stopped behaving and started developing preferences.",
+		"effects": {"ambition": 1}
 	},
 	{
 		"id": "instability_qa_redline",
@@ -24,12 +40,37 @@
 		"effects": {"soul": -3}
 	},
 	{
+		"id": "soul_studio_manifesto",
+		"metric": "soul",
+		"threshold": 18,
+		"severity": "info",
+		"message": "Studio manifesto: The team believes in the bit hard enough to make it contagious.",
+		"effects": {"ambition": 1}
+	},
+	{
+		"id": "soul_low_morale",
+		"metric": "soul",
+		"threshold": 6,
+		"comparison": "lte",
+		"severity": "warning",
+		"message": "Low morale: Conversations have shortened into sighs and bug numbers.",
+		"effects": {"instability": 2}
+	},
+	{
 		"id": "soul_community_hype",
 		"metric": "soul",
 		"threshold": 40,
 		"severity": "info",
 		"message": "Players are calling your bugs immersive.",
 		"effects": {}
+	},
+	{
+		"id": "ambition_scope_drag",
+		"metric": "ambition",
+		"threshold": 28,
+		"severity": "warning",
+		"message": "Scope drag: Every new idea now arrives with two hidden implementation meetings.",
+		"effects": {"instability": 3}
 	},
 	{
 		"id": "runway_budget_alarm",
@@ -39,5 +80,14 @@
 		"severity": "warning",
 		"message": "Accounting switched to panic spreadsheets.",
 		"effects": {"instability": 2}
+	},
+	{
+		"id": "runway_final_lock",
+		"metric": "runway_days",
+		"threshold": 5,
+		"comparison": "lte",
+		"severity": "warning",
+		"message": "Final lock: Every task now sounds urgent, even the fake ones.",
+		"effects": {"soul": -1}
 	}
 ]

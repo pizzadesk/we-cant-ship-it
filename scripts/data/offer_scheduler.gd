@@ -10,6 +10,7 @@ var _dilemma_days_offered: Dictionary = {}
 var _popup_offered_on_runway_day: int = -1
 var _pending_dilemma: Dictionary = {}
 var _pending_draft_offer: Dictionary = {}
+var _draft_offer_deferred: bool = false
 
 var _rng: RandomNumberGenerator
 
@@ -21,6 +22,7 @@ func reset() -> void:
 	_dilemma_days_offered.clear()
 	_pending_dilemma.clear()
 	_pending_draft_offer.clear()
+	_draft_offer_deferred = false
 	_popup_offered_on_runway_day = -1
 
 # --- Getters for pending state (AppState reads these) ---
@@ -30,6 +32,9 @@ func get_pending_dilemma() -> Dictionary:
 
 func get_pending_draft_offer() -> Dictionary:
 	return _pending_draft_offer
+
+func has_deferred_draft_offer() -> bool:
+	return _draft_offer_deferred
 
 func get_popup_offered_on_runway_day() -> int:
 	return _popup_offered_on_runway_day
@@ -98,30 +103,74 @@ func maybe_offer_draft(
 	if runway_days <= 0:
 		return {}
 	if feature_board_empty:
+		_draft_offer_deferred = false
 		return {}
-	if runway_days > _pressure_start_day_for_run(current_run):
-		return {}
-	if _popup_offered_on_runway_day == runway_days:
-		return {}
-	var effective_interval: int = maxi(1, int(float(config.draft_offer_interval) / pressure_modifier))
-	if runway_days % effective_interval != 0:
+	if _draft_offer_deferred:
+		if _popup_offered_on_runway_day == runway_days:
+			return {}
+		_pending_draft_offer = _build_draft_offer(offers, soul)
+		if _pending_draft_offer.is_empty():
+			_draft_offer_deferred = false
+			return {}
+		_pending_draft_offer["runway_day"] = runway_days
+		_last_draft_day_offered = runway_days
+		_popup_offered_on_runway_day = runway_days
+		_draft_offer_deferred = false
+		return _pending_draft_offer
+	if not _is_draft_offer_day(config, runway_days, current_run, pressure_modifier):
 		return {}
 	if _last_draft_day_offered == runway_days:
 		return {}
+	if _popup_offered_on_runway_day == runway_days:
+		_draft_offer_deferred = true
+		return {}
 
+	_pending_draft_offer = _build_draft_offer(offers, soul)
+	if _pending_draft_offer.is_empty():
+		return {}
 	_last_draft_day_offered = runway_days
-	var draft_picks: Array = Array((offers.get("draft_picks", {}) as Dictionary).get("base", []))
-	var soul_gated: Array = Array((offers.get("draft_picks", {}) as Dictionary).get("soul_gated", []))
-	for sg_pick: Variant in soul_gated:
-		if int((sg_pick as Dictionary).get("soul_required", 0)) <= soul:
-			draft_picks.append(sg_pick)
-	_pending_draft_offer = {
-		"title": "Feature Pitch Draft",
-		"description": "Pick one producer pitch to shape the next stretch.",
-		"picks": draft_picks,
-	}
+	_pending_draft_offer["runway_day"] = runway_days
 	_popup_offered_on_runway_day = runway_days
 	return _pending_draft_offer
+
+func _is_draft_offer_day(
+	config: GameConfig,
+	runway_days: int,
+	current_run: int,
+	pressure_modifier: float,
+) -> bool:
+	if runway_days > _pressure_start_day_for_run(current_run):
+		return false
+	var effective_interval: int = maxi(1, int(float(config.draft_offer_interval) / pressure_modifier))
+	return runway_days % effective_interval == 0
+
+func _build_draft_offer(offers: Dictionary, soul: int) -> Dictionary:
+	var draft_config: Dictionary = offers.get("draft_picks", {}) as Dictionary
+	var draft_picks: Array[Dictionary] = []
+	var base: Array = Array(draft_config.get("base", []))
+	for pick in base:
+		if pick is Dictionary:
+			draft_picks.append((pick as Dictionary).duplicate(true))
+	var soul_gated: Array = Array(draft_config.get("soul_gated", []))
+	for sg_pick in soul_gated:
+		if sg_pick is not Dictionary:
+			continue
+		var pick_dict: Dictionary = sg_pick as Dictionary
+		if int(pick_dict.get("soul_required", 0)) <= soul:
+			draft_picks.append(pick_dict.duplicate(true))
+	if draft_picks.size() < 3:
+		return {}
+	var selected_picks: Array[Dictionary] = []
+	var available_picks: Array[Dictionary] = draft_picks.duplicate(true)
+	while selected_picks.size() < 3 and not available_picks.is_empty():
+		var pick_index: int = _rng.randi_range(0, available_picks.size() - 1)
+		selected_picks.append((available_picks[pick_index] as Dictionary).duplicate(true))
+		available_picks.remove_at(pick_index)
+	return {
+		"title": "Feature Pitch Draft",
+		"description": "Pick one producer pitch to shape the next stretch.",
+		"picks": selected_picks,
+	}
 
 func _pressure_start_day_for_run(current_run: int) -> int:
 	match current_run:

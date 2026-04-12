@@ -1,8 +1,8 @@
 const ON_ARCHETYPE_OFFER_WEIGHT: float = 12.0
-const UNIVERSAL_OFFER_WEIGHT: float = 10.0
-const GENRE_STRETCH_OFFER_WEIGHT: float = 3.0
-const WILD_SWING_OFFER_WEIGHT: float = 1.0
-const ALIEN_OFFER_WEIGHT: float = 0.35
+const UNIVERSAL_OFFER_WEIGHT: float = 9.0
+const GENRE_STRETCH_OFFER_WEIGHT: float = 4.0
+const WILD_SWING_OFFER_WEIGHT: float = 1.5
+const ALIEN_OFFER_WEIGHT: float = 0.5
 
 static func ensure_template_cards_loaded(
 	template_cards: Array[Resource],

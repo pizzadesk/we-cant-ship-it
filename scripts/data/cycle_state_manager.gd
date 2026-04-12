@@ -121,10 +121,20 @@ func ensure_initial_card_unlock_state(
 	for card_id in all_card_ids:
 		if get_card_tier.call(card_id) == "common":
 			common_ids.append(card_id)
+	var shuffled_common_ids: Array = []
+	for card_id in common_ids:
+		shuffled_common_ids.append(card_id)
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.randomize()
+	for idx in range(shuffled_common_ids.size() - 1, 0, -1):
+		var swap_idx: int = rng.randi_range(0, idx)
+		var temp: Variant = shuffled_common_ids[idx]
+		shuffled_common_ids[idx] = shuffled_common_ids[swap_idx]
+		shuffled_common_ids[swap_idx] = temp
 	var seed_count: int = mini(initial_count, common_ids.size())
 	var seeded: Array = []
 	for idx in range(seed_count):
-		seeded.append(common_ids[idx])
+		seeded.append(shuffled_common_ids[idx])
 	_cycle["unlocked_card_ids"] = seeded
 	save()
 
