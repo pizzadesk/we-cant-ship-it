@@ -245,9 +245,9 @@ routine rotation.*
 *Design intent: Ship It is not just a stat threshold check. Timing is a
 second dimension. Shipping too early reads as undercooked; shipping in
 blind panic reads as unfinished. The sweet spot rewards players who read
-the board and commit before runway forces their hand. Defining Game
-endings are exempt from timing penalties --- reaching the apex outcome
-should not be penalised by the moment you chose to ship.*
+the board and commit before runway forces their hand. Timing still
+matters even for otherwise strong builds, so the player is pushed to
+read the board rather than rely on a single threshold crossing.*
 
 **6. Archetype System**
 
@@ -257,8 +257,8 @@ skin. Archetype does three things:
 
 -   Sets the Defining Game Instability window for this run.
 
--   Determines which archetype-exclusive cards appear in the daily
-    offer.
+-   Strongly weights the daily offer toward on-archetype cards while
+    still allowing off-brief and alien cards to surface occasionally.
 
 -   Acts as the interpretive lens for emergent jank --- the same card
     combination produces different jank outcomes depending on archetype.
@@ -281,25 +281,23 @@ skin. Archetype does three things:
                                       card can bust you.
   ---------------------------------------------------------------------------
 
-**Archetype-Exclusive Cards**
+**Offer Weighting and Friction**
 
-Each archetype has 4--6 exclusive cards that only appear in that
-archetype\'s daily offer pool. These cards are genre-flavored in name
-and feel, not just in stats:
+The daily backlog is weighted rather than hard-filtered. Cards that fit
+the chosen archetype appear much more often, universal cards stay common,
+and off-genre or alien cards still break through often enough to create
+temptation and mismatch friction.
 
--   RPG exclusives: Dialogue System, Faction Reputation, World Map,
-    Branching Questline, Lore Codex.
+This keeps archetype selection feeling like a commitment without turning
+the run into a sealed lane. The player is usually offered the kind of
+game they said they were making, but the backlog can still tempt them
+into a reach, a wild swing, or a studio identity crisis.
 
--   Shooter exclusives: Gunfeel Tuning, Enemy AI Aggression, Arena
-    Layout, Reload Animation, Damage Numbers.
+When a signature jank prospect is active, the exact missing partner card
+gets a temporary offer-weight bonus and is allowed back into the backlog
+rotation even if it was already shown earlier in the run. The intended
+feel is "chaseable, not guaranteed."
 
--   Action-Adventure exclusives: Traversal System, Open World Density,
-    Side Quest Generator, Physics Playground, Day-Night Cycle.
-
-*These cards have normal Ambition/Instability values but are stamped
-with their archetype. When placed in a different archetype\'s run (via
-jank card inheritance across runs), they carry higher instability
-modifiers --- a shooter card in an RPG run produces friction.*
 **Archetype Mismatch Penalty**
 
 Placing a card outside its native archetype applies a friction penalty
@@ -362,13 +360,16 @@ the cards hit harder.
 **Daily Offer --- Pick One of Three**
 
 Each day, three cards are presented face-up. The player picks one. The
-other two are discarded --- they will not reappear in future offers this
-run. No skipping, no reroll.
+other two are usually discarded for the rest of the run. No skipping, no
+reroll. The one explicit exception is a live signature-jank prospect:
+the exact missing partner card can be reintroduced with a temporary
+weight bonus so the pursuit stays legible.
 
 *Design intent: Blackjack doesn't offer a reroll. The tension is in the
 choice between three known options today. Passive waiting is not
-available: every card you pass on is gone. The constraint is scarcity
-of decisions, not scarcity of time.*
+available. The constraint is scarcity of decisions, not scarcity of
+time, while prospect chase support prevents the most exciting hook from
+depending entirely on blind churn.*
 
 **8. Emergent Jank System**
 
@@ -398,6 +399,10 @@ raw permutation volume; it is pursuit of legible, named signature jank.
 -   The player sees this through a prominent banner and a persistent
     jank-state strip on the board.
 
+-   Once a prospect is live, the daily backlog softly biases toward the
+    exact missing partner card so the player can meaningfully chase the
+    lock instead of waiting on ordinary offer churn.
+
 -   The first exact lock in a run becomes the canonical signature jank
     for that run. Later matches do not replace it.
 
@@ -409,55 +414,35 @@ ships without notable jank --- not every broken game becomes legendary.
 
 **Illustrative Combination Examples**
 
-  ------------------------------------------------------------------------------
-  **Card A**   **Card B**   **Archetype**      **Jank Card    **Flavor**
-                                               Unlocked**     
-  ------------ ------------ ------------------ -------------- ------------------
-  Physics      Dialogue     RPG                The Yeetable   Quest NPCs can be
-  Playground   System                          NPC            launched off
-                                                              geometry.
-                                                              Speedrunners found
-                                                              a clip through the
-                                                              final boss.
-                                                              Beloved.
+-   **Ragdoll Physics + Deep Branching Dialogue + RPG -> The Yeetable
+    NPC**
+    Quest NPCs can be launched off geometry. Speedrunners found a clip
+    through the final boss. Beloved.
 
-  Physics      Dialogue     Shooter            Ragdoll        Enemies deliver
-  Playground   System                          Monologue      scripted death
-                                                              speeches
-                                                              mid-ragdoll.
-                                                              Somehow emotional.
+-   **Ragdoll Physics + Deep Branching Dialogue + Shooter -> Ragdoll
+    Monologue**
+    Enemies deliver scripted death speeches mid-ragdoll. Somehow
+    emotional.
 
-  Procedural   Faction      RPG                The Infinite   Faction logic
-  Generation   Reputation                      Betrayal       fires on proc-gen
-                                                              entities. Every
-                                                              merchant is
-                                                              secretly hostile.
-                                                              Players wrote lore
-                                                              about it.
+-   **Faction Reputation + Dynamic Faction Wars + RPG -> The Infinite
+    Betrayal**
+    Faction loyalty re-evaluates every tick against war state. Every
+    merchant is secretly hostile. Players wrote lore about it.
 
-  Gunfeel      Day-Night    Shooter            Midnight       Recoil multipliers
-  Tuning       Cycle                           Recoil         read the wrong
-                                                              time variable.
-                                                              Guns are perfect
-                                                              at 3am game-time.
-                                                              Tournaments
-                                                              adjusted.
+-   **Firearm Customization + Day Night Cycle + Shooter -> Midnight
+    Recoil**
+    Recoil multipliers read the wrong time variable. Guns are perfect at
+    3am game-time. Tournaments adjusted.
 
-  Open World   Branching    Action-Adventure   The Haunted    Quest markers
-  Density      Questline                       Waypoint       persist after
-                                                              completion in
-                                                              dense areas.
-                                                              Players report
-                                                              \'following a
-                                                              ghost.\'
+-   **Side Quest Generator + Seamless Open World + Action-Adventure ->
+    The Haunted Waypoint**
+    Quest markers persist after completion in dense world spaces.
+    Players report following a ghost.
 
-  Arena Layout Enemy AI     Shooter            The Honourable AI pathfinds to
-               Aggression                      Duel           center of arena
-                                                              before engaging.
-                                                              Players started
-                                                              treating it as a
-                                                              ritual.
-  ------------------------------------------------------------------------------
+-   **Ambush AI Encounters + Fortress Siege Mode + Shooter -> The
+    Honourable Duel**
+    AI pathfinds to the centre of siege arenas before engaging. Players
+    started treating it as a ritual.
 
 **Jank Cards in Subsequent Runs**
 
@@ -505,9 +490,12 @@ player was already chasing mid-run.
 
 Shown immediately after shipping. Critic reviews resolve before the
 player sees any stat analysis. The review score is derived from the
-ending type, with ship window timing noted in the indie blog critic
-copy. The first thing the player sees is how the world reacted ---
-before they can see why.
+shipped stats and ship window, but the copy is anchored to the shipped
+build itself: reviewers react to the run's locked signature jank when
+one exists, then to its meme-family afterlife before falling back to broader genre or
+ending language. Ship window timing is still noted in critical framing.
+The first thing the player sees is how the world reacted --- before they
+can see why.
 
 **Gap Visualizer**
 
@@ -520,7 +508,7 @@ next run.
 > ██████████████ ✓
 
 Bars show delta from a proportional baseline, not distance from the
-ceiling. Run 1 shows the Defining Game as locked. Runs 2--3 show it
+ceiling. Run 1 shows the Defining Game as locked. Runs 2--4 show it
 open.
 
 **Jank Discovery Screen**

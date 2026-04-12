@@ -99,6 +99,10 @@ WHERE EVERYTHING IS
 
   Your card gets mixed into the same offer pool as the built-in cards.
   There is no registration step -- the folder is scanned automatically.
+  Daily offers are weighted toward the chosen archetype rather than hard-
+  filtered, so off-genre cards can still appear. If a signature-jank
+  prospect is active, the exact missing partner card can also be softly
+  boosted in the backlog.
 
   QUICK VALUES GUIDE:
 
@@ -186,6 +190,9 @@ WHERE EVERYTHING IS
       it will not create named signature jank
     - the first exact lock in a run becomes that run's canonical signature
       and is the one preserved for the post-ship recap
+    - once a prospect is live, the game softly boosts the exact missing
+      partner card in the backlog; recipes should stay distinctive enough
+      that this support feels like a chase, not a guarantee
 
   JSON TEXT RULES:
     - Text goes between double quotes: "like this"

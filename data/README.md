@@ -96,6 +96,19 @@ Weighted review text pools used by ReviewService for the four reviewer archetype
 
 Reviewers must stay outlet-specific while still reacting to the shipped game that actually exists. Signature jank and meme-family language should be preferred over generic genre chatter.
 
+If you add a new `meme_families` value in `jank_combinations.json`, update the reviewer pools in the same pass or the new folklore category will have no outlet-specific reaction lines.
+
+---
+
+## jank_combinations.json
+
+Authored mid-run prospect and signature-jank recipe list. Each entry can define the card pair, archetype, name, description, prospect title, prospect hint, lock-in line, and optional `meme_families` metadata.
+
+Important runtime behavior:
+- The first exact lock in a run becomes the canonical signature jank for that run.
+- While a prospect is active, the backlog softly boosts the exact missing partner card so the pursuit is chaseable but not guaranteed.
+- Signature jank discovered at lock or ship time is what reviewers and post-ship recap screens talk about.
+
 ---
 
 ## offers.json
