@@ -6,6 +6,8 @@ const ScoreCalculator = preload("res://scripts/data/score_calculator.gd")
 const CycleStateManager = preload("res://scripts/data/cycle_state_manager.gd")
 @warning_ignore("shadowed_global_identifier")
 const OfferScheduler = preload("res://scripts/data/offer_scheduler.gd")
+@warning_ignore("shadowed_global_identifier")
+const JankResolver = preload("res://scripts/data/jank_resolver.gd")
 const ChoiceResolutionType = preload("res://scripts/data/payloads/choice_resolution.gd")
 const RunStateDataType = preload("res://scripts/data/payloads/run_state_data.gd")
 const RunResolutionOutcomeType = preload("res://scripts/data/payloads/run_resolution_outcome.gd")
@@ -33,6 +35,10 @@ var _offer_flow: RunOfferFlow
 var _run_resolution: RunResolutionService
 # Transient: which run was just completed via ship_it(). Used by UI post-ship dialogs.
 var _last_completed_run: int = 0
+var _current_prospect_jank_id: String = ""
+var _hinted_prospect_jank_ids: Dictionary = {}
+var _locked_signature_jank: Dictionary = {}
+var _signature_jank_reward_granted: bool = false
 
 func _ready() -> void:
 	_rng.randomize()
@@ -62,6 +68,10 @@ func reset_run() -> void:
 	soul = _content_repository.get_game_config().soul_start
 	feature_board.clear()
 	chosen_archetype = ""
+	_current_prospect_jank_id = ""
+	_hinted_prospect_jank_ids.clear()
+	_locked_signature_jank.clear()
+	_signature_jank_reward_granted = false
 	_offer_flow.reset()
 	_emit_state()
 
@@ -121,6 +131,12 @@ func set_archetype(archetype: String) -> void:
 func get_chosen_archetype() -> String:
 	return chosen_archetype
 
+func has_locked_signature_jank() -> bool:
+	return not _locked_signature_jank.is_empty()
+
+func get_locked_signature_jank() -> Dictionary:
+	return _locked_signature_jank.duplicate(true)
+
 ## Tier availability is gated by current run number in the four-run cycle.
 func is_tier_available(tier: String) -> bool:
 	match tier.to_lower():
@@ -151,11 +167,17 @@ func add_feature_card(card: Resource) -> void:
 	ambition += placed_card.ambition_value
 	instability += placed_card.instability_value
 	_apply_archetype_mismatch(placed_card)
-
+	var jank_feedback: Array[Dictionary] = _evaluate_jank_prospecting(placed_card)
 	soul = maxi(soul, 0)
 	spend_day("add_feature")
 	if _event_bus != null:
 		_event_bus.feature_added.emit(placed_card)
+		for feedback in jank_feedback:
+			match String(feedback.get("stage", "")):
+				"prospect":
+					_event_bus.jank_prospect_updated.emit(feedback)
+				"locked":
+					_event_bus.jank_signature_locked.emit(feedback)
 
 func fix_bugs() -> void:
 	if runway_days <= 0:
@@ -198,7 +220,8 @@ func ship_it() -> ShipResult:
 		soul,
 		feature_board,
 		chosen_archetype,
-		current_run
+		current_run,
+		_locked_signature_jank
 	)
 	if outcome == null:
 		outcome = RunResolutionOutcomeType.new()
@@ -343,3 +366,50 @@ func _emit_threshold_event_from_dictionary(event_data: Dictionary) -> void:
 		event_data.get("effects", {}),
 		String(event_data.get("severity", "info"))
 	))
+
+func _evaluate_jank_prospecting(placed_card: FeatureCard) -> Array[Dictionary]:
+	var feedback: Array[Dictionary] = []
+	if placed_card == null or _content_repository == null:
+		return feedback
+	if not _locked_signature_jank.is_empty():
+		return feedback
+	var combinations: Array = _content_repository.get_jank_combinations()
+	if combinations.is_empty():
+		return feedback
+
+	var lock_match: Dictionary = JankResolver.find_combination(feature_board, chosen_archetype, combinations)
+	if not lock_match.is_empty():
+		_locked_signature_jank = lock_match.duplicate(true)
+		_current_prospect_jank_id = String(lock_match.get("jank_card_id", ""))
+		var locked_payload: Dictionary = lock_match.duplicate(true)
+		locked_payload["stage"] = "locked"
+		locked_payload["message"] = String(locked_payload.get(
+			"lock_in_line",
+			"Signature jank locked: %s." % String(locked_payload.get("name", "Unknown Jank"))
+		))
+		var soul_reward: int = 0
+		if not _signature_jank_reward_granted:
+			soul += 1
+			_signature_jank_reward_granted = true
+			soul_reward = 1
+		locked_payload["soul_reward"] = soul_reward
+		feedback.append(locked_payload)
+		return feedback
+
+	var prospect: Dictionary = JankResolver.find_prospect(feature_board, chosen_archetype, placed_card, combinations)
+	if prospect.is_empty():
+		_current_prospect_jank_id = ""
+		return feedback
+
+	var prospect_id: String = String(prospect.get("jank_card_id", ""))
+	if prospect_id.is_empty():
+		return feedback
+	_current_prospect_jank_id = prospect_id
+	if bool(_hinted_prospect_jank_ids.get(prospect_id, false)):
+		return feedback
+	_hinted_prospect_jank_ids[prospect_id] = true
+	var prospect_payload: Dictionary = prospect.duplicate(true)
+	prospect_payload["stage"] = "prospect"
+	prospect_payload["message"] = String(prospect_payload.get("prospect_hint", "Something strange is taking shape."))
+	feedback.append(prospect_payload)
+	return feedback

@@ -92,9 +92,12 @@ static func _predict_ending_label(game_state: Node, _predicted_score: float) -> 
 	var soul: int = int(game_state.soul)
 	var archetype: String = ""
 	var current_run: int = int(game_state.current_run)
+	var has_locked_jank: bool = false
 	if game_state.has_method("get_chosen_archetype"):
 		archetype = String(game_state.get_chosen_archetype())
-	return EndingResolver.resolve_ending_label(config, ambition, instability, soul, archetype, false, current_run)
+	if game_state.has_method("has_locked_signature_jank"):
+		has_locked_jank = bool(game_state.has_locked_signature_jank())
+	return EndingResolver.resolve_ending_label(config, ambition, instability, soul, archetype, has_locked_jank, current_run)
 
 static func _ending_key(ending: String) -> String:
 	return _extract_ending_name(ending).to_lower().replace(" ", "_")

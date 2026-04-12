@@ -38,6 +38,7 @@ func resolve_and_commit_run(
 	feature_board: Array[FeatureCard],
 	chosen_archetype: String,
 	current_run: int,
+	locked_signature_jank: Dictionary = {},
 ) -> RunResolutionOutcomeType:
 	var config: GameConfig = _content_repository.get_game_config()
 	var completed_run: int = current_run
@@ -62,7 +63,9 @@ func resolve_and_commit_run(
 		dg_eligible
 	)
 	var jank_status: String = ScoreCalculator.compute_jank_status(config, instability, review_score)
-	var jank_match: Dictionary = JankResolver.find_combination(feature_board, chosen_archetype, _content_repository.get_jank_combinations())
+	var jank_match: Dictionary = locked_signature_jank.duplicate(true)
+	if jank_match.is_empty():
+		jank_match = JankResolver.find_combination(feature_board, chosen_archetype, _content_repository.get_jank_combinations())
 	var has_jank_combination: bool = not jank_match.is_empty()
 	var ending_id: String = EndingResolver.resolve_ending_id(
 		config,

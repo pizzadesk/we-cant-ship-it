@@ -288,6 +288,8 @@ func _wire_events() -> void:
 	if _event_bus != null:
 		_event_bus.state_changed.connect(_on_state_changed)
 		_event_bus.feature_added.connect(_on_feature_added)
+		_event_bus.jank_prospect_updated.connect(_on_jank_prospect_updated)
+		_event_bus.jank_signature_locked.connect(_on_jank_signature_locked)
 		_event_bus.threshold_event.connect(_on_threshold_event)
 		_event_bus.dilemma_offered.connect(_on_dilemma_offered)
 		_event_bus.draft_offer.connect(_on_draft_offer)
@@ -372,6 +374,21 @@ func _on_state_changed(payload: StateSnapshotPayload) -> void:
 func _on_feature_added(card: FeatureCard) -> void:
 	_feature_board.add_feature_to_board(card)
 	_append_log(_S.get_string("log_messages", "feature_added") % card.feature_name)
+
+func _on_jank_prospect_updated(payload: Dictionary) -> void:
+	var title: String = String(payload.get("prospect_title", "Jank Prospect"))
+	var message: String = String(payload.get("message", "Something strange is taking shape."))
+	_show_synergy_toast("%s: %s" % [title, message], 0, 0)
+	_append_log("[JANK PROSPECT] %s — %s" % [title, message])
+
+func _on_jank_signature_locked(payload: Dictionary) -> void:
+	var message: String = String(payload.get("message", "Signature jank locked."))
+	var soul_reward: int = int(payload.get("soul_reward", 0))
+	_show_synergy_toast(message, 0, soul_reward)
+	var reward_text: String = ""
+	if soul_reward > 0:
+		reward_text = " (Soul +%d)" % soul_reward
+	_append_log("[JANK LOCKED] %s%s" % [message, reward_text])
 
 func _on_threshold_event(payload: ThresholdEventPayload) -> void:
 	var effect_parts: PackedStringArray = []
