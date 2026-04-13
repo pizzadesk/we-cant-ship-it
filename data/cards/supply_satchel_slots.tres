@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_suppl"]
+
+[resource]
+script = ExtResource("1_suppl")
+feature_name = "Supply Satchel Slots"
+ambition_value = 1
+instability_value = 2
+tier = "common"
+unlock_weight = 1
+tags = PackedStringArray("inventory", "ui")
+interactions = {
+"inventory": {"instability": 1, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Extra loops appear on the pack for ropes, flasks, and the item you swore would matter later."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_preda"]
+
+[resource]
+script = ExtResource("1_preda")
+feature_name = "Predator Territory Maps"
+ambition_value = 4
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("world", "combat", "ui")
+interactions = {
+"world": {"instability": 2, "soul": 0},
+"combat": {"instability": 2, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "The world records where large things hunt. Entering anyway still counts as a choice."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_react"]
+
+[resource]
+script = ExtResource("1_react")
+feature_name = "Reactive Frontier Settlements"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("world", "character", "inventory")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"character": {"instability": 2, "soul": 2},
+"inventory": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Border towns expand, harden, or empty out based on what survives nearby. Prosperity sounds temporary."
+archetype_affinity = PackedStringArray("action_adventure")

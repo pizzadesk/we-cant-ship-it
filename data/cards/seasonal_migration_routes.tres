@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_seaso"]
+
+[resource]
+script = ExtResource("1_seaso")
+feature_name = "Seasonal Migration Routes"
+ambition_value = 8
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.4
+tags = PackedStringArray("world", "lore", "weather")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"lore": {"instability": 1, "soul": 2},
+"weather": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+description = "Wild herds and caravan traffic redraw safe travel through the year. The empty field was only empty last month."
+archetype_affinity = PackedStringArray("action_adventure")

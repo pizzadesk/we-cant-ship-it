@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_mount"]
+
+[resource]
+script = ExtResource("1_mount")
+feature_name = "Mounted Chase Segments"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.9
+tags = PackedStringArray("combat", "horses", "world")
+interactions = {
+"combat": {"instability": 2, "soul": 0},
+"horses": {"instability": 2, "soul": 1},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Set pieces now continue at horse speed. Trees insist on participating."
+archetype_affinity = PackedStringArray("action_adventure")

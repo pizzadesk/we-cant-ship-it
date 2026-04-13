@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ruin_"]
+
+[resource]
+script = ExtResource("1_ruin_")
+feature_name = "Ruin Excavation Sandbox"
+ambition_value = 9
+instability_value = 9
+tier = "rare"
+unlock_weight = 5
+tags = PackedStringArray("world", "physics", "lore")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"physics": {"instability": 4, "soul": 0},
+"lore": {"instability": 1, "soul": 2}
+}
+interaction_flavor = {}
+description = "Sites can be cleared layer by layer with support beams, tools, and mistakes. History resists being rushed."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_flood"]
+
+[resource]
+script = ExtResource("1_flood")
+feature_name = "Floodgate Redirect Puzzles"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.9
+tags = PackedStringArray("physics", "quest", "world")
+interactions = {
+"physics": {"instability": 3, "soul": 0},
+"quest": {"instability": 2, "soul": 1},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Water can be rerouted through locks and broken channels. The valley notices every experiment."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_shipw"]
+
+[resource]
+script = ExtResource("1_shipw")
+feature_name = "Shipwreck Salvage Ocean"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("vehicles", "world", "physics")
+interactions = {
+"vehicles": {"instability": 4, "soul": 0},
+"world": {"instability": 3, "soul": 1},
+"physics": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}
+description = "Sunken routes, reefs, and wreck fields form a full treasure economy offshore. The sea keeps the first draft."
+archetype_affinity = PackedStringArray("action_adventure")

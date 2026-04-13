@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_watch"]
+
+[resource]
+script = ExtResource("1_watch")
+feature_name = "Watchtower Signal Fires"
+ambition_value = 4
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("world", "quest", "lore")
+interactions = {
+"world": {"instability": 2, "soul": 0},
+"quest": {"instability": 2, "soul": 1},
+"lore": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Outposts can warn each other across the frontier. Smoke turns local mistakes into regional news."
+archetype_affinity = PackedStringArray("action_adventure")

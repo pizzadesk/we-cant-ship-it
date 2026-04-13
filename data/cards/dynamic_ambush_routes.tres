@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_dynam"]
+
+[resource]
+script = ExtResource("1_dynam")
+feature_name = "Dynamic Ambush Routes"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.9
+tags = PackedStringArray("combat", "quest", "world")
+interactions = {
+"combat": {"instability": 2, "soul": 0},
+"quest": {"instability": 2, "soul": 1},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Enemy groups pick attack angles from the terrain. The terrain likes them too much."
+archetype_affinity = PackedStringArray("action_adventure")

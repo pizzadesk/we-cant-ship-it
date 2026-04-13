@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_cityw"]
+
+[resource]
+script = ExtResource("1_cityw")
+feature_name = "Citywide Rooftop Network"
+ambition_value = 8
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.5
+tags = PackedStringArray("world", "physics", "animation")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"physics": {"instability": 4, "soul": 0},
+"animation": {"instability": 3, "soul": 0}
+}
+interaction_flavor = {}
+description = "Entire districts connect through climb lines, cloth awnings, and illegal ladders. Streets keep losing jurisdiction."
+archetype_affinity = PackedStringArray("action_adventure")

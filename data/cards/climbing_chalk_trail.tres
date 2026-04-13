@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_climb"]
+
+[resource]
+script = ExtResource("1_climb")
+feature_name = "Climbing Chalk Trail"
+ambition_value = 2
+instability_value = 1
+tier = "common"
+unlock_weight = 1.1
+tags = PackedStringArray("world", "physics")
+interactions = {
+"world": {"instability": 1, "soul": 0},
+"physics": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Handholds retain chalk streaks after failed routes. The mountain now keeps notes."
+archetype_affinity = PackedStringArray("action_adventure")

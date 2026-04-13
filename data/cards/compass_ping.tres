@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_compa"]
+
+[resource]
+script = ExtResource("1_compa")
+feature_name = "Compass Ping"
+ambition_value = 1
+instability_value = 1
+tier = "common"
+unlock_weight = 0.9
+tags = PackedStringArray("ui", "world")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"world": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Press once to face the objective. Press twice to learn the cave is behind the waterfall again."
+archetype_affinity = PackedStringArray("action_adventure")

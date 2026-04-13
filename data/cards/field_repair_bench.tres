@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_field"]
+
+[resource]
+script = ExtResource("1_field")
+feature_name = "Field Repair Bench"
+ambition_value = 4
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.4
+tags = PackedStringArray("inventory", "ui", "world")
+interactions = {
+"inventory": {"instability": 1, "soul": 0},
+"ui": {"instability": 1, "soul": 0},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Portable benches restore tools in the wild. They also remind the player how many tools exist."
+archetype_affinity = PackedStringArray("action_adventure")

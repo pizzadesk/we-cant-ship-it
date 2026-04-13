@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ocean"]
+
+[resource]
+script = ExtResource("1_ocean")
+feature_name = "Ocean Current Navigation"
+ambition_value = 8
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.4
+tags = PackedStringArray("world", "weather", "vehicles")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"weather": {"instability": 3, "soul": 0},
+"vehicles": {"instability": 4, "soul": 0}
+}
+interaction_flavor = {}
+description = "Sea routes shift with season, wind, and water pressure. The shortest path now depends on the planet."
+archetype_affinity = PackedStringArray("action_adventure")

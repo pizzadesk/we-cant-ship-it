@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_breat"]
+
+[resource]
+script = ExtResource("1_breat")
+feature_name = "Breathing Climb System"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("world", "character", "ui")
+interactions = {
+"world": {"instability": 2, "soul": 0},
+"character": {"instability": 1, "soul": 2},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Stamina recovers differently depending on pace and panic. The cliff can hear both."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_exped"]
+
+[resource]
+script = ExtResource("1_exped")
+feature_name = "Expedition Supply Lines"
+ambition_value = 8
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.5
+tags = PackedStringArray("inventory", "quest", "world")
+interactions = {
+"inventory": {"instability": 2, "soul": 0},
+"quest": {"instability": 3, "soul": 1},
+"world": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Remote camps consume food, tools, and patience until the route back is secured. Exploration becomes accounting with cliffs."
+archetype_affinity = PackedStringArray("action_adventure")

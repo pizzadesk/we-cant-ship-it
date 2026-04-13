@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_campf"]
+
+[resource]
+script = ExtResource("1_campf")
+feature_name = "Campfire Rest Prompt"
+ambition_value = 1
+instability_value = 1
+tier = "common"
+unlock_weight = 0.9
+tags = PackedStringArray("ui", "character")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "A small icon asks whether you want to rest. The answer is usually yes and never free."
+archetype_affinity = PackedStringArray("action_adventure")

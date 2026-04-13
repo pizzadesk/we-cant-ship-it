@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_merch"]
+
+[resource]
+script = ExtResource("1_merch")
+feature_name = "Merchant Bell Cue"
+ambition_value = 1
+instability_value = 1
+tier = "common"
+unlock_weight = 0.9
+tags = PackedStringArray("ui", "character")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Shopkeepers ring a small bell when you approach. It sounds optimistic until the inventory opens."
+archetype_affinity = PackedStringArray("action_adventure")

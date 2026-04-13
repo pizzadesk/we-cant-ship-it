@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_smugg"]
+
+[resource]
+script = ExtResource("1_smugg")
+feature_name = "Smuggler Bribe Routes"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("quest", "character", "inventory")
+interactions = {
+"quest": {"instability": 2, "soul": 1},
+"character": {"instability": 1, "soul": 2},
+"inventory": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Hidden paths open when the right people are paid. The route stays secret until the receipt exists."
+archetype_affinity = PackedStringArray("action_adventure")

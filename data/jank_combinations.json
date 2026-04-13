@@ -75,7 +75,7 @@
     },
     {
       "card_a": "Firearm Customization",
-      "card_b": "Day Night Cycle",
+      "card_b": "Day-Night Cycle",
       "archetype": "shooter",
       "jank_card_id": "midnight_recoil",
       "name": "Midnight Recoil",
@@ -194,7 +194,7 @@
       "lock_in_line": "Signature jank locked: The Unreliable Narrator. The archive now dreams in first person."
     },
     {
-      "card_a": "In World Economy",
+      "card_a": "In-World Economy",
       "card_b": "Survival Crafting",
       "archetype": "rpg",
       "jank_card_id": "rubber_economy",
@@ -254,7 +254,7 @@
       "lock_in_line": "Signature jank locked: The Director Has Opinions. The horde now respects dramatic timing."
     },
     {
-      "card_a": "In World Cult Subplot",
+      "card_a": "In-World Cult Subplot",
       "card_b": "Generative Narrative Engine",
       "archetype": "rpg",
       "jank_card_id": "the_recursive_cult",
@@ -312,6 +312,102 @@
       "prospect_title": "Civilizational Residue",
       "prospect_hint": "Time skips are leaving history behind in places they should have erased.",
       "lock_in_line": "Signature jank locked: The Long Memory. The world now remembers versions of itself that never properly ended."
+    },
+    {
+      "card_a": "Self-Updating Treasure Maps",
+      "card_b": "Player Journal",
+      "archetype": "action_adventure",
+      "jank_card_id": "cartographic_revisionism",
+      "name": "Cartographic Revisionism",
+      "meme_families": ["lore_archive", "theorycraft_canon"],
+      "description": "Map revisions can overwrite handwritten journal certainty a frame too late. Players follow crossed-out routes to treasure sites that only existed briefly and insist the earlier version was truer.",
+      "prospect_title": "Moving X",
+      "prospect_hint": "Your notes and your map are starting to disagree with unusual confidence.",
+      "lock_in_line": "Signature jank locked: Cartographic Revisionism. The route now changes its mind faster than the notebook can object."
+    },
+    {
+      "card_a": "Crowd Memory System",
+      "card_b": "Crime & Bounty",
+      "archetype": "action_adventure",
+      "jank_card_id": "municipal_grudge",
+      "name": "The Municipal Grudge",
+      "meme_families": ["theorycraft_canon", "build_cult"],
+      "description": "Minor crimes become district folklore. One stolen apple can sour an entire market for hours, and players now route apology laps through town like they are part of the speedrun.",
+      "prospect_title": "Civic Memory",
+      "prospect_hint": "The crowd is starting to remember small crimes with municipal seriousness.",
+      "lock_in_line": "Signature jank locked: The Municipal Grudge. The town now keeps score longer than the law does."
+    },
+    {
+      "card_a": "Catastrophic River Rerouting",
+      "card_b": "Water Physics",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_second_river",
+      "name": "The Second River",
+      "meme_families": ["pilgrimage_site", "patch_defense"],
+      "description": "Flood-state currents can persist after the water mesh retreats. Players surf an invisible downstream path across dry terrain and treat the route like a seasonal event nobody is allowed to fix.",
+      "prospect_title": "Phantom Current",
+      "prospect_hint": "The river seems interested in continuing past the part where the water stopped.",
+      "lock_in_line": "Signature jank locked: The Second River. The valley now remembers water as a direction rather than a substance."
+    },
+    {
+      "card_a": "Full Parkour City",
+      "card_b": "Grappling Hook",
+      "archetype": "action_adventure",
+      "jank_card_id": "municipal_flight",
+      "name": "Municipal Flight",
+      "meme_families": ["competitive_ritual", "pilgrimage_site"],
+      "description": "Traversal tags propagate through banners, awnings, and public signage, letting the grapple inherit an entire skyline. High-level routes stop touching the street and begin reading like air traffic law.",
+      "prospect_title": "Air Rights",
+      "prospect_hint": "The city is beginning to present itself as a continuous grapple surface with zoning problems.",
+      "lock_in_line": "Signature jank locked: Municipal Flight. Street level is now optional and faintly old-fashioned."
+    },
+    {
+      "card_a": "Faction Convoy Warfare",
+      "card_b": "Dynamic Faction Wars",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_moving_front",
+      "name": "The Moving Front",
+      "meme_families": ["theorycraft_canon", "lore_archive"],
+      "description": "Faction boundary updates can anchor to convoy positions instead of regions. Players escort one skirmish through three towns and watch the political map repaint itself in motion. The wiki treats it as campaign doctrine now.",
+      "prospect_title": "Mobile Border",
+      "prospect_hint": "The war lines are starting to follow traffic instead of territory.",
+      "lock_in_line": "Signature jank locked: The Moving Front. Geography now updates wherever the convoy manages to survive."
+    },
+    {
+      "card_a": "Cross-Realm Portal Routes",
+      "card_b": "Seamless Open World",
+      "archetype": "action_adventure",
+      "jank_card_id": "courtesy_rift",
+      "name": "The Courtesy Rift",
+      "meme_families": ["patch_defense", "pilgrimage_site"],
+      "description": "Portal exits can land in half-streamed terrain seams that politely finish loading around the player. Communities now gather in one specific rift to watch distant mountains negotiate their existence in real time.",
+      "prospect_title": "Polite Tear",
+      "prospect_hint": "The portal network is beginning to deliver players a few seconds before the world is fully ready for them.",
+      "lock_in_line": "Signature jank locked: The Courtesy Rift. The world now assembles itself around the intrusion with admirable manners."
+    },
+    {
+      "card_a": "Planetary Eclipse Events",
+      "card_b": "Stealth System",
+      "archetype": "action_adventure",
+      "jank_card_id": "noonless_heist",
+      "name": "The Noonless Heist",
+      "meme_families": ["sacred_timing", "competitive_ritual"],
+      "description": "Daylight suspicion tables fail to recover properly after an eclipse. For a few real-time minutes, entire capitals behave like dusk forever and players schedule theft routes around the sky going wrong.",
+      "prospect_title": "Shadow Holiday",
+      "prospect_hint": "The stealth layer is starting to treat eclipse state as a permanent exemption.",
+      "lock_in_line": "Signature jank locked: The Noonless Heist. The guards now observe celestial timing before basic procedure."
+    },
+    {
+      "card_a": "Boathouse Vehicle Docks",
+      "card_b": "Shipwreck Salvage Ocean",
+      "archetype": "action_adventure",
+      "jank_card_id": "the_reusable_shipwreck",
+      "name": "The Reusable Shipwreck",
+      "meme_families": ["build_cult", "patch_defense"],
+      "description": "Dock ownership can reclassify a salvaged wreck as a valid stored vessel. Players repeatedly recover the same ruined boat, strip it for parts, and defend the loop as a deeply honest maritime economy.",
+      "prospect_title": "Returned To Pier",
+      "prospect_hint": "The salvage ledger is beginning to confuse total loss with eligible storage.",
+      "lock_in_line": "Signature jank locked: The Reusable Shipwreck. The harbor now returns wreckage like a library system with no sense of shame."
     }
   ]
 }

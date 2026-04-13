@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_nemes"]
+
+[resource]
+script = ExtResource("1_nemes")
+feature_name = "Nemesis Pursuit Web"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("combat", "character", "quest", "lore")
+interactions = {
+"combat": {"instability": 3, "soul": 0},
+"character": {"instability": 2, "soul": 2},
+"quest": {"instability": 3, "soul": 1},
+"lore": {"instability": 1, "soul": 2}
+}
+interaction_flavor = {}
+description = "A surviving rival tracks your habits, allies, and unfinished fights. Every shortcut becomes personal history."
+archetype_affinity = PackedStringArray("action_adventure")

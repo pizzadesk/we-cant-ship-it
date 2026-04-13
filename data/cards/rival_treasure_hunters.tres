@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_rival"]
+
+[resource]
+script = ExtResource("1_rival")
+feature_name = "Rival Treasure Hunters"
+ambition_value = 6
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 3
+tags = PackedStringArray("character", "quest", "combat")
+interactions = {
+"character": {"instability": 1, "soul": 2},
+"quest": {"instability": 2, "soul": 1},
+"combat": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Competing crews race you to relic sites and shortcuts. They arrive just early enough to be personal."
+archetype_affinity = PackedStringArray("action_adventure")

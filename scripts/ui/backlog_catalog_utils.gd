@@ -3,7 +3,15 @@ const UNIVERSAL_OFFER_WEIGHT: float = 9.0
 const GENRE_STRETCH_OFFER_WEIGHT: float = 4.0
 const WILD_SWING_OFFER_WEIGHT: float = 1.5
 const ALIEN_OFFER_WEIGHT: float = 0.5
-const PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER: float = 6.0
+const PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER: float = 3.0
+const RECENT_DAY_REPEAT_WEIGHT: float = 0.08
+const TWO_DAY_REPEAT_WEIGHT: float = 0.4
+const THREE_DAY_REPEAT_WEIGHT: float = 0.7
+const SAME_DAY_TIER_WEIGHT: float = 0.82
+const SAME_DAY_TAG_WEIGHT: float = 0.9
+const NOVEL_TAG_BONUS_WEIGHT: float = 1.12
+const STABILITY_RECOVERY_WEIGHT: float = 1.15
+const STABILITY_DANGER_WEIGHT: float = 0.72
 
 static func ensure_template_cards_loaded(
 	template_cards: Array[Resource],
@@ -34,7 +42,8 @@ static func rebuild_daily_offer(
 	daily_visible_cards: int,
 	ui_rng: RandomNumberGenerator,
 	is_template_unlocked_cb: Callable,
-	already_offered_paths: PackedStringArray = PackedStringArray()
+	already_offered_paths: PackedStringArray = PackedStringArray(),
+	recent_offer_days: Array = []
 ) -> DailyOfferResult:
 	var result: DailyOfferResult = DailyOfferResult.new()
 	if template_cards.is_empty():
@@ -53,10 +62,14 @@ static func rebuild_daily_offer(
 	var available_templates: Array[Resource] = []
 	var chosen_archetype: String = ""
 	var prospect_targets: PackedStringArray = PackedStringArray()
+	var recent_paths: Array[PackedStringArray] = _sanitize_recent_offer_days(recent_offer_days)
+	var prior_day_paths: PackedStringArray = PackedStringArray()
 	if game_state != null and game_state.has_method("get_chosen_archetype"):
 		chosen_archetype = String(game_state.get_chosen_archetype())
 	if game_state != null and game_state.has_method("get_active_prospect_offer_targets"):
 		prospect_targets = PackedStringArray(game_state.get_active_prospect_offer_targets())
+	if not recent_paths.is_empty():
+		prior_day_paths = recent_paths[recent_paths.size() - 1]
 
 	# Build the eligible pool, respecting unlock and run-tier rules.
 	# Archetype commitment is enforced by weighted offers rather than hard filtering,
@@ -75,7 +88,8 @@ static func rebuild_daily_offer(
 	# remain — guarantees a full offer every day.
 	if not already_offered_paths.is_empty():
 		for template in eligible_templates:
-			if not already_offered_paths.has(template.resource_path) or _is_prospect_target_template(template, prospect_targets):
+			var is_prospect_target: bool = _is_prospect_target_template(template, prospect_targets)
+			if not already_offered_paths.has(template.resource_path) or (is_prospect_target and not prior_day_paths.has(template.resource_path)):
 				available_templates.append(template)
 		if available_templates.size() < daily_visible_cards:
 			# Pool nearly or fully exhausted — wrap to the full eligible pool.
@@ -84,7 +98,18 @@ static func rebuild_daily_offer(
 	else:
 		available_templates = eligible_templates.duplicate()
 
+	var immediate_repeat_filtered: Array[Resource] = []
+	for template in available_templates:
+		if not prior_day_paths.has(template.resource_path):
+			immediate_repeat_filtered.append(template)
+	if immediate_repeat_filtered.size() >= daily_visible_cards:
+		available_templates = immediate_repeat_filtered
+
 	var backlog_cards: Array[Resource] = []
+	var selected_cards: Array[FeatureCard] = []
+	var offer_context: Dictionary = {}
+	if game_state != null and game_state.has_method("get_daily_offer_context"):
+		offer_context = game_state.get_daily_offer_context()
 	if runway_today <= 0 or available_templates.is_empty():
 		result.backlog_cards = backlog_cards
 		result.last_offer_runway_day = runway_today
@@ -92,7 +117,15 @@ static func rebuild_daily_offer(
 
 	var visible_count: int = mini(daily_visible_cards, available_templates.size())
 	for _pick in range(visible_count):
-		var pick_index: int = _pick_weighted_template_index(available_templates, chosen_archetype, ui_rng, prospect_targets)
+		var pick_index: int = _pick_weighted_template_index(
+			available_templates,
+			chosen_archetype,
+			ui_rng,
+			prospect_targets,
+			recent_paths,
+			selected_cards,
+			offer_context
+		)
 		if pick_index < 0:
 			break
 		var template: Resource = available_templates[pick_index]
@@ -102,6 +135,7 @@ static func rebuild_daily_offer(
 		if variant == null:
 			continue
 		backlog_cards.append(variant)
+		selected_cards.append(variant)
 		if not template.resource_path.is_empty():
 			result.offered_paths.append(template.resource_path)
 
@@ -140,6 +174,9 @@ static func _pick_weighted_template_index(
 	chosen_archetype: String,
 	ui_rng: RandomNumberGenerator,
 	prospect_targets: PackedStringArray = PackedStringArray(),
+	recent_offer_days: Array[PackedStringArray] = [],
+	selected_cards: Array[FeatureCard] = [],
+	offer_context: Dictionary = {},
 ) -> int:
 	if templates.is_empty():
 		return -1
@@ -148,7 +185,15 @@ static func _pick_weighted_template_index(
 	for template in templates:
 		var weight: float = 1.0
 		if template is FeatureCard:
-			weight = _offer_weight_for_archetype(template as FeatureCard, chosen_archetype, prospect_targets)
+			weight = _offer_weight_for_template(
+				template,
+				template as FeatureCard,
+				chosen_archetype,
+				prospect_targets,
+				recent_offer_days,
+				selected_cards,
+				offer_context
+			)
 		weights.append(weight)
 		total_weight += weight
 	if total_weight <= 0.0:
@@ -160,6 +205,22 @@ static func _pick_weighted_template_index(
 		if roll <= running:
 			return idx
 	return templates.size() - 1
+
+static func _offer_weight_for_template(
+	template: Resource,
+	card: FeatureCard,
+	chosen_archetype: String,
+	prospect_targets: PackedStringArray,
+	recent_offer_days: Array[PackedStringArray],
+	selected_cards: Array[FeatureCard],
+	offer_context: Dictionary,
+) -> float:
+	var weight: float = _offer_weight_for_archetype(card, chosen_archetype, prospect_targets)
+	weight *= _authorial_offer_weight(card)
+	weight *= _recent_offer_weight(template, prospect_targets, recent_offer_days)
+	weight *= _board_state_offer_weight(card, offer_context)
+	weight *= _selection_diversity_weight(card, selected_cards)
+	return maxf(weight, 0.01)
 
 static func _offer_weight_for_archetype(
 	card: FeatureCard,
@@ -190,6 +251,106 @@ static func _offer_weight_for_archetype(
 	if _is_prospect_target_card(card, prospect_targets):
 		weight *= PROSPECT_TARGET_OFFER_WEIGHT_MULTIPLIER
 	return weight
+
+static func _authorial_offer_weight(card: FeatureCard) -> float:
+	if card == null:
+		return 1.0
+	return clampf(sqrt(maxf(card.unlock_weight, 0.1)), 0.75, 1.4)
+
+static func _recent_offer_weight(
+	template: Resource,
+	prospect_targets: PackedStringArray,
+	recent_offer_days: Array[PackedStringArray],
+) -> float:
+	if template == null or template.resource_path.is_empty() or recent_offer_days.is_empty():
+		return 1.0
+	var is_prospect_target: bool = _is_prospect_target_template(template, prospect_targets)
+	var multiplier: float = 1.0
+	var history_size: int = recent_offer_days.size()
+	for idx in range(history_size):
+		var day_paths: PackedStringArray = recent_offer_days[history_size - 1 - idx]
+		if not day_paths.has(template.resource_path):
+			continue
+		match idx:
+			0:
+				multiplier *= RECENT_DAY_REPEAT_WEIGHT if not is_prospect_target else 0.35
+			1:
+				multiplier *= TWO_DAY_REPEAT_WEIGHT
+			2:
+				multiplier *= THREE_DAY_REPEAT_WEIGHT
+			_:
+				multiplier *= 0.85
+	return multiplier
+
+static func _board_state_offer_weight(card: FeatureCard, offer_context: Dictionary) -> float:
+	if card == null or offer_context.is_empty():
+		return 1.0
+	var current_instability: int = int(offer_context.get("instability", 0))
+	var current_soul: int = int(offer_context.get("soul", 0))
+	var board_size: int = int(offer_context.get("board_size", 0))
+	var board_tags: PackedStringArray = PackedStringArray(offer_context.get("board_tags", PackedStringArray()))
+	var weight: float = 1.0
+	if current_instability <= 12 and board_size >= 1:
+		if card.instability_value >= 4 and card.instability_value <= 7:
+			weight *= 1.15
+		elif card.instability_value <= 2:
+			weight *= 0.92
+	elif current_instability >= 45 or current_soul <= 4:
+		if card.instability_value >= 8:
+			weight *= STABILITY_DANGER_WEIGHT
+		elif card.instability_value <= 3:
+			weight *= STABILITY_RECOVERY_WEIGHT
+	else:
+		if card.instability_value >= 8:
+			weight *= 0.94
+	if not board_tags.is_empty() and _has_no_shared_tags(card, board_tags):
+		weight *= NOVEL_TAG_BONUS_WEIGHT
+	return weight
+
+static func _selection_diversity_weight(
+	card: FeatureCard,
+	selected_cards: Array[FeatureCard],
+) -> float:
+	if card == null or selected_cards.is_empty():
+		return 1.0
+	var weight: float = 1.0
+	var shared_tag_hits: int = 0
+	var same_tier_hits: int = 0
+	for selected_card in selected_cards:
+		if selected_card == null:
+			continue
+		if String(selected_card.tier).to_lower() == String(card.tier).to_lower():
+			same_tier_hits += 1
+		if _cards_share_any_tag(card, selected_card):
+			shared_tag_hits += 1
+	if same_tier_hits > 0:
+		weight *= pow(SAME_DAY_TIER_WEIGHT, same_tier_hits)
+	if shared_tag_hits > 0:
+		weight *= pow(SAME_DAY_TAG_WEIGHT, shared_tag_hits)
+	return weight
+
+static func _cards_share_any_tag(card_a: FeatureCard, card_b: FeatureCard) -> bool:
+	if card_a == null or card_b == null:
+		return false
+	for tag in card_a.tags:
+		if card_b.tags.has(tag):
+			return true
+	return false
+
+static func _has_no_shared_tags(card: FeatureCard, board_tags: PackedStringArray) -> bool:
+	if card == null or board_tags.is_empty():
+		return false
+	for tag in card.tags:
+		if board_tags.has(tag):
+			return false
+	return true
+
+static func _sanitize_recent_offer_days(recent_offer_days: Array) -> Array[PackedStringArray]:
+	var sanitized: Array[PackedStringArray] = []
+	for entry in recent_offer_days:
+		if entry is PackedStringArray:
+			sanitized.append(entry)
+	return sanitized
 
 static func _is_prospect_target_template(template: Resource, prospect_targets: PackedStringArray) -> bool:
 	if template is not FeatureCard:

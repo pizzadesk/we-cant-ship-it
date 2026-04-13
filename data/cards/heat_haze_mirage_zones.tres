@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_heat_"]
+
+[resource]
+script = ExtResource("1_heat_")
+feature_name = "Heat Haze Mirage Zones"
+ambition_value = 5
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.8
+tags = PackedStringArray("weather", "world", "lore")
+interactions = {
+"weather": {"instability": 2, "soul": 0},
+"world": {"instability": 2, "soul": 0},
+"lore": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Distance wobbles in the hottest regions. Landmarks arrive late and with excuses."
+archetype_affinity = PackedStringArray("action_adventure")

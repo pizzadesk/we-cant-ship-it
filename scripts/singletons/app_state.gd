@@ -175,6 +175,16 @@ func get_jank_pursuit_state() -> Dictionary:
 		"display_body": "Combine features and watch for collisions that feel a little too meaningful.",
 	}
 
+func get_daily_offer_context() -> Dictionary:
+	return {
+		"ambition": ambition,
+		"instability": instability,
+		"runway_days": runway_days,
+		"soul": soul,
+		"board_size": feature_board.size(),
+		"board_tags": _collect_feature_board_tags(),
+	}
+
 ## Tier availability is gated by current run number in the four-run cycle.
 func is_tier_available(tier: String) -> bool:
 	match tier.to_lower():
@@ -462,6 +472,20 @@ func _collect_feature_board_ids() -> PackedStringArray:
 		if card is FeatureCard:
 			board_ids.append(_normalize_feature_name(String((card as FeatureCard).feature_name)))
 	return board_ids
+
+func _collect_feature_board_tags() -> PackedStringArray:
+	var seen: Dictionary = {}
+	var board_tags: PackedStringArray = PackedStringArray()
+	for card in feature_board:
+		if card is not FeatureCard:
+			continue
+		for tag in (card as FeatureCard).tags:
+			var tag_name: String = String(tag)
+			if tag_name.is_empty() or seen.has(tag_name):
+				continue
+			seen[tag_name] = true
+			board_tags.append(tag_name)
+	return board_tags
 
 func _normalize_feature_name(raw: String) -> String:
 	return raw.to_lower().strip_edges().replace(" ", "_").replace("-", "_")

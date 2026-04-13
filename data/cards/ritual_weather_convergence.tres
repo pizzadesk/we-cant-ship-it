@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ritua"]
+
+[resource]
+script = ExtResource("1_ritua")
+feature_name = "Ritual Weather Convergence"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("weather", "lore", "world")
+interactions = {
+"weather": {"instability": 3, "soul": 0},
+"lore": {"instability": 1, "soul": 2},
+"world": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Storms can be summoned, delayed, or misread through regional rites. Forecasting has entered theology."
+archetype_affinity = PackedStringArray("action_adventure")

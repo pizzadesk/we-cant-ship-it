@@ -51,26 +51,31 @@ initial_position = 1
 
 [node name="JankDiscoveryDialog" parent="." unique_id=756663057 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "How The Machine Works"
 initial_position = 1
 
 [node name="GapVisualizerDialog" parent="." unique_id=1332734296 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Gap Visualizer"
 initial_position = 1
 
 [node name="CycleLegacyDialog" parent="." unique_id=1567001682 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "What This Run Left Behind"
 initial_position = 1
 
 [node name="PreviouslyOnDialog" parent="." unique_id=1808776669 instance=ExtResource("2_rich_accept")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Previously On..."
 initial_position = 1
 
 [node name="ArchetypeSelectDialog" parent="." unique_id=1883942007 instance=ExtResource("3_rich_confirm")]
 unique_name_in_owner = true
+oversampling_override = 1.0
 title = "Target Genre"
 initial_position = 1
 
@@ -89,6 +94,7 @@ oversampling_override = 1.0
 title = "Quit Game?"
 initial_position = 1
 size = Vector2i(380, 130)
+visible = true
 min_size = Vector2i(380, 130)
 ok_button_text = "Yes, Quit"
 dialog_text = "Sure you want to quit now?"

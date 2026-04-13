@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_patro"]
+
+[resource]
+script = ExtResource("1_patro")
+feature_name = "Patrol Route Memory"
+ambition_value = 5
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.8
+tags = PackedStringArray("combat", "character", "world")
+interactions = {
+"combat": {"instability": 2, "soul": 0},
+"character": {"instability": 1, "soul": 2},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Guards remember the last place they were embarrassed. This improves them unevenly."
+archetype_affinity = PackedStringArray("action_adventure")

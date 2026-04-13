@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_relic"]
+
+[resource]
+script = ExtResource("1_relic")
+feature_name = "Relic Appraisal Desk"
+ambition_value = 4
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.4
+tags = PackedStringArray("lore", "inventory", "ui")
+interactions = {
+"lore": {"instability": 0, "soul": 1},
+"inventory": {"instability": 1, "soul": 0},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Artifacts can be inspected for value, curse, and provenance. The provenance is usually the expensive part."
+archetype_affinity = PackedStringArray("action_adventure")

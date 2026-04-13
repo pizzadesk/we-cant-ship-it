@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_parry"]
+
+[resource]
+script = ExtResource("1_parry")
+feature_name = "Parry Practice Dummy"
+ambition_value = 2
+instability_value = 2
+tier = "common"
+unlock_weight = 1.2
+tags = PackedStringArray("combat", "character")
+interactions = {
+"combat": {"instability": 1, "soul": 0},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "The yard dummy survives hundreds of perfect counters. It remains the safest enemy in the game."
+archetype_affinity = PackedStringArray("action_adventure")

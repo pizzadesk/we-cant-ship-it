@@ -16,7 +16,9 @@
 			"games where the side characters steal the show",
 			"games where the world feels lived-in",
 			"games that made people send bug reports with the word 'love' in them",
-			"games where something beautiful survived the deadline"
+			"games where something beautiful survived the deadline",
+			"games where the shortcut became the story",
+			"games where the map remembered what the quest forgot"
 		],
 		"notorious": [
 			"games where everything was on fire and somehow still ran",
@@ -25,7 +27,9 @@
 			"games where the bugs became the feature",
 			"games that crashed at the credits, every time",
 			"games with a community dedicated to cataloguing disasters",
-			"games remembered for the wrong reasons, warmly"
+			"games remembered for the wrong reasons, warmly",
+			"games where the waypoint arrived before the objective",
+			"games where whole towns held grudges longer than the patch cycle"
 		],
 		"regretted": [
 			"games that were finished but not complete",
@@ -34,7 +38,9 @@
 			"games that played it safe and lost",
 			"games where polish replaced personality",
 			"games that made money and disappeared",
-			"games the studio doesn't mention in interviews"
+			"games the studio doesn't mention in interviews",
+			"games where traversal worked perfectly and said nothing",
+			"games where the map was large and the stories stayed small"
 		],
 		"disaster": [
 			"games that became cautionary tales",
@@ -43,7 +49,9 @@
 			"games the team learned from, slowly",
 			"games that ended partnerships",
 			"games that got the studio on a publisher blacklist",
-			"games that still have active refund threads"
+			"games that still have active refund threads",
+			"games where the river patched the level before the studio could",
+			"games where every system remembered a different version of the world"
 		],
 		"sellout": [
 			"games with a season pass nobody asked for",
@@ -52,7 +60,9 @@
 			"games that satisfied the spreadsheet",
 			"games described as 'polished' by people who meant 'empty'",
 			"games that ticked every box and felt nothing",
-			"games that could have been anything"
+			"games that could have been anything",
+			"games with an open world assembled entirely out of checklists",
+			"games where the frontier looked expensive and felt pre-approved"
 		],
 		"cult_disaster": [
 			"games where the fanbase is sincerely wrong about everything",
@@ -61,7 +71,9 @@
 			"games that speedrunners adopted out of pity",
 			"games with Discord servers larger than the launch playerbase",
 			"games where the brokenness was the whole point",
-			"games that shouldn't work but somehow do, emotionally"
+			"games that shouldn't work but somehow do, emotionally",
+			"games where players gathered at a broken doorway like it was a shrine",
+			"games where the community knew more routes than the designers ever meant to ship"
 		]
 	}
 }

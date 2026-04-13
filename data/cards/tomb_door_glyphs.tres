@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_tomb_"]
+
+[resource]
+script = ExtResource("1_tomb_")
+feature_name = "Tomb Door Glyphs"
+ambition_value = 2
+instability_value = 2
+tier = "common"
+unlock_weight = 1.2
+tags = PackedStringArray("lore", "quest")
+interactions = {
+"lore": {"instability": 0, "soul": 1},
+"quest": {"instability": 1, "soul": 1}
+}
+interaction_flavor = {}
+description = "Symbols around sealed doors explain the puzzle after you have already guessed twice."
+archetype_affinity = PackedStringArray("action_adventure")

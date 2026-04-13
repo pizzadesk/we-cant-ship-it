@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ruin_"]
+
+[resource]
+script = ExtResource("1_ruin_")
+feature_name = "Ruin Surface Links"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("quest", "lore", "world")
+interactions = {
+"quest": {"instability": 3, "soul": 1},
+"lore": {"instability": 1, "soul": 2},
+"world": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Major ruins open back into the surface through designed shortcuts and consequences. The underworld finally returns the favor."
+archetype_affinity = PackedStringArray("action_adventure")

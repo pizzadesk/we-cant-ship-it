@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_bell_"]
+
+[resource]
+script = ExtResource("1_bell_")
+feature_name = "Bell Tower Echo Test"
+ambition_value = 1
+instability_value = 2
+tier = "common"
+unlock_weight = 1
+tags = PackedStringArray("lore", "world")
+interactions = {
+"lore": {"instability": 0, "soul": 1},
+"world": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Shout into old towers and wait for the return. Some echoes know the layout better than you do."
+archetype_affinity = PackedStringArray("action_adventure")

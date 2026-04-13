@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_rescu"]
+
+[resource]
+script = ExtResource("1_rescu")
+feature_name = "Rescue Rope Physics"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.9
+tags = PackedStringArray("physics", "character", "world")
+interactions = {
+"physics": {"instability": 3, "soul": 0},
+"character": {"instability": 1, "soul": 2},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Thrown lines catch, sag, and pull with full consequences. Heroic entrances now need math."
+archetype_affinity = PackedStringArray("action_adventure")

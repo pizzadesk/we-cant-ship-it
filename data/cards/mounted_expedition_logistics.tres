@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_mount"]
+
+[resource]
+script = ExtResource("1_mount")
+feature_name = "Mounted Expedition Logistics"
+ambition_value = 8
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.4
+tags = PackedStringArray("horses", "inventory", "world")
+interactions = {
+"horses": {"instability": 3, "soul": 1},
+"inventory": {"instability": 2, "soul": 0},
+"world": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Long rides now track feed, rest, and spare tack across real distance. The horse becomes management."
+archetype_affinity = PackedStringArray("action_adventure")

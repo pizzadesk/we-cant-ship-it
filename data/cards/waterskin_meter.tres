@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_water"]
+
+[resource]
+script = ExtResource("1_water")
+feature_name = "Waterskin Meter"
+ambition_value = 2
+instability_value = 2
+tier = "common"
+unlock_weight = 1.2
+tags = PackedStringArray("ui", "world")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"world": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "A small gauge tracks thirst with professional calm. The desert does not share the tone."
+archetype_affinity = PackedStringArray("action_adventure")

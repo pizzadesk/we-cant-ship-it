@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_sand_"]
+
+[resource]
+script = ExtResource("1_sand_")
+feature_name = "Sand Slide Track Marks"
+ambition_value = 2
+instability_value = 2
+tier = "common"
+unlock_weight = 1.2
+tags = PackedStringArray("world", "physics")
+interactions = {
+"world": {"instability": 1, "soul": 0},
+"physics": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Sliding down dunes leaves grooves visible from below. The desert reviews every shortcut."
+archetype_affinity = PackedStringArray("action_adventure")

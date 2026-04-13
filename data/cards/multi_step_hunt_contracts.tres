@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_multi"]
+
+[resource]
+script = ExtResource("1_multi")
+feature_name = "Multi-Step Hunt Contracts"
+ambition_value = 6
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 3
+tags = PackedStringArray("quest", "combat", "lore")
+interactions = {
+"quest": {"instability": 2, "soul": 1},
+"combat": {"instability": 2, "soul": 0},
+"lore": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Some bounties now require tracks, evidence, and patience. The reward assumes you kept all three."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_journ"]
+
+[resource]
+script = ExtResource("1_journ")
+feature_name = "Journal Sketch Pages"
+ambition_value = 2
+instability_value = 1
+tier = "common"
+unlock_weight = 1.1
+tags = PackedStringArray("ui", "lore")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"lore": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Collected landmarks appear as rough drawings. The artist understands the place better than the engine."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ledge"]
+
+[resource]
+script = ExtResource("1_ledge")
+feature_name = "Ledge Shimmy Assist"
+ambition_value = 2
+instability_value = 2
+tier = "common"
+unlock_weight = 1.2
+tags = PackedStringArray("world", "animation")
+interactions = {
+"world": {"instability": 1, "soul": 0},
+"animation": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Hands snap to the ledge with confidence. Feet negotiate the rest in private."
+archetype_affinity = PackedStringArray("action_adventure")

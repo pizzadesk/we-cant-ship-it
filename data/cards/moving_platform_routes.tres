@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_movin"]
+
+[resource]
+script = ExtResource("1_movin")
+feature_name = "Moving Platform Routes"
+ambition_value = 4
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.4
+tags = PackedStringArray("world", "physics", "quest")
+interactions = {
+"world": {"instability": 2, "soul": 0},
+"physics": {"instability": 3, "soul": 0},
+"quest": {"instability": 2, "soul": 1}
+}
+interaction_flavor = {}
+description = "Rotating lifts and hanging rafts can be sequenced into real routes. One mistimed jump writes its own patch notes."
+archetype_affinity = PackedStringArray("action_adventure")

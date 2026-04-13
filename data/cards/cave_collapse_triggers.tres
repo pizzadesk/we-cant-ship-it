@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_cave_"]
+
+[resource]
+script = ExtResource("1_cave_")
+feature_name = "Cave Collapse Triggers"
+ambition_value = 4
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.7
+tags = PackedStringArray("physics", "world", "quest")
+interactions = {
+"physics": {"instability": 3, "soul": 0},
+"world": {"instability": 2, "soul": 0},
+"quest": {"instability": 2, "soul": 1}
+}
+interaction_flavor = {}
+description = "Loose chambers can fail under weight, blast, or noise. The cave only needs one good reason."
+archetype_affinity = PackedStringArray("action_adventure")

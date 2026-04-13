@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_world"]
+
+[resource]
+script = ExtResource("1_world")
+feature_name = "World State Aftershocks"
+ambition_value = 9
+instability_value = 9
+tier = "rare"
+unlock_weight = 5
+tags = PackedStringArray("world", "quest", "lore")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"quest": {"instability": 3, "soul": 1},
+"lore": {"instability": 1, "soul": 2}
+}
+interaction_flavor = {}
+description = "Major quest outcomes alter prices, patrols, repairs, and travel habits everywhere nearby. The ending of one problem recruits three more."
+archetype_affinity = PackedStringArray("action_adventure")

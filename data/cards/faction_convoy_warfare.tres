@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_facti"]
+
+[resource]
+script = ExtResource("1_facti")
+feature_name = "Faction Convoy Warfare"
+ambition_value = 9
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.8
+tags = PackedStringArray("world", "combat", "character", "quest")
+interactions = {
+"world": {"instability": 3, "soul": 1},
+"combat": {"instability": 3, "soul": 0},
+"character": {"instability": 2, "soul": 2},
+"quest": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Patrols, convoys, and grudges move between settlements without waiting for the player. Arrival times become political."
+archetype_affinity = PackedStringArray("action_adventure")

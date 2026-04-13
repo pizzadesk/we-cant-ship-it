@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ruin_"]
+
+[resource]
+script = ExtResource("1_ruin_")
+feature_name = "Ruin Echo Puzzles"
+ambition_value = 5
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.8
+tags = PackedStringArray("lore", "quest", "ui")
+interactions = {
+"lore": {"instability": 0, "soul": 1},
+"quest": {"instability": 2, "soul": 1},
+"ui": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Chambers respond to sound, timing, and angle. Silence becomes another wrong answer."
+archetype_affinity = PackedStringArray("action_adventure")

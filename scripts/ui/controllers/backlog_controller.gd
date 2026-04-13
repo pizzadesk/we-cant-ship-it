@@ -14,6 +14,7 @@ var _ui_rng: RandomNumberGenerator = null
 var _backlog_cards: Array[Resource] = []
 var _last_offer_runway_day: int = -1
 var _run_offered_paths: PackedStringArray = PackedStringArray()
+var _recent_offer_days: Array = []
 var _template_cards: Array[Resource] = []
 var _templates_loaded: bool = false
 
@@ -38,6 +39,7 @@ func populate_card_list(append_log: Callable) -> void:
 	_backlog_cards.clear()
 	_last_offer_runway_day = -1
 	_run_offered_paths = PackedStringArray()
+	_recent_offer_days.clear()
 	_ensure_template_cards_loaded(append_log)
 	_rebuild_daily_offer(true)
 
@@ -52,6 +54,7 @@ func reset_run_state() -> void:
 	_backlog_cards.clear()
 	_last_offer_runway_day = -1
 	_run_offered_paths = PackedStringArray()
+	_recent_offer_days.clear()
 
 func handle_card_dropped(menu_active: bool, run_ended: bool, data: Dictionary) -> void:
 	if menu_active or run_ended:
@@ -122,10 +125,15 @@ func _rebuild_daily_offer(force: bool = false) -> void:
 		_daily_visible_cards,
 		_ui_rng,
 		Callable(self, "_is_template_unlocked"),
-		_run_offered_paths
+		_run_offered_paths,
+		_recent_offer_days
 	)
 	_backlog_cards = offer_result.backlog_cards
 	_last_offer_runway_day = offer_result.last_offer_runway_day
+	if not offer_result.offered_paths.is_empty():
+		_recent_offer_days.append(offer_result.offered_paths.duplicate())
+		while _recent_offer_days.size() > 3:
+			_recent_offer_days.remove_at(0)
 	if offer_result.pool_reset:
 		_run_offered_paths = offer_result.offered_paths.duplicate()
 	elif not offer_result.offered_paths.is_empty():

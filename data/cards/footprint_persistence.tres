@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_footp"]
+
+[resource]
+script = ExtResource("1_footp")
+feature_name = "Footprint Persistence"
+ambition_value = 3
+instability_value = 3
+tier = "common"
+unlock_weight = 1.5
+tags = PackedStringArray("world", "physics")
+interactions = {
+"world": {"instability": 1, "soul": 0},
+"physics": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Mud keeps the last few minutes on record. Snow keeps longer grudges."
+archetype_affinity = PackedStringArray("action_adventure")

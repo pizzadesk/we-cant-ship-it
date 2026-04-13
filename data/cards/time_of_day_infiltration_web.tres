@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_time_"]
+
+[resource]
+script = ExtResource("1_time_")
+feature_name = "Time-of-Day Infiltration Web"
+ambition_value = 8
+instability_value = 8
+tier = "rare"
+unlock_weight = 4.5
+tags = PackedStringArray("quest", "combat", "world")
+interactions = {
+"quest": {"instability": 3, "soul": 1},
+"combat": {"instability": 3, "soul": 0},
+"world": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Guard shifts, light angles, vendor noise, and curfew stack into real infiltration windows. Noon is now a tactical problem."
+archetype_affinity = PackedStringArray("action_adventure")

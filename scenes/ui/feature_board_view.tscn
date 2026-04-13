@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://da6datl6ou0t0"]
 
-[ext_resource type="Script" path="res://scripts/ui/feature_board.gd" id="1_board"]
+[ext_resource type="Script" uid="uid://cw7q3moexv7o0" path="res://scripts/ui/feature_board.gd" id="1_board"]
+
 [sub_resource type="StyleBoxFlat" id="BoardBaseStyle"]
 bg_color = Color(0.08, 0.09, 0.12, 1)
 border_width_left = 2
@@ -40,7 +41,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="JankStateProspectStyle"]
-bg_color = Color(0.28, 0.20, 0.08, 0.96)
+bg_color = Color(0.28, 0.2, 0.08, 0.96)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -79,7 +80,7 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="FeatureBoard" type="PanelContainer"]
+[node name="FeatureBoard" type="PanelContainer" unique_id=1645883289]
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_board")
@@ -89,25 +90,25 @@ idle_state_style = SubResource("JankStateIdleStyle")
 prospect_state_style = SubResource("JankStateProspectStyle")
 locked_state_style = SubResource("JankStateLockedStyle")
 
-[node name="BoardPadding" type="MarginContainer" parent="."]
+[node name="BoardPadding" type="MarginContainer" parent="." unique_id=1601751014]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="BoardVBox" type="VBoxContainer" parent="BoardPadding"]
+[node name="BoardVBox" type="VBoxContainer" parent="BoardPadding" unique_id=1024416090]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="BoardTitle" type="Label" parent="BoardPadding/BoardVBox"]
+[node name="BoardTitle" type="Label" parent="BoardPadding/BoardVBox" unique_id=678342089]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Current Build"
 
-[node name="BoardHelp" type="Label" parent="BoardPadding/BoardVBox"]
+[node name="BoardHelp" type="Label" parent="BoardPadding/BoardVBox" unique_id=1188418661]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
@@ -115,40 +116,40 @@ theme_override_font_sizes/font_size = 15
 text = "This is the run taking shape. Watch for signature jank prospects, Defining Game pressure, and the moment the build becomes something irreversible."
 autowrap_mode = 3
 
-[node name="JankStateBox" type="PanelContainer" parent="BoardPadding/BoardVBox"]
+[node name="JankStateBox" type="PanelContainer" parent="BoardPadding/BoardVBox" unique_id=1279181568]
 layout_mode = 2
 
-[node name="JankStatePadding" type="MarginContainer" parent="BoardPadding/BoardVBox/JankStateBox"]
+[node name="JankStatePadding" type="MarginContainer" parent="BoardPadding/BoardVBox/JankStateBox" unique_id=2005021897]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="JankStateVBox" type="VBoxContainer" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding"]
+[node name="JankStateVBox" type="VBoxContainer" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding" unique_id=1884199932]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="JankStateTitle" type="Label" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding/JankStateVBox"]
+[node name="JankStateTitle" type="Label" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding/JankStateVBox" unique_id=1710140890]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.95, 0.88, 0.66, 1)
+theme_override_font_sizes/font_size = 15
 text = "No Signature Yet"
 
-[node name="JankStateBody" type="Label" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding/JankStateVBox"]
+[node name="JankStateBody" type="Label" parent="BoardPadding/BoardVBox/JankStateBox/JankStatePadding/JankStateVBox" unique_id=429063537]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.8, 0.85, 0.92, 1)
+theme_override_font_sizes/font_size = 14
 text = "Combine features and watch for collisions that feel a little too meaningful."
 autowrap_mode = 3
 
-[node name="BoardSeparator" type="HSeparator" parent="BoardPadding/BoardVBox"]
+[node name="BoardSeparator" type="HSeparator" parent="BoardPadding/BoardVBox" unique_id=55720596]
 layout_mode = 2
 
-[node name="BoardDropCue" type="Label" parent="BoardPadding/BoardVBox"]
+[node name="BoardDropCue" type="Label" parent="BoardPadding/BoardVBox" unique_id=1521839666]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.705882, 0.333333, 1)
@@ -156,78 +157,79 @@ theme_override_font_sizes/font_size = 21
 text = "DROP FEATURE HERE"
 horizontal_alignment = 1
 
-[node name="BoardEmptyState" type="Label" parent="BoardPadding/BoardVBox"]
+[node name="BoardEmptyState" type="Label" parent="BoardPadding/BoardVBox" unique_id=215646891]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 text = "No features in the build yet. Start with one reckless idea and see what kind of game it wants to become."
 autowrap_mode = 3
 
-[node name="BoardLogSplit" type="VSplitContainer" parent="BoardPadding/BoardVBox"]
+[node name="BoardLogSplit" type="VSplitContainer" parent="BoardPadding/BoardVBox" unique_id=1292953857]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+split_offsets = PackedInt32Array(360)
 split_offset = 360
 
-[node name="PlacedFeaturesScroll" type="ScrollContainer" parent="BoardPadding/BoardVBox/BoardLogSplit"]
+[node name="PlacedFeaturesScroll" type="ScrollContainer" parent="BoardPadding/BoardVBox/BoardLogSplit" unique_id=200972644]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="PlacedFeaturesRow" type="GridContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/PlacedFeaturesScroll"]
+[node name="PlacedFeaturesRow" type="GridContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/PlacedFeaturesScroll" unique_id=876047437]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 columns = 3
 
-[node name="ConsolePanel" type="PanelContainer" parent="BoardPadding/BoardVBox/BoardLogSplit"]
+[node name="ConsolePanel" type="PanelContainer" parent="BoardPadding/BoardVBox/BoardLogSplit" unique_id=1796559566]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 152)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("ConsolePanelStyle")
 
-[node name="ConsolePadding" type="MarginContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel"]
+[node name="ConsolePadding" type="MarginContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel" unique_id=651762270]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="ConsoleVBox" type="VBoxContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding"]
+[node name="ConsoleVBox" type="VBoxContainer" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding" unique_id=987532033]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="ConsoleTitle" type="Label" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox"]
+[node name="ConsoleTitle" type="Label" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox" unique_id=677443953]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.82, 0.9, 0.96, 1)
+theme_override_font_sizes/font_size = 15
 text = "Studio Console"
 
-[node name="ConsoleHelp" type="Label" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox"]
+[node name="ConsoleHelp" type="Label" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox" unique_id=1792312030]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.69, 0.76, 0.86, 1)
+theme_override_font_sizes/font_size = 12
 text = "Choices, collisions, and studio mood swings are recorded here."
 autowrap_mode = 3
 
-[node name="ConsoleLog" type="RichTextLabel" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox"]
+[node name="ConsoleLog" type="RichTextLabel" parent="BoardPadding/BoardVBox/BoardLogSplit/ConsolePanel/ConsolePadding/ConsoleVBox" unique_id=1894745212]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-bbcode_enabled = false
-scroll_active = true
-selection_enabled = true
-context_menu_enabled = true
-shortcut_keys_enabled = false
-autowrap_mode = 3
+focus_mode = 2
 theme_override_colors/default_color = Color(0.88, 0.91, 0.95, 1)
 theme_override_font_sizes/normal_font_size = 13
 text = "Studio console is listening. The run has not made a move yet."
+fit_content = true
+tab_size = 10
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true

@@ -169,6 +169,68 @@
         "{new_feature} marks quest objects with exclamation points. {existing_feature} sorts them by weight.",
         "Critical side quest auto-completes when backpack is full. Community assumes this was intentional."
       ]
+    },
+    {
+      "tags": ["world", "ui"],
+      "instability_delta": 2,
+      "soul_delta": 1,
+      "flavors": [
+        "{new_feature} gives {existing_feature} one more marker than the player strictly needed and three more than the map can explain.",
+        "A guidance prompt appears over the vista, the ladder, and one emotionally significant rock. QA calls the coverage thorough.",
+        "The interface now points into the landscape with total confidence. The landscape has not agreed to the arrangement."
+      ]
+    },
+    {
+      "tags": ["character", "quest"],
+      "instability_delta": 1,
+      "soul_delta": 3,
+      "soul_required": 16,
+      "flavors": [
+        "{new_feature} turns {existing_feature} into a personal problem. Players keep finishing the mission for the wrong but moving reason.",
+        "The objective survives, but now it arrives with a face, a grudge, and a preferred route through town.",
+        "Quest logic starts behaving like remembered conversation. The forum thread about this is unusually sincere."
+      ]
+    },
+    {
+      "tags": ["character", "world"],
+      "instability_delta": 1,
+      "soul_delta": 3,
+      "soul_required": 20,
+      "flavors": [
+        "{new_feature} makes {existing_feature} feel inhabited rather than populated. The distinction costs frame time and earns loyalty.",
+        "An NPC remembers which bridge collapsed, who caused it, and where you stood when it did. The world now keeps witness statements.",
+        "Settlements begin reacting like they have local memory instead of ambient dialogue. Players immediately test this like a moral science."
+      ]
+    },
+    {
+      "tags": ["physics", "quest"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "{new_feature} gives {existing_feature} one approved solution and four structural ones. Players prefer the structural route.",
+        "The objective marker remains calm while the room collapses into a faster answer.",
+        "Quest progression now depends on which wall survived contact with momentum. The wall is inconsistent but committed."
+      ]
+    },
+    {
+      "tags": ["vehicles", "world"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "{new_feature} teaches {existing_feature} to treat roads, rivers, and rooflines as one continuous administrative problem.",
+        "Traversal speed outruns streaming for a moment. Players describe the horizon loading in as part of the journey.",
+        "The vehicle system now arrives before the level fully does. This reads less like a bug than a scheduling philosophy."
+      ]
+    },
+    {
+      "tags": ["vehicles", "quest"],
+      "instability_delta": 3,
+      "soul_delta": 2,
+      "flavors": [
+        "Escort logic assumes the cart, boat, or train shares the NPC's sense of obligation. It does not, but it has momentum.",
+        "{new_feature} turns {existing_feature} into a moving deadline with collision and weather support.",
+        "The mission objective is now travelling at speed through hostile territory. Players call this stressful with affection."
+      ]
     }
   ]
 }

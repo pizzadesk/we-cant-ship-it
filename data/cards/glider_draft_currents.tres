@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_glide"]
+
+[resource]
+script = ExtResource("1_glide")
+feature_name = "Glider Draft Currents"
+ambition_value = 5
+instability_value = 6
+tier = "uncommon"
+unlock_weight = 2.9
+tags = PackedStringArray("physics", "world", "weather")
+interactions = {
+"physics": {"instability": 3, "soul": 0},
+"world": {"instability": 2, "soul": 0},
+"weather": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Thermals and downdrafts shape full glide routes. The best line is usually the one above the problem."
+archetype_affinity = PackedStringArray("action_adventure")

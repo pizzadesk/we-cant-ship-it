@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_puzzl"]
+
+[resource]
+script = ExtResource("1_puzzl")
+feature_name = "Puzzle Reset Lever"
+ambition_value = 1
+instability_value = 2
+tier = "common"
+unlock_weight = 1
+tags = PackedStringArray("ui", "world")
+interactions = {
+"ui": {"instability": 1, "soul": 0},
+"world": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "One lever restores the room to its intended state. The player rarely arrives in one."
+archetype_affinity = PackedStringArray("action_adventure")

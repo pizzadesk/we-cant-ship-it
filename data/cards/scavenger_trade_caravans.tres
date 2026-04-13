@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_scave"]
+
+[resource]
+script = ExtResource("1_scave")
+feature_name = "Scavenger Trade Caravans"
+ambition_value = 5
+instability_value = 4
+tier = "uncommon"
+unlock_weight = 2.6
+tags = PackedStringArray("character", "world", "inventory")
+interactions = {
+"character": {"instability": 1, "soul": 2},
+"world": {"instability": 2, "soul": 0},
+"inventory": {"instability": 1, "soul": 0}
+}
+interaction_flavor = {}
+description = "Traveling merchants move between danger and opportunity. Their schedule assumes the bridge still exists."
+archetype_affinity = PackedStringArray("action_adventure")

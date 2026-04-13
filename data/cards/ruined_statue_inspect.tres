@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_ruine"]
+
+[resource]
+script = ExtResource("1_ruine")
+feature_name = "Ruined Statue Inspect"
+ambition_value = 2
+instability_value = 1
+tier = "common"
+unlock_weight = 1.1
+tags = PackedStringArray("lore", "world", "character")
+interactions = {
+"lore": {"instability": 0, "soul": 1},
+"world": {"instability": 1, "soul": 0},
+"character": {"instability": 0, "soul": 1}
+}
+interaction_flavor = {}
+description = "Broken monuments offer close-up lore and missing faces. Reverence survives the texture budget."
+archetype_affinity = PackedStringArray("action_adventure")

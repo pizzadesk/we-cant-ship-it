@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_deser"]
+
+[resource]
+script = ExtResource("1_deser")
+feature_name = "Desert Caravan Reputation"
+ambition_value = 5
+instability_value = 5
+tier = "uncommon"
+unlock_weight = 2.8
+tags = PackedStringArray("quest", "character", "world")
+interactions = {
+"quest": {"instability": 2, "soul": 1},
+"character": {"instability": 1, "soul": 2},
+"world": {"instability": 2, "soul": 0}
+}
+interaction_flavor = {}
+description = "Long routes remember whether you protected, robbed, or delayed the traders. The dunes pass judgment by rumor."
+archetype_affinity = PackedStringArray("action_adventure")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureCard" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/feature_card.gd" id="1_dynas"]
+
+[resource]
+script = ExtResource("1_dynas")
+feature_name = "Dynasty Succession Politics"
+ambition_value = 8
+instability_value = 7
+tier = "rare"
+unlock_weight = 4.4
+tags = PackedStringArray("character", "lore", "quest")
+interactions = {
+"character": {"instability": 2, "soul": 2},
+"lore": {"instability": 1, "soul": 2},
+"quest": {"instability": 3, "soul": 1}
+}
+interaction_flavor = {}
+description = "Local power changes through marriages, deaths, and bad advice. The quest giver can lose the room mid-sentence."
+archetype_affinity = PackedStringArray("action_adventure")
