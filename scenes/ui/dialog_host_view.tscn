@@ -94,7 +94,6 @@ oversampling_override = 1.0
 title = "Quit Game?"
 initial_position = 1
 size = Vector2i(380, 130)
-visible = true
 min_size = Vector2i(380, 130)
 ok_button_text = "Yes, Quit"
 dialog_text = "Sure you want to quit now?"

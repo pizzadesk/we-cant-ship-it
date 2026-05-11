@@ -115,22 +115,36 @@ static func rebuild_daily_offer(
 		result.last_offer_runway_day = runway_today
 		return result
 
+	# --- HARD GUARANTEE: If prospect is close, always include exactly one prospect target card ---
 	var visible_count: int = mini(daily_visible_cards, available_templates.size())
-	for _pick in range(visible_count):
+	var prospect_target_templates: Array[Resource] = []
+	if not prospect_targets.is_empty():
+		for template in available_templates:
+			if _is_prospect_target_template(template, prospect_targets):
+				prospect_target_templates.append(template)
+	# Remove prospect targets from available_templates for normal selection
+	var filtered_templates: Array[Resource] = []
+	for template in available_templates:
+		if not _is_prospect_target_template(template, prospect_targets):
+			filtered_templates.append(template)
+
+	# Select (visible_count - 1) normal cards
+	for _pick in range(visible_count - 1):
+		if filtered_templates.is_empty():
+			break
 		var pick_index: int = _pick_weighted_template_index(
-			available_templates,
-			chosen_archetype,
-			ui_rng,
-			prospect_targets,
-			recent_paths,
-			selected_cards,
-			offer_context
+				filtered_templates,
+				chosen_archetype,
+				ui_rng,
+				prospect_targets,
+				recent_paths,
+				selected_cards,
+				offer_context
 		)
 		if pick_index < 0:
 			break
-		var template: Resource = available_templates[pick_index]
-		available_templates.remove_at(pick_index)
-
+		var template: Resource = filtered_templates[pick_index]
+		filtered_templates.remove_at(pick_index)
 		var variant: FeatureCard = template.duplicate(false) as FeatureCard
 		if variant == null:
 			continue
@@ -138,6 +152,41 @@ static func rebuild_daily_offer(
 		selected_cards.append(variant)
 		if not template.resource_path.is_empty():
 			result.offered_paths.append(template.resource_path)
+
+	# Insert exactly one prospect target card if any are available and prospect is close
+	if not prospect_targets.is_empty() and prospect_target_templates.size() > 0:
+		var idx := int(ui_rng.randi_range(0, prospect_target_templates.size() - 1))
+		var prospect_template: Resource = prospect_target_templates[idx]
+		var variant: FeatureCard = prospect_template.duplicate(false) as FeatureCard
+		if variant != null:
+			backlog_cards.append(variant)
+			selected_cards.append(variant)
+			if not prospect_template.resource_path.is_empty():
+				result.offered_paths.append(prospect_template.resource_path)
+	else:
+		# If no prospect is close or no target available, fill the last slot normally
+		if filtered_templates.size() > 0 and backlog_cards.size() < visible_count:
+			var pick_index: int = _pick_weighted_template_index(
+				filtered_templates,
+				chosen_archetype,
+				ui_rng,
+				prospect_targets,
+				recent_paths,
+				selected_cards,
+				offer_context
+			)
+			if pick_index >= 0:
+				var template: Resource = filtered_templates[pick_index]
+				var variant: FeatureCard = template.duplicate(false) as FeatureCard
+				if variant != null:
+					backlog_cards.append(variant)
+					selected_cards.append(variant)
+					if not template.resource_path.is_empty():
+						result.offered_paths.append(template.resource_path)
+
+	# If we somehow have too many, trim to visible_count
+	while backlog_cards.size() > visible_count:
+		backlog_cards.remove_at(backlog_cards.size() - 1)
 
 	result.backlog_cards = backlog_cards
 	result.last_offer_runway_day = runway_today
