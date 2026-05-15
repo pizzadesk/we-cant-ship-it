@@ -42,7 +42,7 @@ autowrap_mode = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.9, 0.94, 1)
+theme_override_colors/font_color = Color(0.600, 0.900, 0.600, 1)
 theme_override_font_sizes/font_size = 14
 text = "Defining Game target will appear here once the run starts."
 autowrap_mode = 3
@@ -72,6 +72,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Ambition: 0"
 
+[node name="AmbitionDelta" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.400, 0.950, 0.400, 0)
+text = ""
+
 [node name="AmbitionGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 8)
@@ -80,7 +87,7 @@ mouse_filter = 2
 show_percentage = false
 max_value = 100.0
 value = 0.0
-modulate = Color(0.2, 0.8, 0.3, 1)
+modulate = Color(0.267, 0.867, 0.267, 1)
 
 [node name="AmbitionStatus" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/AmbitionBlock"]
 unique_name_in_owner = true
@@ -88,7 +95,7 @@ custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.9, 0.86, 0.72, 1)
+theme_override_colors/font_color = Color(0.659, 0.910, 0.659, 1)
 text = "Need Ambition"
 autowrap_mode = 3
 
@@ -106,8 +113,15 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Instability: 0"
 
+[node name="InstabilityDelta" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1.0, 0.72, 0.42, 0)
+text = ""
+
 [node name="InstabilityGaugeContainer" type="Control" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock"]
-custom_minimum_size = Vector2(60, 10)
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
@@ -129,7 +143,7 @@ offset_left = 12.0
 offset_right = 28.0
 offset_bottom = 10.0
 mouse_filter = 2
-color = Color(0.78, 0.94, 0.52, 0.28)
+color = Color(0.200, 0.800, 0.200, 0.28)
 
 [node name="GoldilocksFloorMarker" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
 unique_name_in_owner = true
@@ -138,7 +152,7 @@ offset_left = 9.0
 offset_right = 11.0
 offset_bottom = 10.0
 mouse_filter = 2
-color = Color(0.35, 0.88, 0.45, 0.9)
+color = Color(0.200, 0.867, 0.200, 0.9)
 
 [node name="GoldilocksCeilingMarker" type="ColorRect" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/InstabilityBlock/InstabilityGaugeContainer"]
 unique_name_in_owner = true
@@ -155,7 +169,7 @@ custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 mouse_filter = 2
 theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.9, 0.86, 0.72, 1)
+theme_override_colors/font_color = Color(0.659, 0.910, 0.659, 1)
 text = "Waiting on archetype"
 autowrap_mode = 3
 
@@ -173,15 +187,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Runway Days: 0"
 
-[node name="RunwayGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
+[node name="RunwayCellsRow" type="HBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/RunwayBlock"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 8)
+custom_minimum_size = Vector2(60, 12)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
 mouse_filter = 2
-show_percentage = false
-max_value = 21.0
-value = 0.0
-modulate = Color(0.3, 0.6, 1, 1)
 
 [node name="FeaturesBlock" type="VBoxContainer" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow"]
 layout_mode = 2
@@ -210,6 +222,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Soul: 10"
 
+[node name="SoulDelta" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.700, 0.600, 1.000, 0)
+text = ""
+
 [node name="SoulGauge" type="ProgressBar" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 8)
@@ -218,7 +237,7 @@ mouse_filter = 2
 show_percentage = false
 max_value = 20.0
 value = 0.0
-modulate = Color(1, 0.6, 0.8, 1)
+modulate = Color(0.700, 0.600, 1.000, 1)
 
 [node name="SoulRiskLabel" type="Label" parent="StatsPanel/StatsPadding/StatsVBox/StatsRow/SoulBlock"]
 unique_name_in_owner = true

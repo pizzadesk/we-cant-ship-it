@@ -28,7 +28,7 @@ func _update_view() -> void:
 		_name_label.text += " " + _drag_mismatch_icon
 	if _risk_label_widget != null:
 		_risk_label_widget.text = "FIT: On-archetype"
-		_risk_label_widget.add_theme_color_override("font_color", Color(0.72, 0.96, 0.80, 1.0))
+		_risk_label_widget.add_theme_color_override("font_color", Color(0.400, 0.950, 0.400, 1.0))
 	tooltip_text = ""
 	modulate = Color(1.0, 1.0, 1.0, 1.0)
 	# Alien card blocked by soul gate: dim and label so the player knows before dragging.
@@ -53,6 +53,14 @@ func _update_view() -> void:
 				_apply_risk_style(3, fc, config, true)
 			if tooltip_text.is_empty():
 				tooltip_text = preview_text
+		elif mismatch_level == 3 and not AppState.can_place_card(fc):
+			modulate = Color(1.0, 0.4, 0.4, 0.6)
+			if _risk_label_widget != null:
+				_risk_label_widget.text = "Out of Reach"
+				_apply_risk_style(3, fc, config, true)
+			if _description_label != null:
+				_description_label.text = "The studio does not have the courage for this feature. Not yet."
+				_description_label.visible = true
 
 func set_drag_origin(origin: String) -> void:
 	drag_origin = origin
@@ -88,20 +96,20 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	return payload.to_dictionary()
 func _apply_janky_look() -> void:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = Color(0.14 + _rng.randf_range(-0.03, 0.04), 0.11 + _rng.randf_range(-0.02, 0.03), 0.08 + _rng.randf_range(-0.02, 0.03))
+	sb.bg_color = Color(0.035 + _rng.randf_range(-0.01, 0.020), 0.094 + _rng.randf_range(-0.015, 0.020), 0.035 + _rng.randf_range(-0.01, 0.020))
 	sb.border_width_left = 3
 	sb.border_width_top = 3
 	sb.border_width_right = 3
 	sb.border_width_bottom = 3
-	sb.border_color = Color(0.88 + _rng.randf_range(-0.06, 0.05), 0.70 + _rng.randf_range(-0.08, 0.06), 0.30 + _rng.randf_range(-0.08, 0.06))
+	sb.border_color = Color(0.133 + _rng.randf_range(-0.04, 0.05), 0.600 + _rng.randf_range(-0.06, 0.07), 0.133 + _rng.randf_range(-0.04, 0.05))
 	sb.corner_radius_top_left = 3
 	sb.corner_radius_top_right = 2
 	sb.corner_radius_bottom_left = 2
 	sb.corner_radius_bottom_right = 4
 	add_theme_stylebox_override("panel", sb)
 
-	_name_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.79))
-	_tags_label.add_theme_color_override("font_color", Color(0.79, 0.93, 0.79))
+	_name_label.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659))
+	_tags_label.add_theme_color_override("font_color", Color(0.400, 0.750, 0.400))
 	_base_rotation = _rng.randf_range(-1.6, 1.6)
 	rotation_degrees = _base_rotation
 
@@ -174,7 +182,7 @@ func _apply_risk_style(mismatch_level: int, _card: FeatureCard, _config: GameCon
 		return
 	match mismatch_level:
 		0:
-			_risk_label_widget.add_theme_color_override("font_color", Color(0.72, 0.96, 0.80, 1.0))
+			_risk_label_widget.add_theme_color_override("font_color", Color(0.400, 0.950, 0.400, 1.0))
 		1:
 			_risk_label_widget.add_theme_color_override("font_color", Color(0.96, 0.87, 0.54, 1.0))
 		2:
@@ -182,4 +190,27 @@ func _apply_risk_style(mismatch_level: int, _card: FeatureCard, _config: GameCon
 		3:
 			_risk_label_widget.add_theme_color_override("font_color", Color(1.0, 0.48, 0.48, 1.0) if blocked else Color(0.97, 0.62, 0.62, 1.0))
 		_:
-			_risk_label_widget.add_theme_color_override("font_color", Color(0.9, 0.86, 0.72, 1.0))
+			_risk_label_widget.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659, 1.0))
+
+func apply_prospect_target_style(jank_name: String) -> void:
+	var sb: StyleBoxFlat = StyleBoxFlat.new()
+	sb.bg_color = Color(0.16, 0.13, 0.06)
+	sb.border_width_left = 3
+	sb.border_width_top = 3
+	sb.border_width_right = 3
+	sb.border_width_bottom = 3
+	sb.border_color = Color(0.98, 0.77, 0.34, 1.0)
+	sb.corner_radius_top_left = 3
+	sb.corner_radius_top_right = 3
+	sb.corner_radius_bottom_left = 3
+	sb.corner_radius_bottom_right = 3
+	sb.shadow_color = Color(0.98, 0.65, 0.18, 0.35)
+	sb.shadow_size = 6
+	add_theme_stylebox_override("panel", sb)
+	if _risk_label_widget != null:
+		_risk_label_widget.text = "◆ PROSPECT: %s" % jank_name
+		_risk_label_widget.add_theme_color_override("font_color", Color(0.98, 0.77, 0.34, 1.0))
+
+func clear_prospect_target_style() -> void:
+	remove_theme_stylebox_override("panel")
+	_update_view()

@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://h5pyl2lnnrhq"]
+
+[ext_resource type="Script" path="res://scripts/ui/overlays/confirm_overlay.gd" id="1_confirm"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.012, 0.039, 0.012, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.133, 0.510, 0.133, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.133, 0.510, 0.133, 0.25)
+shadow_size = 24
+
+[node name="ConfirmOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_confirm")
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0, 0.008, 0.0, 0.86)
+mouse_filter = 0
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(640, 0)
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="Padding" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Padding"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Center/Panel/Padding/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = ""
+
+[node name="Sep" type="HSeparator" parent="Center/Panel/Padding/VBox"]
+layout_mode = 2
+
+[node name="BodyLabel" type="Label" parent="Center/Panel/Padding/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 0
+autowrap_mode = 3
+text = ""
+
+[node name="Spacer" type="Control" parent="Center/Panel/Padding/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+size_flags_vertical = 3
+
+[node name="ButtonRow" type="HBoxContainer" parent="Center/Panel/Padding/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="CancelButton" type="Button" parent="Center/Panel/Padding/VBox/ButtonRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+theme_override_font_sizes/font_size = 18
+text = "Cancel"
+
+[node name="RowSpacer" type="Control" parent="Center/Panel/Padding/VBox/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OkButton" type="Button" parent="Center/Panel/Padding/VBox/ButtonRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+theme_override_font_sizes/font_size = 18
+text = "OK"

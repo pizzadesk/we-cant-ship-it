@@ -3,9 +3,12 @@
   "fix_bugs_active": "-10 Instability, -2 Ambition, -2 Soul. Emergency brake only.",
   "fix_bugs_exhausted": "-10 Instability, -2 Ambition, -2 Soul. Soul is critically low and the team feels it.",
   "fix_bugs_depleted": "No runway days remaining. Only shipping is available.",
-  "dev_log_active": "+1 Soul. You are buying belief, not stability.",
+  "dev_log_active": "+1 Soul (+1 bonus if 6+ features are on the board). You are buying belief, not stability.",
   "dev_log_depleted": "No runway days remaining. The update will be late. The community will survive.",
   "ship_overloaded": "High Instability. This might become legendary for the wrong reasons.",
   "ship_underloaded": "Low Instability. Safe shipping may cost you the run's identity.",
-  "ship_default": "Lock the build, face the critics, and see whether this run became a Defining Game or a memorable mistake."
+  "ship_default": "Lock the build, face the critics, and see whether this run became a Defining Game or a memorable mistake.",
+  "ship_timing_sweet_spot": "Timing: Sweet Spot — the build is at peak chaos. Ship now for a score bonus.",
+  "ship_timing_too_early": "Timing: Too Early — critics will note you shipped before the jank had time to become culture.",
+  "ship_timing_panic": "Timing: Last Stand — almost no runway left. Panic shipping leaves marks on the score."
 }

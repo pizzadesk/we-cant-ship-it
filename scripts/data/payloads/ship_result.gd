@@ -16,6 +16,7 @@ var reviews: Array[Dictionary] = []
 var jank_combination: Dictionary = {}
 var unlock_defining_game: bool = false
 var completed_run: int = 0
+var unfulfilled_prospect: Dictionary = {}
 
 func to_dictionary() -> Dictionary:
 	return {
@@ -30,4 +31,5 @@ func to_dictionary() -> Dictionary:
 		"jank_combination": jank_combination,
 		"unlock_defining_game": unlock_defining_game,
 		"completed_run": completed_run,
+		"unfulfilled_prospect": unfulfilled_prospect,
 	}

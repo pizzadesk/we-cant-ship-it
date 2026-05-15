@@ -45,6 +45,10 @@ func populate_card_list(append_log: Callable) -> void:
 
 func refresh_backlog_list() -> void:
 	BacklogCatalogUtils.refresh_backlog_list(_card_list, _backlog_cards, _card_widget_scene, "backlog")
+	_apply_prospect_highlighting()
+
+func refresh_prospect_highlighting() -> void:
+	_apply_prospect_highlighting()
 
 func clear_visible_backlog() -> void:
 	_backlog_cards.clear()
@@ -139,6 +143,18 @@ func _rebuild_daily_offer(force: bool = false) -> void:
 	elif not offer_result.offered_paths.is_empty():
 		_run_offered_paths.append_array(offer_result.offered_paths)
 	refresh_backlog_list()
+
+func _apply_prospect_highlighting() -> void:
+	if _game_state == null or _card_list == null:
+		return
+	var targets: PackedStringArray = PackedStringArray()
+	if _game_state.has_method("get_active_prospect_offer_targets"):
+		targets = PackedStringArray(_game_state.get_active_prospect_offer_targets())
+	var prospect_jank: Dictionary = {}
+	if _game_state.has_method("get_current_prospect_jank"):
+		prospect_jank = Dictionary(_game_state.get_current_prospect_jank())
+	var jank_name: String = String(prospect_jank.get("prospect_title", "Jank Prospect"))
+	BacklogCatalogUtils.apply_prospect_highlights(_card_list, targets, jank_name)
 
 func _get_initial_runway_days() -> int:
 	if _game_state != null and _game_state.has_method("get_initial_runway_days"):

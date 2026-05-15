@@ -5,6 +5,9 @@ const JankVisualUtils = preload("res://scripts/ui/jank_visual_utils.gd")
 const SynergyToastUtils = preload("res://scripts/ui/synergy_toast_utils.gd")
 const ThemeUtils = preload("res://scripts/ui/theme_utils.gd")
 
+const TOAST_FADE_IN: float = 0.15
+const TOAST_FADE_OUT: float = 0.4
+
 var _owner: Node = null
 var _ui_rng: RandomNumberGenerator = null
 var _scanline_shader: Shader = null
@@ -64,7 +67,7 @@ func process(delta: float, menu_active: bool, instability_visual: float, instabi
 		return
 
 	_jank_time += delta
-	if instability_visual >= 0.25:
+	if instability_visual >= 0.40:
 		_glitch_offset = JankVisualUtils.next_glitch_offset(_glitch_offset, instability_visual, delta, _ui_rng, instability_ceiling_pressure)
 		_wobble_root.position = JankVisualUtils.compute_wobble_position(_jank_time, instability_visual, _glitch_offset, wobble_clamp, instability_ceiling_pressure)
 		_wobble_root.modulate = JankVisualUtils.compute_wobble_modulate(instability_visual)
@@ -73,12 +76,12 @@ func process(delta: float, menu_active: bool, instability_visual: float, instabi
 		_wobble_root.position = Vector2.ZERO
 		_wobble_root.modulate = Color.WHITE
 
-	_jank_tint.visible = instability_visual >= 0.25
-	if instability_visual >= 0.25:
+	_jank_tint.visible = instability_visual >= 0.40
+	if instability_visual >= 0.40:
 		_jank_tint.color = JankVisualUtils.compute_jank_tint_color(instability_visual)
 
-	_scanline_overlay.visible = instability_visual >= 0.45
-	if instability_visual >= 0.45 and _scanline_material != null:
+	_scanline_overlay.visible = instability_visual >= 0.65
+	if instability_visual >= 0.65 and _scanline_material != null:
 		_scanline_material.set_shader_parameter("opacity", JankVisualUtils.compute_scanline_opacity(instability_visual))
 		_scanline_material.set_shader_parameter("speed", JankVisualUtils.compute_scanline_speed(instability_visual))
 		_scanline_material.set_shader_parameter("density", JankVisualUtils.compute_scanline_density(instability_visual))
@@ -101,9 +104,7 @@ func show_synergy_toast(
 	body: String,
 	stage: String,
 	soul_delta: int,
-	synergy_toast_duration: float,
-	synergy_toast_fade_in: float,
-	on_timeout: Callable,
+	duration: float,
 ) -> void:
 	_synergy_toast_timer = SynergyToastUtils.show_synergy_toast(
 		_owner,
@@ -113,10 +114,18 @@ func show_synergy_toast(
 		body,
 		stage,
 		soul_delta,
-		synergy_toast_duration,
-		synergy_toast_fade_in,
-		on_timeout
+		duration,
+		TOAST_FADE_IN,
+		Callable(self, "handle_synergy_toast_timeout")
 	)
+
+func handle_synergy_toast_timeout() -> void:
+	var t: Tween = fade_out_synergy_toast(TOAST_FADE_OUT)
+	if t == null:
+		return
+	await t.finished
+	hide_synergy_toast()
+	clear_synergy_toast_timer()
 
 func fade_out_synergy_toast(synergy_toast_fade_out: float) -> Tween:
 	return SynergyToastUtils.fade_out_synergy_toast(_owner, _synergy_toast, synergy_toast_fade_out)
@@ -129,6 +138,15 @@ func clear_synergy_toast_timer() -> void:
 func hide_synergy_toast() -> void:
 	if _synergy_toast != null:
 		_synergy_toast.hide()
+
+func flash_jank_lock() -> void:
+	if _wobble_root == null:
+		return
+	var t: Tween = _owner.create_tween()
+	t.set_trans(Tween.TRANS_BACK)
+	t.set_ease(Tween.EASE_OUT)
+	t.tween_property(_wobble_root, "scale", Vector2(1.015, 1.015), 0.07)
+	t.tween_property(_wobble_root, "scale", Vector2.ONE, 0.30)
 
 func apply_ui_corruption(instability_visual: float) -> void:
 	JankVisualUtils.apply_ui_corruption(_corruptible_controls, _base_control_text, _ui_rng, instability_visual)

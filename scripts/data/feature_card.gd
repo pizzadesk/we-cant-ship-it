@@ -38,4 +38,4 @@ static func get_instability_color(instability: int) -> Color:
 	elif int(instability) >= 5:
 		return Color(1.0, 0.72, 0.42)
 	else:
-		return Color(0.95, 0.89, 0.68)
+		return Color(0.659, 0.910, 0.659)

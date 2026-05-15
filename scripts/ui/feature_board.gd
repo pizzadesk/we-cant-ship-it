@@ -29,6 +29,7 @@ var _tile_by_name: Dictionary = {}
 var _is_highlighted: bool = false
 var _jank_state_tween: Tween = null
 var _log_entries: Array[String] = []
+var _jank_locked_forever: bool = false
 
 const MAX_LOG_ENTRIES: int = 32
 const CONSOLE_IDLE_TEXT: String = "Studio console is listening. The run has not made a move yet."
@@ -94,6 +95,7 @@ func clear_board() -> void:
 		child.queue_free()
 	_tile_by_name.clear()
 	_empty_state_label.show()
+	_jank_locked_forever = false
 	set_jank_pursuit_state({})
 	clear_console_log()
 	if _placed_features_scroll != null:
@@ -119,6 +121,10 @@ func clear_console_log() -> void:
 
 func set_jank_pursuit_state(state: Dictionary) -> void:
 	var stage: String = String(state.get("stage", "idle"))
+	if _jank_locked_forever and stage != "locked":
+		return
+	if stage == "locked":
+		_jank_locked_forever = true
 	match stage:
 		"prospect":
 			_jank_state_title_label.text = String(state.get("display_title", "Prospect Forming"))
@@ -137,8 +143,8 @@ func set_jank_pursuit_state(state: Dictionary) -> void:
 		_:
 			_jank_state_title_label.text = String(state.get("display_title", "No Signature Yet"))
 			_jank_state_body_label.text = String(state.get("display_body", "Combine features and watch for collisions that feel a little too meaningful."))
-			_jank_state_title_label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.66, 1.0))
-			_jank_state_body_label.add_theme_color_override("font_color", Color(0.80, 0.85, 0.92, 1.0))
+			_jank_state_title_label.add_theme_color_override("font_color", Color(0.518, 0.784, 0.518, 1.0))
+			_jank_state_body_label.add_theme_color_override("font_color", Color(0.380, 0.600, 0.380, 1.0))
 			if idle_state_style != null and _jank_state_box != null:
 				_jank_state_box.add_theme_stylebox_override("panel", idle_state_style)
 
@@ -166,10 +172,39 @@ func pulse_jank_state(stage: String) -> void:
 func _refresh_console_log() -> void:
 	if _console_log == null:
 		return
+	_console_log.clear()
 	if _log_entries.is_empty():
-		_console_log.text = CONSOLE_IDLE_TEXT
+		_console_log.append_text(CONSOLE_IDLE_TEXT)
 		return
-	_console_log.text = "\n".join(PackedStringArray(_log_entries))
+	for i: int in range(_log_entries.size()):
+		if i > 0:
+			_console_log.append_text("\n")
+		_console_log.append_text(_log_entries[i])
+
+func flash_jank_tiles(card_a: String, card_b: String) -> void:
+	for tile_name in [card_a, card_b]:
+		if tile_name.is_empty() or not _tile_by_name.has(tile_name):
+			continue
+		var tile: PlacedFeatureTile = _tile_by_name[tile_name] as PlacedFeatureTile
+		if tile == null:
+			continue
+		var t: Tween = tile.create_tween()
+		t.set_trans(Tween.TRANS_CUBIC)
+		t.set_ease(Tween.EASE_OUT)
+		t.tween_property(tile, "modulate", Color(1.6, 1.2, 0.6, 1.0), 0.12)
+		t.tween_property(tile, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.5)
+
+func pulse_prospect_tile(card_name: String) -> void:
+	if card_name.is_empty() or not _tile_by_name.has(card_name):
+		return
+	var tile: PlacedFeatureTile = _tile_by_name[card_name] as PlacedFeatureTile
+	if tile == null:
+		return
+	var t: Tween = tile.create_tween()
+	t.set_trans(Tween.TRANS_SINE)
+	t.set_ease(Tween.EASE_IN_OUT)
+	t.tween_property(tile, "modulate", Color(1.3, 1.1, 0.7, 1.0), 0.2)
+	t.tween_property(tile, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.4)
 
 func _scroll_console_to_latest() -> void:
 	if _console_log == null:
@@ -179,12 +214,17 @@ func _scroll_console_to_latest() -> void:
 
 func _format_log_entry(message: String) -> String:
 	if message.begins_with("[JANK PROSPECT] "):
-		return "> Prospect: %s" % message.trim_prefix("[JANK PROSPECT] ")
+		var body: String = message.trim_prefix("[JANK PROSPECT] ")
+		return "[color=#f0c84a]▸ Prospect:[/color] %s" % body
 	if message.begins_with("[JANK LOCKED] "):
-		return "> Signature: %s" % message.trim_prefix("[JANK LOCKED] ")
-	if message.begins_with("["):
-		return "> %s" % message
-	return "> %s" % message
+		var body: String = message.trim_prefix("[JANK LOCKED] ")
+		return "[color=#ff8030][b]★ Signature:[/b][/color] [color=#ffcf90]%s[/color]" % body
+	var severity_tags: PackedStringArray = PackedStringArray(["[LOW] ", "[MEDIUM] ", "[HIGH] ", "[CRITICAL] ", "[MODERATE] "])
+	for tag: String in severity_tags:
+		if message.begins_with(tag):
+			var body: String = message.trim_prefix(tag)
+			return "[color=#c090e0]◈ Event:[/color] %s" % body
+	return "[color=#8aabb8]▸[/color] %s" % message
 
 func _update_feature_grid_columns() -> void:
 	if _placed_features_list == null or _placed_features_scroll == null:

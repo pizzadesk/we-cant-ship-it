@@ -15,8 +15,10 @@
   "cycle_complete": "Cycle complete. Four runs, one voice found, three real attempts spent. The studio has become legible to itself.",
   "auto_draft": "Nobody killed the pitch in time. The most unstable option stayed on the roadmap.",
   "auto_dilemma": "Nobody answered before the silence hardened. The room drifted into the safer choice.",
-  "onboarding_0": "Run 1 is a five-day voice-finding sprint. The Defining Game is locked. For now, the only job is learning what kind of trouble this studio calls sincere.",
-  "onboarding_1": "Placed features raise Ambition and Instability. Every action except shipping spends a day.",
-  "onboarding_2": "Fix Bugs buys stability with Soul and Ambition. Dev Log buys a little belief back.",
-  "onboarding_3": "Ship something ambitious, a little broken, and specific enough to be loved."
+  "onboarding_0": "Run 1 is a five-day sprint to find your voice. Defining Game is locked this run. The only job is learning what kind of trouble this studio makes.",
+  "onboarding_1": "Placing features raises Ambition and Instability. Every action except shipping spends a day of runway.",
+  "onboarding_2": "Fix Bugs reduces Instability but costs Soul and Ambition. Dev Log recovers a little Soul.",
+  "onboarding_3": "Ship something ambitious, a little broken, and specific enough to be loved.",
+  "jank_prospect": "[JANK PROSPECT] %s",
+  "jank_locked": "[JANK LOCKED] %s and %s forced a collision the studio is naming %s. %s"
 }

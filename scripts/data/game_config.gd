@@ -27,6 +27,8 @@ class_name GameConfig
 @export var fix_bugs_soul_cost: int = 2
 @export var fix_bugs_ambition_penalty: int = 2
 @export var dev_log_soul_gain: int = 1
+@export var dev_log_large_board_soul_bonus: int = 1
+@export var dev_log_large_board_threshold: int = 6
 
 # --- DEFINING GAME ENDING ---
 # Apex achievement; requires ALL thresholds simultaneously.

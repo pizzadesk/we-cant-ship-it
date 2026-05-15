@@ -16,6 +16,8 @@
 	"fix_bugs_soul_cost": 2,
 	"fix_bugs_ambition_penalty": 2,
 	"dev_log_soul_gain": 1,
+	"dev_log_large_board_soul_bonus": 1,
+	"dev_log_large_board_threshold": 6,
 
 	"__section_goldilocks": "=== DEFINING GAME === Per-archetype instability windows. Requires ALL conditions simultaneously.",
 	"goldilocks_ambition_min": 25,

@@ -39,6 +39,7 @@ func resolve_and_commit_run(
 	chosen_archetype: String,
 	current_run: int,
 	locked_signature_jank: Dictionary = {},
+	unfulfilled_prospect: Dictionary = {},
 ) -> RunResolutionOutcomeType:
 	var config: GameConfig = _content_repository.get_game_config()
 	var completed_run: int = current_run
@@ -132,6 +133,7 @@ func resolve_and_commit_run(
 		"jank_combination": jank_match.duplicate(true),
 		"ship_window": ship_window.duplicate(true),
 		"card_unlock": unlock_result.duplicate(true),
+		"unfulfilled_prospect": unfulfilled_prospect.duplicate(true),
 	}
 
 	var last_completed_run: int = _cycle_mgr.complete_run(ending, new_unlocked, cycle_summary)
@@ -147,6 +149,7 @@ func resolve_and_commit_run(
 	result.jank_combination = jank_match
 	result.unlock_defining_game = ending_id == EndingResolver.DEFINING_GAME_ID
 	result.completed_run = completed_run
+	result.unfulfilled_prospect = unfulfilled_prospect.duplicate(true)
 	var outcome: RunResolutionOutcomeType = RunResolutionOutcomeType.new()
 	outcome.ship_result = result
 	outcome.last_completed_run = last_completed_run

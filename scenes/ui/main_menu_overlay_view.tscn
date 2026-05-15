@@ -15,7 +15,7 @@ offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.03, 0.02, 0.02, 0.86)
+color = Color(0.010, 0.030, 0.010, 0.90)
 
 [node name="MainMenuPanel" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(520, 360)
@@ -68,6 +68,12 @@ autowrap_mode = 3
 [node name="MenuSpacer" type="Control" parent="MainMenuPanel/MenuPadding/MenuVBox"]
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
+
+[node name="CycleTrack" type="HBoxContainer" parent="MainMenuPanel/MenuPadding/MenuVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 6
 
 [node name="StartRunButton" type="Button" parent="MainMenuPanel/MenuPadding/MenuVBox"]
 unique_name_in_owner = true

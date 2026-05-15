@@ -13,12 +13,12 @@ static func setup_synergy_toast(owner: Node) -> PanelContainer:
 	toast.custom_minimum_size = Vector2(560.0, 0.0)
 
 	var panel_style: StyleBoxFlat = StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.19, 0.16, 0.12, 0.96)
+	panel_style.bg_color = Color(0.039, 0.098, 0.039, 0.96)
 	panel_style.border_width_left = 2
 	panel_style.border_width_top = 2
 	panel_style.border_width_right = 2
 	panel_style.border_width_bottom = 2
-	panel_style.border_color = Color(0.95, 0.80, 0.48, 1.0)
+	panel_style.border_color = Color(0.200, 0.700, 0.200, 1.0)
 	panel_style.corner_radius_top_left = 6
 	panel_style.corner_radius_top_right = 6
 	panel_style.corner_radius_bottom_left = 6
@@ -43,7 +43,7 @@ static func setup_synergy_toast(owner: Node) -> PanelContainer:
 	title_label.text = "PROSPECT FORMING"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 18)
-	title_label.add_theme_color_override("font_color", Color(0.99, 0.84, 0.52, 1.0))
+	title_label.add_theme_color_override("font_color", Color(0.400, 0.950, 0.400, 1.0))
 
 	var body_label: Label = Label.new()
 	body_label.name = "Body"
@@ -51,7 +51,7 @@ static func setup_synergy_toast(owner: Node) -> PanelContainer:
 	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body_label.add_theme_font_size_override("font_size", 16)
-	body_label.add_theme_color_override("font_color", Color(0.98, 0.94, 0.86, 1.0))
+	body_label.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659, 1.0))
 
 	content.add_child(title_label)
 	content.add_child(body_label)
@@ -94,20 +94,20 @@ static func show_synergy_toast(
 				style.bg_color = Color(0.28, 0.20, 0.08, 0.96)
 				style.border_color = Color(0.98, 0.77, 0.34, 1.0)
 			_:
-				style.bg_color = Color(0.19, 0.16, 0.12, 0.96)
-				style.border_color = Color(0.95, 0.80, 0.48, 1.0)
+				style.bg_color = Color(0.039, 0.098, 0.039, 0.96)
+				style.border_color = Color(0.200, 0.700, 0.200, 1.0)
 	if title_label != null:
 		if stage == "locked":
-			title_label.add_theme_font_size_override("font_size", 20)
+			title_label.add_theme_font_size_override("font_size", 26)
 			title_label.add_theme_color_override("font_color", Color(1.0, 0.69, 0.40, 1.0))
 		elif stage == "prospect":
-			title_label.add_theme_font_size_override("font_size", 24)
+			title_label.add_theme_font_size_override("font_size", 22)
 			title_label.add_theme_color_override("font_color", Color(0.99, 0.84, 0.52, 1.0))
 		else:
 			title_label.add_theme_font_size_override("font_size", 18)
-			title_label.add_theme_color_override("font_color", Color(0.99, 0.84, 0.52, 1.0))
+			title_label.add_theme_color_override("font_color", Color(0.400, 0.950, 0.400, 1.0))
 	if body_label != null:
-		body_label.add_theme_color_override("font_color", Color(0.98, 0.94, 0.86, 1.0))
+		body_label.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659, 1.0))
 		body_label.add_theme_font_size_override("font_size", 16 if stage == "locked" else 15)
 		if soul_delta > 0:
 			body_label.text = "%s\nSoul +%d" % [body, soul_delta]

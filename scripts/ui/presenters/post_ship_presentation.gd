@@ -4,13 +4,13 @@ static func build_ship_summary_text(game_state: Node, predicted_score: float) ->
 	if game_state == null:
 		return ""
 
-	var rule: String = "\n[color=#444444]" + "\u2500".repeat(42) + "[/color]\n\n"
+	var rule: String = "\n[color=#1a3d1a]" + "\u2500".repeat(42) + "[/color]\n\n"
 	var ending_colors: Dictionary = {
 		EndingResolver.DEFINING_GAME_ID: "ff00ff",
 		EndingResolver.LEGENDARY_JANK_ID: "ff8c42",
-		EndingResolver.SURPRISE_HIT_ID: "74c0fc",
+		EndingResolver.SURPRISE_HIT_ID: "66cccc",
 		EndingResolver.PRESTIGE_COLLAPSE_ID: "cc5de8",
-		EndingResolver.SHIPPED_SOMETHING_ID: "cccccc",
+		EndingResolver.SHIPPED_SOMETHING_ID: "80cc80",
 	}
 
 	var content: String = ""
@@ -18,7 +18,7 @@ static func build_ship_summary_text(game_state: Node, predicted_score: float) ->
 
 	var ending_label: String = _predict_ending_label(game_state, predicted_score)
 	var normalized: String = EndingResolver.normalize_ending_id(ending_label)
-	var ending_hex: String = "#" + String(ending_colors.get(normalized, "cccccc"))
+	var ending_hex: String = "#" + String(ending_colors.get(normalized, "80cc80"))
 	content += _S.get_string("popups", "ship_summary_prediction_header") + "\n"
 	content += _S.get_string("popups", "ship_summary_score_format") % predicted_score + "\n"
 	content += "[color=%s]Ending Path: %s[/color]" % [ending_hex, ending_label] + rule
@@ -34,14 +34,14 @@ static func build_ship_summary_text(game_state: Node, predicted_score: float) ->
 			if feature_card.tags.is_empty():
 				content += "\u2022 %s\n" % feature_card.feature_name
 			else:
-				content += "\u2022 %s [color=#666666](%s)[/color]\n" % [feature_card.feature_name, ", ".join(feature_card.tags)]
+				content += "\u2022 %s [color=#4a7a4a](%s)[/color]\n" % [feature_card.feature_name, ", ".join(feature_card.tags)]
 	content += "\n"
 	content += _S.get_string("popups", "ship_summary_confirm_note")
 	return content
 
 static func build_jank_discovery_text(results: Dictionary) -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	var rule: String = "[color=#444444]" + "\u2500".repeat(42) + "[/color]"
+	var rule: String = "[color=#1a3d1a]" + "\u2500".repeat(42) + "[/color]"
 	var ending: String = String(results.get("ending", "Shipped Something"))
 	var ending_id: String = String(results.get("ending_id", EndingResolver.normalize_ending_id(ending)))
 	lines.append("[b]%s[/b]" % _extract_ending_label(ending))
@@ -54,8 +54,8 @@ static func build_jank_discovery_text(results: Dictionary) -> String:
 		lines.append("[color=#ff8c42]%s[/color]" % String(jank_combination.get("name", "Unknown Combo")))
 		lines.append(String(jank_combination.get("description", "")))
 	else:
-		lines.append("[color=#888888][b]JANK DISCOVERY[/b][/color]")
-		lines.append("[color=#888888]The studio shipped something solid. Nothing legendary broke.[/color]")
+		lines.append("[color=#558855][b]JANK DISCOVERY[/b][/color]")
+		lines.append("[color=#558855]The studio shipped something solid. Nothing legendary broke.[/color]")
 
 	var card_unlock: Dictionary = results.get("card_unlock", {})
 	if not card_unlock.is_empty():
@@ -66,6 +66,17 @@ static func build_jank_discovery_text(results: Dictionary) -> String:
 		if not bonus_card_name.is_empty():
 			lines.append("Bonus unlock: [b]%s[/b]" % bonus_card_name)
 		lines.append("[i]%s[/i]" % _S.get_string("popups", "jank_card_unlock_note"))
+
+	var unfulfilled: Dictionary = results.get("unfulfilled_prospect", {})
+	if not unfulfilled.is_empty() and jank_combination.is_empty():
+		lines.append(rule)
+		lines.append(_S.get_string("popups", "jank_almost_locked_header"))
+		lines.append("[color=#558855]%s[/color]" % String(unfulfilled.get("name", "")))
+		lines.append("[color=#4a7a4a]%s + %s[/color]" % [
+			String(unfulfilled.get("card_a", "")),
+			String(unfulfilled.get("card_b", ""))
+		])
+		lines.append("[i]%s[/i]" % _S.get_string("popups", "jank_almost_locked_note"))
 
 	if bool(results.get("unlock_defining_game", false)) or ending_id == EndingResolver.DEFINING_GAME_ID:
 		lines.append(rule)

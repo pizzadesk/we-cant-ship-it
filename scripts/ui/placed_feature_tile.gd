@@ -28,20 +28,20 @@ func _update_view() -> void:
 	_refresh_name_label()
 func _apply_janky_look() -> void:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = Color(0.09 + _rng.randf_range(-0.02, 0.03), 0.14 + _rng.randf_range(-0.03, 0.04), 0.12 + _rng.randf_range(-0.03, 0.04))
+	sb.bg_color = Color(0.035 + _rng.randf_range(-0.01, 0.020), 0.094 + _rng.randf_range(-0.015, 0.020), 0.035 + _rng.randf_range(-0.01, 0.020))
 	sb.border_width_left = 2
 	sb.border_width_top = 3
 	sb.border_width_right = 2
 	sb.border_width_bottom = 3
-	sb.border_color = Color(0.44 + _rng.randf_range(-0.08, 0.08), 0.90 + _rng.randf_range(-0.08, 0.06), 0.74 + _rng.randf_range(-0.08, 0.06))
+	sb.border_color = Color(0.133 + _rng.randf_range(-0.04, 0.05), 0.600 + _rng.randf_range(-0.05, 0.06), 0.133 + _rng.randf_range(-0.04, 0.05))
 	sb.corner_radius_top_left = 2
 	sb.corner_radius_top_right = 5
 	sb.corner_radius_bottom_left = 5
 	sb.corner_radius_bottom_right = 2
 	add_theme_stylebox_override("panel", sb)
 
-	_name_label.add_theme_color_override("font_color", Color(0.93, 0.98, 0.90))
-	_tags_label.add_theme_color_override("font_color", Color(0.72, 0.91, 0.82))
+	_name_label.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659))
+	_tags_label.add_theme_color_override("font_color", Color(0.400, 0.750, 0.400))
 	rotation_degrees = _rng.randf_range(-1.4, 1.4)
 
 func _play_spawn_pop() -> void:

@@ -3,10 +3,10 @@
 		{
 			"title": "Funding Ultimatum",
 			"category": "intrusive",
-			"description": "A publisher wants the build and a say in what it becomes. Take the runway or keep the voice.",
+			"description": "A publisher wants the build and a say in what it becomes. Take the deal, or keep your voice.",
 			"choices": [
 				{ "label": "Take the money", "effects": { "ambition": 4, "instability": 3, "soul": -2 } },
-				{ "label": "Stay indie", "effects": { "soul": 4, "runway_days": -1 } }
+				{ "label": "Stay indie", "effects": { "soul": 4, "runway_days": -1, "ambition": -2 } }
 			]
 		},
 		{
@@ -48,19 +48,19 @@
 		{
 			"title": "Unexpected Fan Heat",
 			"category": "community",
-			"description": "An early clip caught fire. Feed the little cult forming around it or retreat to safer work.",
+			"description": "An early clip went viral. Feed the fan community forming around it, or return to quieter work.",
 			"choices": [
-				{ "label": "Lean into the cult", "effects": { "soul": 4, "instability": 2 } },
+				{ "label": "Lean into the cult", "effects": { "soul": 2, "instability": 2, "ambition": 2 } },
 				{ "label": "Play it safe", "effects": { "instability": -2, "runway_days": -1 } }
 			]
 		},
 		{
 			"title": "Romance Thread Demands",
 			"category": "creative",
-			"description": "Two characters shared one exchange. The audience wrote the rest overnight. Ignore it or make it true.",
+			"description": "Two characters shared one exchange. The audience wrote the rest overnight. Ignore it or make it real.",
 			"choices": [
 				{ "label": "Write it properly", "effects": { "soul": 3, "ambition": 2, "instability": 1 } },
-				{ "label": "Say no and move on", "effects": { "runway_days": 1, "soul": -1 } }
+				{ "label": "Say no and move on", "effects": { "runway_days": 1, "soul": -1, "instability": -2 } }
 			]
 		},
 		{

@@ -2,16 +2,16 @@ const _S = preload("res://scripts/ui/ui_strings.gd")
 
 static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 	var lines: PackedStringArray = PackedStringArray()
-	var rule: String = "[color=#444444]" + "\u2500".repeat(42) + "[/color]"
+	var rule: String = "[color=#1a3d1a]" + "\u2500".repeat(42) + "[/color]"
 
 	lines.append(_S.get_string("popups", "cycle_legacy_arc_header") + "\n")
 
 	var ending_colors: Dictionary = {
-		"defining game": "51cf66",
+		"defining game": "66dd66",
 		"legendary jank": "ff8c42",
-		"surprise hit": "74c0fc",
+		"surprise hit": "66cccc",
 		"prestige collapse": "cc5de8",
-		"shipped something": "adb5bd",
+		"shipped something": "6db06d",
 	}
 
 	var any_defining: bool = false
@@ -33,6 +33,11 @@ static func build_cycle_legacy_text(cycle_state: Dictionary) -> String:
 		if not jank_combination.is_empty():
 			lines.append("  Jank discovered: [color=#ff922b]%s[/color]" % String(jank_combination.get("name", "Unknown Jank")))
 			lines.append("  %s" % String(jank_combination.get("description", "")))
+		var raw_unfulfilled: Variant = summary.get("unfulfilled_prospect", {})
+		var unfulfilled: Dictionary = raw_unfulfilled if raw_unfulfilled is Dictionary else {}
+		var unfulfilled_name: String = String(unfulfilled.get("name", ""))
+		if not unfulfilled_name.is_empty() and jank_combination.is_empty():
+			lines.append("  [color=#3a6a3a]Almost locked: %s[/color]" % unfulfilled_name)
 		if normalized == EndingResolver.DEFINING_GAME_ID:
 			any_defining = true
 		lines.append("")
@@ -54,9 +59,9 @@ static func build_previously_on_text(run_summary: Dictionary, current_run: int, 
 	var lines: PackedStringArray = PackedStringArray()
 	lines.append("[b]RUN %d OF 4[/b]" % current_run)
 	if current_run == 2:
-		lines.append("[color=#888888]The five-day tutorial sprint is over. The studio found its voice. Now it has to ship on purpose.[/color]")
+		lines.append("[color=#558855]The five-day tutorial sprint is over. The studio found its voice. Now it has to ship on purpose.[/color]")
 	else:
-		lines.append("[color=#888888]A new sprint begins.[/color]")
+		lines.append("[color=#558855]A new sprint begins.[/color]")
 	lines.append("")
 	if run_summary.is_empty():
 		lines.append("[i]The studio remembers the bruises, not the details.[/i]")
@@ -65,7 +70,7 @@ static func build_previously_on_text(run_summary: Dictionary, current_run: int, 
 	var ending: String = String(run_summary.get("ending", ""))
 	var ending_id: String = String(run_summary.get("ending_id", EndingResolver.normalize_ending_id(ending)))
 	if not ending.is_empty():
-		var last_time_color: String = "74c0fc" if ending_id != EndingResolver.PRESTIGE_COLLAPSE_ID else "cc5de8"
+		var last_time_color: String = "66cccc" if ending_id != EndingResolver.PRESTIGE_COLLAPSE_ID else "cc5de8"
 		lines.append("Last time: [color=#%s]%s[/color]" % [last_time_color, _extract_ending_label(ending)])
 		lines.append("")
 
@@ -101,18 +106,18 @@ static func _extract_ending_label(ending: String) -> String:
 static func _build_goldilocks_gap_section(ambition: int, instability: int, soul: int, archetype: String, cfg: GameConfig, current_run: int) -> String:
 	const BAR_LEN: int = 14
 	var lines: PackedStringArray = PackedStringArray()
-	lines.append("[b]GAP VISUALIZER[/b]  [color=#555555]Run %d[/color]" % current_run)
+	lines.append("[b]GAP VISUALIZER[/b]  [color=#3a6a3a]Run %d[/color]" % current_run)
 
 	var gate_line: String
 	if current_run <= 1:
-		gate_line = "[color=#888888]DEFINING GAME: LOCKED \u2014 this run was about learning the shape of the chaos.[/color]"
+		gate_line = "[color=#558855]DEFINING GAME: LOCKED \u2014 this run was about learning the shape of the chaos.[/color]"
 	else:
 		var gw: Array[int] = ArchetypeRules.get_goldilocks_window_for_archetype(cfg, archetype)
 		var ambition_ok: bool = ambition >= cfg.goldilocks_ambition_min
 		var inst_ok: bool = instability >= gw[0] and instability <= gw[1]
 		var soul_ok: bool = soul >= cfg.goldilocks_soul_min
 		if ambition_ok and inst_ok and soul_ok:
-			gate_line = "[color=#51cf66][b]\u2713 DEFINING GAME: ACHIEVED![/b][/color]"
+			gate_line = "[color=#66dd66][b]\u2713 DEFINING GAME: ACHIEVED![/b][/color]"
 		else:
 			gate_line = "[color=#ffd43b]DEFINING GAME: NOT QUITE THERE YET[/color]"
 	lines.append(gate_line)
@@ -122,8 +127,8 @@ static func _build_goldilocks_gap_section(ambition: int, instability: int, soul:
 	var amb_bar_color: String
 	var amb_label: String
 	if ambition >= cfg.goldilocks_ambition_min:
-		amb_bar_color = "51cf66"
-		amb_label = "[color=#51cf66]\u2713[/color]"
+		amb_bar_color = "66dd66"
+		amb_label = "[color=#66dd66]\u2713[/color]"
 	elif amb_ratio >= 0.80:
 		amb_bar_color = "ffd43b"
 		amb_label = "[color=#ffd43b]close[/color]"
@@ -150,16 +155,16 @@ static func _build_goldilocks_gap_section(ambition: int, instability: int, soul:
 		inst_label = "[color=#ff6b6b]too high[/color]"
 	else:
 		inst_ratio = 1.0
-		inst_bar_color = "51cf66"
-		inst_label = "[color=#51cf66]\u2713[/color]"
+		inst_bar_color = "66dd66"
+		inst_label = "[color=#66dd66]\u2713[/color]"
 	lines.append("INSTABILITY %s  %s" % [_gap_bar_colored(inst_ratio, BAR_LEN, inst_bar_color), inst_label])
 
 	var soul_ratio: float = clampf(float(soul) / float(cfg.goldilocks_soul_min), 0.0, 1.0)
 	var soul_bar_color: String
 	var soul_label: String
 	if soul >= cfg.goldilocks_soul_min:
-		soul_bar_color = "51cf66"
-		soul_label = "[color=#51cf66]\u2713[/color]"
+		soul_bar_color = "66dd66"
+		soul_label = "[color=#66dd66]\u2713[/color]"
 	elif soul_ratio >= 0.80:
 		soul_bar_color = "ffd43b"
 		soul_label = "[color=#ffd43b]close[/color]"
@@ -176,5 +181,5 @@ static func _gap_bar_colored(ratio: float, length: int, bar_color: String) -> St
 	if filled > 0:
 		result += "[color=#%s]%s[/color]" % [bar_color, "\u2588".repeat(filled)]
 	if empty > 0:
-		result += "[color=#444444]%s[/color]" % "\u2591".repeat(empty)
+		result += "[color=#1a3d1a]%s[/color]" % "\u2591".repeat(empty)
 	return result

@@ -6,18 +6,12 @@ const DialogHostViewType = preload("res://scripts/ui/dialog_host_view.gd")
 const HeaderBarViewType = preload("res://scripts/ui/header_bar_view.gd")
 const MainMenuOverlayViewType = preload("res://scripts/ui/main_menu_overlay_view.gd")
 const RunSidebarViewType = preload("res://scripts/ui/run_sidebar_view.gd")
-const PostShipPresentation = preload("res://scripts/ui/presenters/post_ship_presentation.gd")
+const ConfirmOverlay = preload("res://scripts/ui/overlays/confirm_overlay.gd")
 const CARDS_PATH: String = "res://data/cards"
 const CUSTOM_CARDS_PATH: String = "res://data/custom_cards"
 const DAILY_VISIBLE_CARDS: int = 3
-const END_DIALOG_SIZE: Vector2i = Vector2i(760, 360)
-const DILEMMA_DIALOG_SIZE: Vector2i = Vector2i(1120, 620)
-const DRAFT_DIALOG_SIZE: Vector2i = Vector2i(1180, 660)
-const REVIEW_DIALOG_SIZE: Vector2i = Vector2i(1240, 760)
 const SYNERGY_TOAST_DURATION: float = 2.5
 const _S = preload("res://scripts/ui/ui_strings.gd")
-const SYNERGY_TOAST_FADE_IN: float = 0.15
-const SYNERGY_TOAST_FADE_OUT: float = 0.4
 const JANK_PROSPECT_TOAST_DURATION: float = 4.0
 const JANK_LOCKED_TOAST_DURATION: float = 4.4
 const WOBBLE_CLAMP: float = 10.0
@@ -50,12 +44,8 @@ const SCANLINE_SHADER: Shader = preload("res://shaders/scanline.gdshader")
 @onready var _dev_log_button: Button = _run_sidebar_view.get_dev_log_button()
 @onready var _ship_button: Button = _run_sidebar_view.get_ship_button()
 
-# Dialogs and layers
+# Dialog host and main menu
 @onready var _dialog_host_view: DialogHostViewType = $"%DialogHost"
-@onready var _review_dialog: AcceptDialog = _dialog_host_view.get_review_dialog()
-@onready var _end_run_dialog: ConfirmationDialog = _dialog_host_view.get_end_run_dialog()
-@onready var _dilemma_dialog: ConfirmationDialog = _dialog_host_view.get_dilemma_dialog()
-@onready var _draft_dialog: ConfirmationDialog = _dialog_host_view.get_draft_dialog()
 @onready var _main_menu_view: MainMenuOverlayViewType = $"%MainMenuLayer"
 @onready var _start_run_button: Button = _main_menu_view.get_start_run_button()
 @onready var _reset_game_button: Button = _main_menu_view.get_reset_game_button()
@@ -73,22 +63,24 @@ const SCANLINE_SHADER: Shader = preload("res://shaders/scanline.gdshader")
 @onready var _game_state: Node = AppState
 @onready var _event_bus: Node = GameEvents
 
-var _quit_confirm_dialog: ConfirmationDialog = null
-var _draft_pick_c_button: Button
 var _ui_rng: RandomNumberGenerator = RandomNumberGenerator.new()
-var _review_content: RichTextLabel
-var _ship_summary_dialog: ConfirmationDialog = null
-var _archetype_select_dialog: ConfirmationDialog = null
 var _menu_active: bool = false
-var _run_ended: bool = false
-var _jank_discovery_dialog: AcceptDialog = null
-var _jank_discovery_content: RichTextLabel = null
-var _gap_visualizer_dialog: AcceptDialog = null
-var _gap_visualizer_content: RichTextLabel = null
-var _previously_on_dialog: AcceptDialog = null
-var _cycle_legacy_dialog: AcceptDialog = null
-var _cycle_legacy_content: RichTextLabel = null
-var _reset_confirm_dialog: ConfirmationDialog = null
+
+var _choice_overlay: ChoiceOverlay = null
+var _archetype_overlay: ChoiceOverlay = null
+var _review_overlay: EventOverlay = null
+var _jank_discovery_overlay: EventOverlay = null
+var _gap_visualizer_overlay: EventOverlay = null
+var _cycle_legacy_overlay: EventOverlay = null
+var _ship_summary_overlay: EventOverlay = null
+var _previously_on_overlay: EventOverlay = null
+var _end_run_overlay: ConfirmOverlay = null
+var _reset_confirm_overlay: ConfirmOverlay = null
+var _quit_confirm_overlay: ConfirmOverlay = null
+
+var _runway_narrative_checkpoints: Dictionary = {}
+var _backlog_footer_state: String = ""
+const _BACKLOG_FOOTER_DEFAULT: String = "Watch for risky fits, off-archetype pulls, and cards that feel like they want each other."
 
 var _hud_controller: RunHudController = RunHudController.new()
 var _backlog_controller: BacklogController = BacklogController.new()
@@ -118,44 +110,22 @@ func _notification(what: int) -> void:
 
 # -- Setup: Dialogs and HUD --
 func _setup_dialogs() -> void:
-	var refs: Dictionary = DialogFactory.configure_scene_dialogs(
-		_dialog_host_view,
-		_review_dialog,
-		_end_run_dialog,
-		_dilemma_dialog,
-		_draft_dialog,
-		REVIEW_DIALOG_SIZE,
-		END_DIALOG_SIZE,
-		DILEMMA_DIALOG_SIZE,
-		DRAFT_DIALOG_SIZE,
-		Callable(self, "_on_ship_summary_confirmed"),
-		Callable(self, "_on_ship_summary_canceled"),
-		Callable(self, "_on_jank_discovery_confirmed"),
-		Callable(self, "_on_gap_visualizer_confirmed")
-	)
-	_ship_summary_dialog = refs.get("ship_summary_dialog") as ConfirmationDialog
-	_jank_discovery_dialog = refs.get("jank_discovery_dialog") as AcceptDialog
-	_jank_discovery_content = refs.get("jank_discovery_content") as RichTextLabel
-	_gap_visualizer_dialog = refs.get("jank_dialog") as AcceptDialog
-	_gap_visualizer_content = refs.get("jank_content") as RichTextLabel
-	_review_content = refs.get("review_content") as RichTextLabel
-	_draft_pick_c_button = refs.get("draft_pick_c_button") as Button
-	_archetype_select_dialog = refs.get("archetype_dialog") as ConfirmationDialog
-	_cycle_legacy_dialog = refs.get("cycle_legacy_dialog") as AcceptDialog
-	_cycle_legacy_content = refs.get("cycle_legacy_content") as RichTextLabel
-	_previously_on_dialog = refs.get("previously_on_dialog") as AcceptDialog
-	_reset_confirm_dialog = _dialog_host_view.get_reset_confirm_dialog()
-	_quit_confirm_dialog = _dialog_host_view.get_quit_confirm_dialog()
-
-	for _d: Window in _dialog_host_view.get_scene_dialogs():
-		var _lbl: Label = (_d as AcceptDialog).get_label()
-		if _lbl != null:
-			_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_choice_overlay = _dialog_host_view.get_choice_overlay()
+	_archetype_overlay = _dialog_host_view.get_archetype_overlay()
+	_review_overlay = _dialog_host_view.get_review_overlay()
+	_jank_discovery_overlay = _dialog_host_view.get_jank_discovery_overlay()
+	_gap_visualizer_overlay = _dialog_host_view.get_gap_visualizer_overlay()
+	_cycle_legacy_overlay = _dialog_host_view.get_cycle_legacy_overlay()
+	_ship_summary_overlay = _dialog_host_view.get_ship_summary_overlay()
+	_previously_on_overlay = _dialog_host_view.get_previously_on_overlay()
+	_end_run_overlay = _dialog_host_view.get_end_run_overlay()
+	_reset_confirm_overlay = _dialog_host_view.get_reset_confirm_overlay()
+	_quit_confirm_overlay = _dialog_host_view.get_quit_confirm_overlay()
 
 func _setup_controllers() -> void:
 	_hud_controller.setup(
 		_game_state,
+		_run_sidebar_view,
 		_ambition_value,
 		_instability_value,
 		_runway_value,
@@ -168,12 +138,15 @@ func _setup_controllers() -> void:
 		_ship_button,
 		_run_sidebar_view.get_ambition_gauge(),
 		_run_sidebar_view.get_ambition_status(),
+		_run_sidebar_view.get_ambition_delta(),
 		_run_sidebar_view.get_instability_gauge(),
 		_run_sidebar_view.get_instability_target_band(),
 		_run_sidebar_view.get_instability_status(),
-		_run_sidebar_view.get_runway_gauge(),
+		_run_sidebar_view.get_instability_delta(),
+		_run_sidebar_view.get_runway_cells_row(),
 		_run_sidebar_view.get_soul_gauge(),
 		_run_sidebar_view.get_soul_risk_label(),
+		_run_sidebar_view.get_soul_delta(),
 		_run_sidebar_view.get_goldilocks_floor_marker(),
 		_run_sidebar_view.get_goldilocks_ceiling_marker(),
 		_run_sidebar_view.get_stat_guide(),
@@ -190,25 +163,26 @@ func _setup_controllers() -> void:
 	)
 	_choice_flow_controller.setup(
 		_game_state,
-		_dilemma_dialog,
-		_draft_dialog,
-		_draft_pick_c_button,
-		DILEMMA_DIALOG_SIZE,
-		DRAFT_DIALOG_SIZE
+		_choice_overlay,
+		Callable(self, "_append_log")
 	)
 	_post_ship_flow_controller.setup(
+		self,
 		_game_state,
-		_review_dialog,
-		_review_content,
-		REVIEW_DIALOG_SIZE,
-		_gap_visualizer_dialog,
-		_gap_visualizer_content,
-		_jank_discovery_dialog,
-		_jank_discovery_content,
-		_cycle_legacy_dialog,
-		_cycle_legacy_content,
-		_end_run_dialog,
-		END_DIALOG_SIZE
+		_review_overlay,
+		_review_overlay.content,
+		_gap_visualizer_overlay,
+		_gap_visualizer_overlay.content,
+		_jank_discovery_overlay,
+		_jank_discovery_overlay.content,
+		_cycle_legacy_overlay,
+		_cycle_legacy_overlay.content,
+		_end_run_overlay,
+		_ship_summary_overlay,
+		Callable(_post_ship_flow_controller, "on_ship_confirmed"),
+		Callable(_post_ship_flow_controller, "on_ship_canceled"),
+		Callable(self, "_on_ship_run_ended"),
+		Callable(_hud_controller, "update_card_unlock_progress")
 	)
 	_main_menu_controller.setup(
 		_game_state,
@@ -216,8 +190,9 @@ func _setup_controllers() -> void:
 		_start_run_button,
 		_reset_game_button,
 		_menu_subtitle,
-		_archetype_select_dialog,
-		_previously_on_dialog
+		_main_menu_view.get_cycle_track(),
+		_archetype_overlay,
+		_previously_on_overlay
 	)
 	_jank_fx_controller.setup(
 		self,
@@ -228,8 +203,7 @@ func _setup_controllers() -> void:
 		_wobble_root,
 		_ship_button
 	)
-	var janky_panels: Array[Control] = [
-	]
+	var janky_panels: Array[Control] = []
 	janky_panels.append_array(_header_view.get_theme_panels())
 	janky_panels.append_array(_backlog_view.get_theme_panels())
 	janky_panels.append_array(_run_sidebar_view.get_theme_panels())
@@ -247,31 +221,11 @@ func _setup_controllers() -> void:
 	_jank_fx_controller.cache_corruptible_ui_text(corruptible_ui)
 	_jank_fx_controller.setup_synergy_toast()
 
-# -- UI Actions --
-func _show_ship_summary() -> void:
-	if _ship_summary_dialog == null or _game_state == null:
-		return
-	var predicted_score: float = _game_state.calculate_predicted_score()
-	var content: String = PostShipPresentation.build_ship_summary_text(_game_state, predicted_score)
-	var content_label: RichTextLabel = _ship_summary_dialog.get_node_or_null("Content") as RichTextLabel
-	if content_label == null and _ship_summary_dialog.get_child_count() > 0:
-		content_label = _ship_summary_dialog.get_child(0) as RichTextLabel
-	if content_label != null:
-		content_label.text = content
-		content_label.scroll_to_line(0)
-	_ship_summary_dialog.popup_centered(_ship_summary_dialog.min_size)
-
-func _on_ship_summary_confirmed() -> void:
-	if _game_state != null:
-		_run_ended = true
-		_fix_bugs_button.disabled = true
-		_dev_log_button.disabled = true
-		_ship_button.disabled = true
-		_crunch_timer.stop()
-		_game_state.ship_it()
-
-func _on_ship_summary_canceled() -> void:
-	pass
+func _on_ship_run_ended() -> void:
+	_fix_bugs_button.disabled = true
+	_dev_log_button.disabled = true
+	_ship_button.disabled = true
+	_crunch_timer.stop()
 
 func _wire_events() -> void:
 	if _feature_board.has_signal("card_dropped"):
@@ -283,14 +237,20 @@ func _wire_events() -> void:
 	_crunch_timer.timeout.connect(_on_crunch_timer_timeout)
 	_start_run_button.pressed.connect(_on_start_run_pressed)
 	_reset_game_button.pressed.connect(_on_reset_game_button_pressed)
-	_review_dialog.confirmed.connect(_on_review_dialog_closed)
-	_end_run_dialog.confirmed.connect(_on_end_run_dialog_new_run)
-	_end_run_dialog.canceled.connect(_on_end_run_dialog_menu)
-	_dilemma_dialog.confirmed.connect(_on_dilemma_dialog_choice_a)
-	_dilemma_dialog.canceled.connect(_on_dilemma_dialog_choice_b)
-	_draft_dialog.confirmed.connect(_on_draft_dialog_pick_a)
-	_draft_dialog.canceled.connect(_on_draft_dialog_pick_b)
-	_draft_dialog.custom_action.connect(_on_draft_dialog_custom_action)
+
+	if _end_run_overlay != null:
+		_end_run_overlay.confirmed.connect(_on_end_run_dismissed)
+		_end_run_overlay.canceled.connect(_on_end_run_dismissed)
+	if _reset_confirm_overlay != null:
+		_reset_confirm_overlay.dialog_text = "Erase all four-run progress and start a fresh campaign?"
+		_reset_confirm_overlay.ok_button_text = "Reset"
+		_reset_confirm_overlay.confirmed.connect(_on_reset_game_confirmed)
+	if _quit_confirm_overlay != null:
+		_quit_confirm_overlay.title = "Quit Game?"
+		_quit_confirm_overlay.dialog_text = "Sure you want to quit now?"
+		_quit_confirm_overlay.ok_button_text = "Yes, Quit"
+		_quit_confirm_overlay.cancel_button_text = "No, Keep Playing"
+		_quit_confirm_overlay.confirmed.connect(_on_quit_confirmed)
 
 	if _event_bus != null:
 		_event_bus.state_changed.connect(_on_state_changed)
@@ -302,22 +262,7 @@ func _wire_events() -> void:
 		_event_bus.draft_offer.connect(_on_draft_offer)
 		_event_bus.day_spent.connect(_on_day_spent)
 		_event_bus.runway_depleted.connect(_on_runway_depleted)
-		_event_bus.reviews_generated.connect(_on_reviews_generated)
 		_event_bus.archetype_chosen.connect(_on_archetype_chosen_visual)
-
-	if _archetype_select_dialog != null:
-		_archetype_select_dialog.confirmed.connect(_on_archetype_dialog_confirmed)
-		_archetype_select_dialog.canceled.connect(_on_archetype_dialog_canceled)
-		_archetype_select_dialog.custom_action.connect(_on_archetype_dialog_custom_action)
-
-	if _cycle_legacy_dialog != null:
-		_cycle_legacy_dialog.confirmed.connect(_on_cycle_legacy_confirmed)
-
-	if _reset_confirm_dialog != null:
-		_reset_confirm_dialog.confirmed.connect(_on_reset_game_confirmed)
-
-	if _quit_confirm_dialog != null:
-		_quit_confirm_dialog.confirmed.connect(_on_quit_confirmed)
 
 	if _game_state != null:
 		_on_state_changed(_snapshot_from_state())
@@ -327,37 +272,48 @@ func _populate_card_list() -> void:
 	_backlog_controller.populate_card_list(Callable(self, "_append_log"))
 
 func _on_card_dropped(data: Dictionary) -> void:
-	_backlog_controller.handle_card_dropped(_menu_active, _run_ended, data)
+	_backlog_controller.handle_card_dropped(_menu_active, _post_ship_flow_controller.is_run_ended(), data)
 
 func _on_fix_bugs_pressed() -> void:
-	if _menu_active or _run_ended:
+	if _menu_active or _post_ship_flow_controller.is_run_ended():
 		return
 	if _game_state != null:
 		_game_state.fix_bugs()
+	_hud_controller.animate_fix_bugs_feedback()
 	_append_log(_S.get_string("log_messages", "fix_bugs"))
 
 func _on_dev_log_pressed() -> void:
-	if _menu_active or _run_ended:
+	if _menu_active or _post_ship_flow_controller.is_run_ended():
 		return
 	if _game_state != null:
 		_game_state.do_dev_log()
+	_hud_controller.animate_dev_log_feedback()
 	_append_log(_S.get_string("log_messages", "dev_log"))
 
 func _on_ship_pressed() -> void:
-	if _menu_active or _run_ended:
+	if _menu_active or _post_ship_flow_controller.is_run_ended():
 		return
-	_show_ship_summary()
+	_breathe_in_then_ship()
+
+func _breathe_in_then_ship() -> void:
+	var t: Tween = create_tween()
+	t.set_trans(Tween.TRANS_SINE)
+	t.set_ease(Tween.EASE_IN_OUT)
+	t.tween_property(_wobble_root, "scale", Vector2(0.984, 0.984), 0.18)
+	t.tween_property(_wobble_root, "scale", Vector2.ONE, 0.22)
+	await t.finished
+	_post_ship_flow_controller.show_ship_summary()
 
 func _on_quit_pressed() -> void:
-	if _quit_confirm_dialog != null:
-		_quit_confirm_dialog.popup_centered(_quit_confirm_dialog.min_size)
+	if _quit_confirm_overlay != null:
+		_quit_confirm_overlay.popup_centered()
 
 func _on_quit_confirmed() -> void:
 	get_tree().quit()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and _quit_confirm_dialog != null and not _quit_confirm_dialog.visible:
-		_quit_confirm_dialog.popup_centered(_quit_confirm_dialog.min_size)
+	if event.is_action_pressed("ui_cancel") and _quit_confirm_overlay != null and not _quit_confirm_overlay.visible:
+		_quit_confirm_overlay.popup_centered()
 		get_viewport().set_input_as_handled()
 
 func _on_crunch_timer_timeout() -> void:
@@ -365,18 +321,20 @@ func _on_crunch_timer_timeout() -> void:
 		_crunch_timer.stop()
 
 func _is_blocking_offer_dialog_open() -> bool:
-	return _dilemma_dialog.visible or _draft_dialog.visible
+	return _choice_overlay != null and _choice_overlay.visible
 
 func _on_state_changed(payload: StateSnapshotPayload) -> void:
 	_hud_controller.on_state_changed(
 		payload,
 		_menu_active,
-		_run_ended,
+		_post_ship_flow_controller.is_run_ended(),
 		_get_initial_runway_days(),
 		INSTABILITY_CEILING_ZONE_SIZE,
 		Callable(_jank_fx_controller, "update_ship_button_danger")
 	)
 	_refresh_jank_pursuit_display()
+	_check_runway_narrative(payload.runway_days, payload.current_run)
+	_update_backlog_footer(payload)
 
 # -- Event Bus: Core Gameplay --
 func _on_feature_added(card: FeatureCard) -> void:
@@ -387,23 +345,38 @@ func _on_feature_added(card: FeatureCard) -> void:
 func _on_jank_prospect_updated(payload: Dictionary) -> void:
 	var title: String = String(payload.get("prospect_title", "Jank Prospect"))
 	var message: String = String(payload.get("message", "Something strange is taking shape."))
+	var prospect_card_a: String = String(payload.get("card_a", ""))
 	_refresh_jank_pursuit_display()
 	_show_synergy_toast(title, "%s\nOne more collision may lock it in." % message, "prospect", 0, JANK_PROSPECT_TOAST_DURATION)
 	if _feature_board != null:
 		_feature_board.pulse_jank_state("prospect")
-	_append_log("[JANK PROSPECT] %s — %s" % [title, message])
+		if not prospect_card_a.is_empty():
+			_feature_board.pulse_prospect_tile(prospect_card_a)
+	if _backlog_controller != null:
+		_backlog_controller.refresh_prospect_highlighting()
+	_append_log(_S.get_string("log_messages", "jank_prospect") % message)
 
 func _on_jank_signature_locked(payload: Dictionary) -> void:
 	var message: String = String(payload.get("message", "Signature jank locked."))
 	var soul_reward: int = int(payload.get("soul_reward", 0))
+	var card_a: String = String(payload.get("card_a", ""))
+	var card_b: String = String(payload.get("card_b", ""))
+	var jank_name: String = String(payload.get("name", ""))
 	_refresh_jank_pursuit_display()
-	_show_synergy_toast("SIGNATURE LOCKED", message, "locked", soul_reward, JANK_LOCKED_TOAST_DURATION)
+	_jank_fx_controller.flash_jank_lock()
+	var toast_title: String = jank_name.to_upper() if not jank_name.is_empty() else "SIGNATURE LOCKED"
+	_show_synergy_toast(toast_title, message, "locked", soul_reward, JANK_LOCKED_TOAST_DURATION)
 	if _feature_board != null:
 		_feature_board.pulse_jank_state("locked")
-	var reward_text: String = ""
-	if soul_reward > 0:
-		reward_text = " (Soul +%d)" % soul_reward
-	_append_log("[JANK LOCKED] %s%s" % [message, reward_text])
+		if not card_a.is_empty() or not card_b.is_empty():
+			_feature_board.flash_jank_tiles(card_a, card_b)
+	if _backlog_controller != null:
+		_backlog_controller.refresh_prospect_highlighting()
+	var reward_text: String = " (Soul +%d)" % soul_reward if soul_reward > 0 else ""
+	if not card_a.is_empty() and not card_b.is_empty() and not jank_name.is_empty():
+		_append_log(_S.get_string("log_messages", "jank_locked") % [card_a, card_b, jank_name, message + reward_text])
+	else:
+		_append_log("[JANK LOCKED] %s%s" % [message, reward_text])
 
 func _on_threshold_event(payload: ThresholdEventPayload) -> void:
 	var effect_parts: PackedStringArray = []
@@ -415,11 +388,11 @@ func _on_threshold_event(payload: ThresholdEventPayload) -> void:
 	_append_log("[%s] %s%s" % [payload.severity.to_upper(), payload.message, effect_text])
 
 func _on_dilemma_offered(payload: DilemmaOfferPayload) -> void:
-	_choice_flow_controller.on_dilemma_offered(payload, _menu_active, _run_ended)
+	_choice_flow_controller.on_dilemma_offered(payload, _menu_active, _post_ship_flow_controller.is_run_ended())
 	_append_log(_S.get_string("log_messages", "dilemma_surfaced") % payload.title)
 
 func _on_draft_offer(payload: DraftOfferPayload) -> void:
-	_choice_flow_controller.on_draft_offer(payload, _menu_active, _run_ended)
+	_choice_flow_controller.on_draft_offer(payload, _menu_active, _post_ship_flow_controller.is_run_ended())
 	_append_log(_S.get_string("log_messages", "draft_surfaced") % payload.title)
 
 func _on_day_spent(payload: DaySpentPayload) -> void:
@@ -427,12 +400,9 @@ func _on_day_spent(payload: DaySpentPayload) -> void:
 
 func _on_runway_depleted(_payload: RunwayDepletedPayload) -> void:
 	_append_log(_S.get_string("log_messages", "runway_depleted"))
-	if not _menu_active and not _run_ended:
+	if not _menu_active and not _post_ship_flow_controller.is_run_ended():
 		_fix_bugs_button.disabled = true
 		_dev_log_button.disabled = true
-
-func _on_reviews_generated(payload: ShipResult) -> void:
-	_post_ship_flow_controller.on_reviews_generated(payload, Callable(_hud_controller, "update_card_unlock_progress"))
 
 func _append_log(message: String) -> void:
 	if _feature_board != null and _feature_board.has_method("append_log_entry"):
@@ -455,56 +425,63 @@ func _on_start_run_pressed() -> void:
 	_start_new_run()
 
 func _on_reset_game_button_pressed() -> void:
-	if _reset_confirm_dialog != null:
-		_reset_confirm_dialog.popup_centered(_reset_confirm_dialog.min_size)
+	if _reset_confirm_overlay != null:
+		_reset_confirm_overlay.popup_centered()
 
 func _on_reset_game_confirmed() -> void:
 	if _game_state != null:
 		_game_state.start_new_cycle()
 	_show_main_menu()
 
-func _on_review_dialog_closed() -> void:
-	_post_ship_flow_controller.advance_sequence(_run_ended)
-
-func _on_gap_visualizer_confirmed() -> void:
-	_post_ship_flow_controller.advance_sequence(_run_ended)
-
-func _on_jank_discovery_confirmed() -> void:
-	_post_ship_flow_controller.advance_sequence(_run_ended)
-
-func _on_cycle_legacy_confirmed() -> void:
-	_post_ship_flow_controller.advance_sequence(_run_ended)
-
-func _on_end_run_dialog_new_run() -> void:
+func _on_end_run_dismissed() -> void:
 	if _game_state != null and _game_state.is_cycle_complete():
 		_game_state.start_new_cycle()
 	_show_main_menu()
 
-func _on_end_run_dialog_menu() -> void:
-	if _game_state != null and _game_state.is_cycle_complete():
-		_game_state.start_new_cycle()
-	_show_main_menu()
+func _update_backlog_footer(payload: StateSnapshotPayload) -> void:
+	if _menu_active or _backlog_view == null:
+		return
+	var footer: Label = _backlog_view.get_backlog_footer()
+	if footer == null:
+		return
+	var run_ended: bool = _post_ship_flow_controller.is_run_ended()
+	var new_state: String
+	if not run_ended and payload.soul <= 3:
+		new_state = "soul_critical"
+	elif not run_ended and payload.runway_days == 1:
+		new_state = "runway_final"
+	else:
+		new_state = "default"
+	if new_state == _backlog_footer_state:
+		return
+	_backlog_footer_state = new_state
+	match new_state:
+		"soul_critical":
+			footer.text = "There is not enough left in this studio for everything it is trying to build."
+		"runway_final":
+			footer.text = "There is no more time to be careful about this."
+		_:
+			footer.text = _BACKLOG_FOOTER_DEFAULT
 
-func _on_dilemma_dialog_choice_a() -> void:
-	_choice_flow_controller.on_dilemma_choice(0, Callable(self, "_append_log"))
-
-func _on_dilemma_dialog_choice_b() -> void:
-	_choice_flow_controller.on_dilemma_choice(1, Callable(self, "_append_log"))
-
-func _on_draft_dialog_pick_a() -> void:
-	_choice_flow_controller.on_draft_pick(0, Callable(self, "_append_log"))
-
-func _on_draft_dialog_pick_b() -> void:
-	_choice_flow_controller.on_draft_pick(1, Callable(self, "_append_log"))
-
-func _on_draft_dialog_custom_action(action: StringName) -> void:
-	_choice_flow_controller.on_draft_custom_action(action, Callable(self, "_append_log"))
+func _check_runway_narrative(runway_days: int, current_run: int) -> void:
+	if _menu_active or _post_ship_flow_controller.is_run_ended() or current_run <= 1:
+		return
+	var checkpoints: Dictionary = {
+		5: "Five days. The team is still debating scope.",
+		3: "Three days. The build is not what anyone planned.",
+		1: "One day. This is the version that ships.",
+	}
+	for threshold in checkpoints:
+		if runway_days <= threshold and not _runway_narrative_checkpoints.has(threshold):
+			_runway_narrative_checkpoints[threshold] = true
+			_append_log(checkpoints[threshold])
 
 func _start_new_run() -> void:
 	if _game_state == null:
 		return
+	_runway_narrative_checkpoints.clear()
+	_backlog_footer_state = ""
 	_menu_active = false
-	_run_ended = false
 	_main_menu_view.visible = false
 	_feature_board.clear_board()
 	_game_state.reset_run()
@@ -519,18 +496,6 @@ func _start_new_run() -> void:
 	if _crunch_timer != null:
 		_crunch_timer.stop()
 	_main_menu_controller.show_archetype_select_dialog(Callable(self, "_begin_run_gameplay"))
-
-func _on_archetype_dialog_confirmed() -> void:
-	_main_menu_controller.on_archetype_dialog_confirmed()
-	_begin_run_gameplay()
-
-func _on_archetype_dialog_canceled() -> void:
-	_main_menu_controller.on_archetype_dialog_canceled()
-	_begin_run_gameplay()
-
-func _on_archetype_dialog_custom_action(action: StringName) -> void:
-	_main_menu_controller.on_archetype_dialog_custom_action(action)
-	_begin_run_gameplay()
 
 func _begin_run_gameplay() -> void:
 	var cycle: Dictionary = _game_state.get_cycle_state()
@@ -547,8 +512,8 @@ func _begin_run_gameplay() -> void:
 		_main_menu_controller.show_previously_on()
 
 func _show_main_menu() -> void:
+	_backlog_footer_state = ""
 	_menu_active = true
-	_run_ended = false
 	_fix_bugs_button.disabled = true
 	_dev_log_button.disabled = true
 	_ship_button.disabled = true
@@ -572,23 +537,7 @@ func _snapshot_from_state() -> StateSnapshotPayload:
 	return _hud_controller.snapshot_from_state()
 
 func _show_synergy_toast(title: String, body: String, stage: String, soul_delta: int, duration: float = SYNERGY_TOAST_DURATION) -> void:
-	_jank_fx_controller.show_synergy_toast(
-		title,
-		body,
-		stage,
-		soul_delta,
-		duration,
-		SYNERGY_TOAST_FADE_IN,
-		Callable(self, "_on_synergy_toast_timeout")
-	)
-
-func _on_synergy_toast_timeout() -> void:
-	var fade_out_tween: Tween = _jank_fx_controller.fade_out_synergy_toast(SYNERGY_TOAST_FADE_OUT)
-	if fade_out_tween == null:
-		return
-	await fade_out_tween.finished
-	_jank_fx_controller.hide_synergy_toast()
-	_jank_fx_controller.clear_synergy_toast_timer()
+	_jank_fx_controller.show_synergy_toast(title, body, stage, soul_delta, duration)
 
 func _refresh_jank_pursuit_display() -> void:
 	if _feature_board == null or _game_state == null or not _game_state.has_method("get_jank_pursuit_state"):

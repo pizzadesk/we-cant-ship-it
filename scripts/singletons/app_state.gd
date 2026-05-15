@@ -239,7 +239,9 @@ func fix_bugs() -> void:
 func do_dev_log() -> void:
 	if runway_days <= 0:
 		return
-	soul += _content_repository.get_game_config().dev_log_soul_gain
+	var config: GameConfig = _content_repository.get_game_config()
+	var bonus: int = config.dev_log_large_board_soul_bonus if feature_board.size() >= config.dev_log_large_board_threshold else 0
+	soul += config.dev_log_soul_gain + bonus
 	spend_day("dev_log")
 
 func spend_day(reason: String) -> void:
@@ -255,12 +257,16 @@ func spend_day(reason: String) -> void:
 		popup_offered = _maybe_offer_dilemma()
 		if not popup_offered:
 			popup_offered = _maybe_offer_draft()
+	_maybe_inject_tutorial_prospect()
 	if runway_days == 0:
 		if _event_bus != null:
 			_event_bus.runway_depleted.emit(RunwayDepletedPayload.build(runway_days))
 	_emit_state()
 
 func ship_it() -> ShipResult:
+	var unfulfilled: Dictionary = {}
+	if not _current_prospect_jank.is_empty() and _locked_signature_jank.is_empty():
+		unfulfilled = _current_prospect_jank.duplicate(true)
 	var outcome: RunResolutionOutcomeType = _run_resolution.resolve_and_commit_run(
 		ambition,
 		instability,
@@ -269,7 +275,8 @@ func ship_it() -> ShipResult:
 		feature_board,
 		chosen_archetype,
 		current_run,
-		_locked_signature_jank
+		_locked_signature_jank,
+		unfulfilled
 	)
 	if outcome == null:
 		outcome = RunResolutionOutcomeType.new()
@@ -489,3 +496,31 @@ func _collect_feature_board_tags() -> PackedStringArray:
 
 func _normalize_feature_name(raw: String) -> String:
 	return raw.to_lower().strip_edges().replace(" ", "_").replace("-", "_")
+
+func _maybe_inject_tutorial_prospect() -> void:
+	if current_run != 1:
+		return
+	if not _current_prospect_jank.is_empty() or not _locked_signature_jank.is_empty():
+		return
+	var initial_days: int = _content_repository.get_game_config().tutorial_runway_days
+	if runway_days > initial_days - 2:
+		return
+	var combinations: Array = _content_repository.get_jank_combinations()
+	var candidates: Array = []
+	for combo in combinations:
+		if bool(combo.get("tutorial_prospect", false)):
+			candidates.append(combo)
+	if candidates.is_empty():
+		return
+	var pick: Dictionary = candidates[_rng.randi_range(0, candidates.size() - 1)]
+	var prospect_id: String = String(pick.get("jank_card_id", ""))
+	if prospect_id.is_empty() or bool(_hinted_prospect_jank_ids.get(prospect_id, false)):
+		return
+	_current_prospect_jank_id = prospect_id
+	_current_prospect_jank = pick.duplicate(true)
+	_hinted_prospect_jank_ids[prospect_id] = true
+	if _event_bus != null:
+		var payload: Dictionary = pick.duplicate(true)
+		payload["stage"] = "prospect"
+		payload["message"] = String(pick.get("prospect_hint", "Something strange is taking shape."))
+		_event_bus.jank_prospect_updated.emit(payload)

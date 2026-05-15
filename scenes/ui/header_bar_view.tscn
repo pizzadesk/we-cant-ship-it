@@ -34,11 +34,3 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 14
 text = "✕ Quit"
-
-[node name="HeaderSubtitle" type="Label" parent="HeaderPadding/HeaderVBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-theme_override_font_sizes/font_size = 17
-text = "You must to assemble ambitious disaster, manage fallout, and ship before money is evaporating completely."
-autowrap_mode = 3

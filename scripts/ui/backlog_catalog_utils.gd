@@ -115,20 +115,16 @@ static func rebuild_daily_offer(
 		result.last_offer_runway_day = runway_today
 		return result
 
-	# --- HARD GUARANTEE: If prospect is close, always include exactly one prospect target card ---
+	# Hard guarantee: if a prospect is active, reserve one slot for a prospect target.
 	var visible_count: int = mini(daily_visible_cards, available_templates.size())
 	var prospect_target_templates: Array[Resource] = []
-	if not prospect_targets.is_empty():
-		for template in available_templates:
-			if _is_prospect_target_template(template, prospect_targets):
-				prospect_target_templates.append(template)
-	# Remove prospect targets from available_templates for normal selection
 	var filtered_templates: Array[Resource] = []
 	for template in available_templates:
-		if not _is_prospect_target_template(template, prospect_targets):
+		if _is_prospect_target_template(template, prospect_targets):
+			prospect_target_templates.append(template)
+		else:
 			filtered_templates.append(template)
 
-	# Select (visible_count - 1) normal cards
 	for _pick in range(visible_count - 1):
 		if filtered_templates.is_empty():
 			break
@@ -145,28 +141,13 @@ static func rebuild_daily_offer(
 			break
 		var template: Resource = filtered_templates[pick_index]
 		filtered_templates.remove_at(pick_index)
-		var variant: FeatureCard = template.duplicate(false) as FeatureCard
-		if variant == null:
-			continue
-		backlog_cards.append(variant)
-		selected_cards.append(variant)
-		if not template.resource_path.is_empty():
-			result.offered_paths.append(template.resource_path)
+		_commit_card_variant(template, backlog_cards, selected_cards, result)
 
-	# Insert exactly one prospect target card if any are available and prospect is close
-	if not prospect_targets.is_empty() and prospect_target_templates.size() > 0:
-		var idx := int(ui_rng.randi_range(0, prospect_target_templates.size() - 1))
-		var prospect_template: Resource = prospect_target_templates[idx]
-		var variant: FeatureCard = prospect_template.duplicate(false) as FeatureCard
-		if variant != null:
-			backlog_cards.append(variant)
-			selected_cards.append(variant)
-			if not prospect_template.resource_path.is_empty():
-				result.offered_paths.append(prospect_template.resource_path)
-	else:
-		# If no prospect is close or no target available, fill the last slot normally
-		if filtered_templates.size() > 0 and backlog_cards.size() < visible_count:
-			var pick_index: int = _pick_weighted_template_index(
+	if not prospect_target_templates.is_empty():
+		var idx: int = ui_rng.randi_range(0, prospect_target_templates.size() - 1)
+		_commit_card_variant(prospect_target_templates[idx], backlog_cards, selected_cards, result)
+	elif not filtered_templates.is_empty() and backlog_cards.size() < visible_count:
+		var pick_index: int = _pick_weighted_template_index(
 				filtered_templates,
 				chosen_archetype,
 				ui_rng,
@@ -174,19 +155,11 @@ static func rebuild_daily_offer(
 				recent_paths,
 				selected_cards,
 				offer_context
-			)
-			if pick_index >= 0:
-				var template: Resource = filtered_templates[pick_index]
-				var variant: FeatureCard = template.duplicate(false) as FeatureCard
-				if variant != null:
-					backlog_cards.append(variant)
-					selected_cards.append(variant)
-					if not template.resource_path.is_empty():
-						result.offered_paths.append(template.resource_path)
+		)
+		if pick_index >= 0:
+			_commit_card_variant(filtered_templates[pick_index], backlog_cards, selected_cards, result)
 
-	# If we somehow have too many, trim to visible_count
-	while backlog_cards.size() > visible_count:
-		backlog_cards.remove_at(backlog_cards.size() - 1)
+	assert(backlog_cards.size() <= visible_count, "backlog overflow")
 
 	result.backlog_cards = backlog_cards
 	result.last_offer_runway_day = runway_today
@@ -414,15 +387,37 @@ static func _is_prospect_target_card(card: FeatureCard, prospect_targets: Packed
 static func _normalize_feature_name(raw: String) -> String:
 	return raw.to_lower().strip_edges().replace(" ", "_").replace("-", "_")
 
+static func _commit_card_variant(
+	template: Resource,
+	backlog_cards: Array[Resource],
+	selected_cards: Array[FeatureCard],
+	result: DailyOfferResult,
+) -> void:
+	var variant: FeatureCard = template.duplicate(false) as FeatureCard
+	if variant == null:
+		return
+	backlog_cards.append(variant)
+	selected_cards.append(variant)
+	if not template.resource_path.is_empty():
+		result.offered_paths.append(template.resource_path)
+
 static func refresh_backlog_list(card_list: VBoxContainer, backlog_cards: Array[Resource], card_widget_scene: PackedScene, origin: String = "backlog") -> void:
 	for child in card_list.get_children():
 		child.queue_free()
+	var stagger_index: int = 0
 	for card in backlog_cards:
 		var widget: Control = card_widget_scene.instantiate() as Control
 		widget.set_feature_card(card)
 		if widget.has_method("set_drag_origin"):
 			widget.set_drag_origin(origin)
+		widget.modulate = Color(1.0, 1.0, 1.0, 0.0)
 		card_list.add_child(widget)
+		var t: Tween = widget.create_tween()
+		t.set_ease(Tween.EASE_OUT)
+		t.set_trans(Tween.TRANS_QUAD)
+		t.tween_interval(stagger_index * 0.07)
+		t.tween_property(widget, "modulate", Color.WHITE, 0.18)
+		stagger_index += 1
 
 static func _load_cards_from_directory(cards: Array[Resource], directory_path: String, is_custom_directory: bool, append_log: Callable) -> Array[Resource]:
 	var out_cards: Array[Resource] = cards.duplicate()
@@ -485,3 +480,20 @@ static func _resolve_card_resource_path(directory_path: String, file_name: Strin
 	if file_name.ends_with(".tres") or file_name.ends_with(".res"):
 		return "%s/%s" % [directory_path, file_name]
 	return ""
+
+static func apply_prospect_highlights(
+		card_list: Control,
+		targets: PackedStringArray,
+		jank_name: String) -> void:
+	for child: Node in card_list.get_children():
+		if child is not FeatureCardWidget:
+			continue
+		var widget: FeatureCardWidget = child as FeatureCardWidget
+		if widget.feature_card is not FeatureCard:
+			continue
+		var fc: FeatureCard = widget.feature_card as FeatureCard
+		var normalized: String = _normalize_feature_name(fc.feature_name)
+		if targets.has(normalized):
+			widget.apply_prospect_target_style(jank_name)
+		else:
+			widget.clear_prospect_target_style()

@@ -1,6 +1,6 @@
 static func update_ship_button_danger(ship_button: Button, runway_days: int, initial_runway_days: int) -> void:
 	var danger_ratio: float = clampf(1.0 - (float(runway_days) / float(initial_runway_days)), 0.0, 1.0)
-	var button_color: Color = Color(0.24, 0.21, 0.24).lerp(Color(0.95, 0.11, 0.07), danger_ratio)
+	var button_color: Color = Color(0.039, 0.118, 0.039).lerp(Color(0.95, 0.11, 0.07), danger_ratio)
 
 	var normal_style: StyleBoxFlat = StyleBoxFlat.new()
 	normal_style.bg_color = button_color
@@ -8,7 +8,7 @@ static func update_ship_button_danger(ship_button: Button, runway_days: int, ini
 	normal_style.border_width_top = 3
 	normal_style.border_width_right = 3
 	normal_style.border_width_bottom = 3
-	normal_style.border_color = Color(1.0, 0.56, 0.50).lerp(Color(1.0, 0.15, 0.15), danger_ratio)
+	normal_style.border_color = Color(0.267, 0.800, 0.267).lerp(Color(1.0, 0.15, 0.15), danger_ratio)
 	normal_style.corner_radius_top_left = 4
 	normal_style.corner_radius_top_right = 5
 	normal_style.corner_radius_bottom_left = 5
@@ -25,12 +25,12 @@ static func update_ship_button_danger(ship_button: Button, runway_days: int, ini
 	ship_button.add_theme_stylebox_override("normal", normal_style)
 	ship_button.add_theme_stylebox_override("hover", hover_style)
 	ship_button.add_theme_stylebox_override("pressed", pressed_style)
-	ship_button.add_theme_color_override("font_color", Color(1.0, 0.95, 0.92))
+	ship_button.add_theme_color_override("font_color", Color(0.659, 0.910, 0.659))
 
 static func next_glitch_offset(current_offset: Vector2, instability_visual: float, delta: float, ui_rng: RandomNumberGenerator, ceiling_pressure: float = 0.0) -> Vector2:
 	var glitch_offset: Vector2 = current_offset
-	if instability_visual > 0.28 or ceiling_pressure > 0.15:
-		var t: float = (instability_visual - 0.28) / 0.72
+	if instability_visual > 0.40 or ceiling_pressure > 0.15:
+		var t: float = (instability_visual - 0.40) / 0.60
 		# ceiling_pressure tightens the glitch interval near the archetype ceiling, making
 		# near-bust Shooter runs visually more frantic than equally-chaotic RPG runs.
 		# Increase the 0.6 multiplier to widen the ceiling pressure effect on glitch rate.
@@ -60,20 +60,20 @@ static func compute_wobble_position(jank_time: float, instability_visual: float,
 static func compute_wobble_modulate(instability_visual: float) -> Color:
 	var polish_visual: float = 1.0 - instability_visual
 	return Color(
-		0.88 + (polish_visual * 0.12),
-		0.88 + (polish_visual * 0.12),
-		0.88 + (polish_visual * 0.07)
-	).lerp(Color(1.0, 0.88, 0.84), instability_visual * 0.55)
+		0.75 + (polish_visual * 0.18),
+		0.90 + (polish_visual * 0.09),
+		0.75 + (polish_visual * 0.18)
+	).lerp(Color(0.60, 0.95, 0.60), instability_visual * 0.55)
 
 static func compute_jank_tint_color(instability_visual: float) -> Color:
 	var polish_visual: float = 1.0 - instability_visual
-	return Color(0.18, 0.62, 0.28, 0.02 + (polish_visual * 0.08)).lerp(
+	return Color(0.10, 0.55, 0.10, 0.02 + (polish_visual * 0.08)).lerp(
 		Color(0.88, 0.12, 0.10, 0.04 + (instability_visual * 0.22)),
 		instability_visual
 	)
 
 static func should_show_scanline(instability_visual: float) -> bool:
-	return instability_visual > 0.45
+	return instability_visual >= 0.65
 
 static func compute_scanline_opacity(instability_visual: float) -> float:
 	return 0.02 + (instability_visual * 0.22)
@@ -128,9 +128,9 @@ static func corrupt_text(base_text: String, ui_rng: RandomNumberGenerator, insta
 	if base_text.is_empty():
 		return base_text
 	var swaps: int = 0
-	if instability_visual >= 0.72 and base_text.length() > 10:
+	if instability_visual >= 0.85 and base_text.length() > 10:
 		swaps = 2
-	elif instability_visual >= 0.38 and base_text.length() > 6:
+	elif instability_visual >= 0.65 and base_text.length() > 6:
 		swaps = 1
 	if swaps == 0:
 		return base_text
